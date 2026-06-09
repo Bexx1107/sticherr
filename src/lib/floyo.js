@@ -216,7 +216,7 @@ async function executeWorkflow(apiKey, workflowName, workflowPrompt, { onStatus,
 }
 
 export async function stitcherEdit(apiKey, modelId, params) {
-  const { sourceImage, cropBase64, cropMimeType, prompt = '', onStatus = null, aspectRatio = 'auto', resolution = '1K', entityRefs = [] } = params;
+  const { sourceImage, cropBase64, cropMimeType, prompt = '', onStatus = null, aspectRatio = 'auto', resolution = '1K', entityRefs = [], advancedConfig = {} } = params;
   const wf = WORKFLOWS.stitcherEdit;
 
   const imgBase64 = cropBase64 || sourceImage?.base64;
@@ -252,6 +252,9 @@ export async function stitcherEdit(apiKey, modelId, params) {
     imageUrl,
     image2Url,
     modelId,
+    seed: advancedConfig.seed !== undefined ? advancedConfig.seed : -1,
+    safetyTolerance: advancedConfig.safetyTolerance !== undefined ? String(advancedConfig.safetyTolerance) : '4',
+    enableWebSearch: !!advancedConfig.enableWebSearch,
   });
 
   return trackFloyoCall('stitcherEdit', wf.name, () =>

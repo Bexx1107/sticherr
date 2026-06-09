@@ -1,71 +1,55 @@
 import { useState } from 'react';
 import { ChevronDown, ChevronRight, Settings2, RotateCcw } from 'lucide-react';
 
-// Default values matching FloUI defaults
+// Default values matching actual image generation parameters
 export const ADVANCED_DEFAULTS = {
-  temperature: 1.0,
-  topP: 0.95,
-  topK: 64,
-  seed: '',              // empty = random
-  systemInstruction: '', // empty = none
+  seed: '',              // empty = random (-1)
+  safetyTolerance: '4',  // '1' (strictest/Block Most) to '4' (most permissive/Allow Most)
+  enableWebSearch: false,
 };
 
-// Get a clean config object for the API call (only includes non-default values)
+// Get a clean config object for the API call
 export function getAdvancedConfig(settings) {
   const config = {};
-  if (settings.temperature !== ADVANCED_DEFAULTS.temperature) {
-    config.temperature = settings.temperature;
-  }
-  if (settings.topP !== ADVANCED_DEFAULTS.topP) {
-    config.topP = settings.topP;
-  }
-  if (settings.topK !== ADVANCED_DEFAULTS.topK) {
-    config.topK = settings.topK;
-  }
   if (settings.seed !== '' && settings.seed !== null && settings.seed !== undefined) {
     config.seed = parseInt(settings.seed, 10);
+  } else {
+    config.seed = -1;
   }
-  if (settings.systemInstruction && settings.systemInstruction.trim()) {
-    config.systemInstruction = settings.systemInstruction.trim();
-  }
+  config.safetyTolerance = settings.safetyTolerance || '4';
+  config.enableWebSearch = !!settings.enableWebSearch;
   return config;
 }
 
 // Hook for managing advanced settings state
 export function useAdvancedSettings() {
-  const [temperature, setTemperature] = useState(ADVANCED_DEFAULTS.temperature);
-  const [topP, setTopP] = useState(ADVANCED_DEFAULTS.topP);
-  const [topK, setTopK] = useState(ADVANCED_DEFAULTS.topK);
   const [seed, setSeed] = useState(ADVANCED_DEFAULTS.seed);
-  const [systemInstruction, setSystemInstruction] = useState(ADVANCED_DEFAULTS.systemInstruction);
+  const [safetyTolerance, setSafetyTolerance] = useState(ADVANCED_DEFAULTS.safetyTolerance);
+  const [enableWebSearch, setEnableWebSearch] = useState(ADVANCED_DEFAULTS.enableWebSearch);
 
-  const settings = { temperature, topP, topK, seed, systemInstruction };
+  const settings = { seed, safetyTolerance, enableWebSearch };
 
   const reset = () => {
-    setTemperature(ADVANCED_DEFAULTS.temperature);
-    setTopP(ADVANCED_DEFAULTS.topP);
-    setTopK(ADVANCED_DEFAULTS.topK);
     setSeed(ADVANCED_DEFAULTS.seed);
-    setSystemInstruction(ADVANCED_DEFAULTS.systemInstruction);
+    setSafetyTolerance(ADVANCED_DEFAULTS.safetyTolerance);
+    setEnableWebSearch(ADVANCED_DEFAULTS.enableWebSearch);
   };
 
   const isModified = 
-    temperature !== ADVANCED_DEFAULTS.temperature ||
-    topP !== ADVANCED_DEFAULTS.topP ||
-    topK !== ADVANCED_DEFAULTS.topK ||
     seed !== ADVANCED_DEFAULTS.seed ||
-    systemInstruction !== ADVANCED_DEFAULTS.systemInstruction;
+    safetyTolerance !== ADVANCED_DEFAULTS.safetyTolerance ||
+    enableWebSearch !== ADVANCED_DEFAULTS.enableWebSearch;
 
   return {
     settings,
-    setTemperature, setTopP, setTopK, setSeed, setSystemInstruction,
+    setSeed, setSafetyTolerance, setEnableWebSearch,
     reset,
     isModified,
   };
 }
 
 // ─── The Advanced Settings Panel Component ──────────────────────
-export default function AdvancedSettings({ settings, setTemperature, setTopP, setTopK, setSeed, setSystemInstruction, reset, isModified }) {
+export default function AdvancedSettings({ settings, setSeed, setSafetyTolerance, setEnableWebSearch, reset, isModified }) {
   const [open, setOpen] = useState(false);
 
   return (
@@ -81,7 +65,7 @@ export default function AdvancedSettings({ settings, setTemperature, setTopP, se
         <div className="flex items-center gap-2">
           <Settings2 size={13} className={isModified ? 'text-accent' : ''} />
           <span>Advanced Settings</span>
-          {isModified && <span className="badge badge-accent text-[9px] px-1.5 py-0">Modified</span>}
+          {isModified && <span className="badge badge-accent text-[9px] px-1.5 py-0 bg-emerald-500/20 text-emerald-400">Modified</span>}
         </div>
         {open ? <ChevronDown size={13} /> : <ChevronRight size={13} />}
       </button>
@@ -91,103 +75,79 @@ export default function AdvancedSettings({ settings, setTemperature, setTopP, se
           {/* Reset button */}
           {isModified && (
             <button onClick={reset}
-              className="flex items-center gap-1.5 text-[11px] text-surface-500 hover:text-accent transition-colors ml-auto">
+              className="flex items-center gap-1.5 text-[11px] text-surface-500 hover:text-emerald-400 transition-colors ml-auto">
               <RotateCcw size={11} /> Reset to defaults
             </button>
           )}
 
-          {/* Temperature */}
-          <div>
-            <div className="flex items-center justify-between mb-1.5">
-              <label className="text-[11px] text-surface-400 uppercase tracking-wider font-bold">Temperature</label>
-              <span className="text-[12px] font-mono text-accent font-bold tabular-nums">{settings.temperature.toFixed(2)}</span>
-            </div>
-            <input
-              type="range" min="0" max="2" step="0.05"
-              value={settings.temperature}
-              onChange={e => setTemperature(parseFloat(e.target.value))}
-              className="advanced-slider w-full"
-            />
-            <div className="flex justify-between text-[9px] text-surface-500 mt-0.5">
-              <span>Deterministic</span>
-              <span>Creative</span>
-            </div>
-          </div>
-
-          {/* Top P */}
-          <div>
-            <div className="flex items-center justify-between mb-1.5">
-              <label className="text-[11px] text-surface-400 uppercase tracking-wider font-bold">Top P</label>
-              <span className="text-[12px] font-mono text-accent font-bold tabular-nums">{settings.topP.toFixed(2)}</span>
-            </div>
-            <input
-              type="range" min="0" max="1" step="0.01"
-              value={settings.topP}
-              onChange={e => setTopP(parseFloat(e.target.value))}
-              className="advanced-slider w-full"
-            />
-            <div className="flex justify-between text-[9px] text-surface-500 mt-0.5">
-              <span>Focused</span>
-              <span>Diverse</span>
-            </div>
-          </div>
-
-          {/* Top K */}
-          <div>
-            <div className="flex items-center justify-between mb-1.5">
-              <label className="text-[11px] text-surface-400 uppercase tracking-wider font-bold">Top K</label>
-              <span className="text-[12px] font-mono text-accent font-bold tabular-nums">{settings.topK}</span>
-            </div>
-            <input
-              type="range" min="1" max="100" step="1"
-              value={settings.topK}
-              onChange={e => setTopK(parseInt(e.target.value, 10))}
-              className="advanced-slider w-full"
-            />
-            <div className="flex justify-between text-[9px] text-surface-500 mt-0.5">
-              <span>1</span>
-              <span>100</span>
-            </div>
-          </div>
-
-          {/* Seed */}
+          {/* Seed Input */}
           <div>
             <div className="flex items-center justify-between mb-1.5">
               <label className="text-[11px] text-surface-400 uppercase tracking-wider font-bold">Seed</label>
               {settings.seed !== '' && (
-                <button onClick={() => setSeed('')} className="text-[10px] text-surface-500 hover:text-accent transition-colors">
+                <button onClick={() => setSeed('')} className="text-[10px] text-surface-500 hover:text-emerald-400 transition-colors">
                   Clear
                 </button>
               )}
             </div>
-            <input
-              type="number" min="0" step="1"
-              value={settings.seed}
-              onChange={e => setSeed(e.target.value)}
-              placeholder="Random (empty)"
-              className="input-field font-mono text-xs"
-            />
-            <p className="text-[9px] text-surface-500 mt-1">Set a number for reproducible results. Leave empty for random.</p>
+            <div className="relative">
+              <input
+                type="number" min="0" step="1"
+                value={settings.seed}
+                onChange={e => setSeed(e.target.value)}
+                placeholder="Random (empty)"
+                className="input-field font-mono text-xs w-full pr-16 bg-black/40 border border-white/[0.12] rounded-lg p-2 text-white outline-none focus:border-emerald-500/40"
+              />
+              <button
+                type="button"
+                onClick={() => setSeed(Math.floor(Math.random() * 2147483647).toString())}
+                className="absolute right-1 top-1 bottom-1 px-2 text-[9px] font-bold rounded bg-white/[0.08] hover:bg-white/[0.15] text-surface-300 hover:text-white transition-all"
+              >
+                🎲 Random
+              </button>
+            </div>
+            <p className="text-[9px] text-surface-500 mt-1">Set a seed for reproducible results. Leave empty for random.</p>
           </div>
 
-          {/* System Instruction */}
+          {/* Safety Tolerance Select Buttons */}
           <div>
-            <div className="flex items-center justify-between mb-1.5">
-              <label className="text-[11px] text-surface-400 uppercase tracking-wider font-bold">System Instruction</label>
-              {settings.systemInstruction && (
-                <button onClick={() => setSystemInstruction('')} className="text-[10px] text-surface-500 hover:text-accent transition-colors">
-                  Clear
+            <label className="text-[11px] text-surface-400 uppercase tracking-wider font-bold block mb-1.5">
+              Safety Block Threshold
+            </label>
+            <div className="grid grid-cols-4 gap-1 p-0.5 rounded-lg bg-white/[0.04] border border-white/[0.06]">
+              {['1', '2', '3', '4'].map(val => (
+                <button
+                  key={val}
+                  type="button"
+                  onClick={() => setSafetyTolerance(val)}
+                  className={`py-1 rounded-md text-[10px] font-bold transition-all cursor-pointer ${
+                    settings.safetyTolerance === val
+                      ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
+                      : 'text-surface-400 hover:text-white hover:bg-white/[0.04] border border-transparent'
+                  }`}
+                >
+                  {val === '1' ? 'Block Most' : val === '2' ? 'High' : val === '3' ? 'Medium' : 'Allow Most'}
                 </button>
-              )}
+              ))}
             </div>
-            <textarea
-              value={settings.systemInstruction}
-              onChange={e => setSystemInstruction(e.target.value)}
-              rows={3}
-              placeholder="e.g. You are a professional anime illustrator. Always use vibrant saturated colors, cel-shading, and thick outlines..."
-              className="input-field font-mono text-[11px] leading-relaxed"
-            />
-            <p className="text-[9px] text-surface-500 mt-1">Persistent style or behavior rules injected before every generation. Enforces consistency across outputs.</p>
+            <p className="text-[9px] text-surface-500 mt-1">Configures content filtering strictness for generated outputs.</p>
+          </div>
+
+          {/* Web Search Grounding Toggle */}
+          <div className="flex items-center justify-between p-2.5 rounded-lg bg-white/[0.03] border border-white/[0.06]">
+            <div>
+              <label className="text-[11px] font-bold text-surface-300 block">Web Search Grounding</label>
+              <span className="text-[9px] text-surface-500 block">Enables live Google search results to guide prompt generation</span>
+            </div>
+            <label className="relative inline-flex items-center cursor-pointer">
+              <input 
+                type="checkbox" 
+                checked={settings.enableWebSearch} 
+                onChange={e => setEnableWebSearch(e.target.checked)}
+                className="sr-only peer" 
+              />
+              <div className="w-9 h-5 bg-white/[0.10] peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-surface-400 after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-emerald-500 peer-checked:after:bg-white peer-checked:after:border-transparent"></div>
+            </label>
           </div>
         </div>
       )}
