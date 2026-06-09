@@ -668,3 +668,40 @@ input[type="color"]::-webkit-color-swatch {
   border: 1px solid rgba(16,185,129,0.3);
   border-radius: 4px;
 }
+
+/* ── Mobile Responsiveness ──────────────────────── */
+@media (max-width: 768px) {
+  /* Stack split columns vertically (canvas preview on top, controls below) */
+  .studio-split {
+    flex-direction: column-reverse;
+    overflow-y: auto;
+  }
+  
+  /* Make studio controls full width */
+  .studio-controls {
+    width: 100% !important;
+    min-width: 100% !important;
+    max-width: 100% !important;
+    border-right: none;
+    border-bottom: 1px solid rgba(16,185,129,0.15);
+    padding: 16px;
+  }
+  
+  /* Give the canvas preview a fixed height so it's fully visible & interactable */
+  .studio-preview {
+    width: 100% !important;
+    height: 480px !important;
+    min-height: 400px !important;
+    padding: 16px;
+    flex-shrink: 0;
+  }
+  
+  /* Make the left settings sidebar float as a drawer when open */
+  aside.shrink-0 {
+    position: absolute !important;
+    height: 100% !important;
+    box-shadow: 20px 0 30px rgba(0, 0, 0, 0.65) !important;
+    background: #020617 !important;
+  }
+}
+

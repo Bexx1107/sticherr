@@ -8,7 +8,12 @@ export default function App() {
     const stored = localStorage.getItem('dmd_api_key') || '';
     return stored.trim().replace(/['"\s]/g, '');
   });
-  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return window.innerWidth < 768;
+    }
+    return false;
+  });
 
   const handleSetApiKey = (key) => {
     const cleaned = (key || '').trim().replace(/['"\s]/g, '');
