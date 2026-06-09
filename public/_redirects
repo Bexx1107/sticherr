@@ -1,0 +1,3 @@
+/api/floyo/*  https://api.floyo.ai/:splat  200!
+/cdn/floyo/*  https://cdn.floyo.ai/:splat  200!
+/*  /index.html  200
