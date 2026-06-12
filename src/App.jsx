@@ -43,7 +43,7 @@ export default function App() {
         {/* Sidebar Content (hidden when collapsed) */}
         <div className={`flex flex-col h-full w-[280px] overflow-hidden transition-opacity duration-200 ${isSidebarCollapsed ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
           {/* Brand */}
-          <div className="flex items-center px-5 py-6 shrink-0">
+          <div className="flex items-center px-m3-ml py-m3-ml shrink-0">
             <div 
               className="w-10 h-10 rounded-xl flex items-center justify-center shadow-lg"
               style={{ 
@@ -53,23 +53,23 @@ export default function App() {
             >
               <Scissors size={20} className="text-white" />
             </div>
-            <div className="ml-3">
+            <div className="ml-m3-ms">
               <h1 className="text-base font-bold text-white tracking-tight leading-none">Sticherr</h1>
               <p className="text-[10px] font-medium text-surface-500 mt-0.5 tracking-wide uppercase">Standalone Editor</p>
             </div>
           </div>
 
           {/* Separator */}
-          <div className="mx-4 h-px bg-white/[0.10]" />
+          <div className="mx-m3-md h-px bg-white/[0.10]" />
 
           {/* Configurations */}
-          <div className="flex-1 p-5 overflow-y-auto space-y-6">
+          <div className="flex-1 p-m3-ml overflow-y-auto space-y-m3-ml">
             {/* API Key */}
             <ApiKeyInput apiKey={apiKey} setApiKey={handleSetApiKey} compact={false} />
 
             {/* Quick Help */}
-            <div className="rounded-xl border border-white/[0.08] bg-white/[0.02] p-4 space-y-3">
-              <div className="flex items-center gap-2 text-surface-300 font-semibold text-xs">
+            <div className="rounded-xl border border-white/[0.08] bg-white/[0.02] p-m3-md space-y-m3-ms">
+              <div className="flex items-center gap-m3-sm text-surface-300 font-semibold text-xs">
                 <HelpCircle size={14} className="text-mint" />
                 <span>Workspace Help</span>
               </div>
@@ -77,7 +77,7 @@ export default function App() {
                 Upload a source image, draw an edit mask, specify a prompt, and hit generate. 
                 The editor lets you layer multiple edit results over the base image.
               </p>
-              <div className="text-[10px] text-surface-500 space-y-1.5 pt-1">
+              <div className="text-[10px] text-surface-500 space-y-m3-xs pt-m3-xs">
                 <div>• <b>Space + Drag</b> to pan the canvas</div>
                 <div>• <b>Ctrl + S</b> to save project</div>
                 <div>• <b>Scroll</b> to zoom in/out</div>
@@ -86,7 +86,7 @@ export default function App() {
           </div>
 
           {/* Footer */}
-          <div className="p-5 border-t border-white/[0.08] text-[10px] text-surface-500 font-medium">
+          <div className="p-m3-ml border-t border-white/[0.08] text-[10px] text-surface-500 font-medium">
             Stand-alone App v1.0.0
           </div>
         </div>

@@ -1355,13 +1355,13 @@ export default function StitcherSubTab({ apiKey, onHistoryAdd, loadProjectId, on
   // ── Render ──
   return (
     <div className="studio-split">
-      <div className="studio-controls space-y-5">
+      <div className="studio-controls space-y-m3-ml">
         {/* Project Bar */}
-        <div className="rounded-xl border border-white/[0.10] bg-white/[0.03] p-3 space-y-2">
-          <div className="flex items-center gap-2">
+        <div className="rounded-xl border border-white/[0.10] bg-white/[0.03] p-m3-ms space-y-m3-sm">
+          <div className="flex items-center gap-m3-sm">
             <button
               onClick={() => setShowProjectBrowser(true)}
-              className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-white/[0.06] border border-white/[0.08] text-surface-300 text-[11px] font-semibold hover:bg-white/[0.10] hover:text-white transition-all"
+              className="flex items-center gap-m3-xs px-m3-ms py-m3-xs rounded-lg bg-white/[0.06] border border-white/[0.08] text-surface-300 text-[11px] font-semibold hover:bg-white/[0.10] hover:text-white transition-all"
             >
               <FolderOpen size={12} /> Projects
             </button>
@@ -1373,7 +1373,7 @@ export default function StitcherSubTab({ apiKey, onHistoryAdd, loadProjectId, on
             />
           </div>
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-1.5 text-[10px] text-surface-500">
+            <div className="flex items-center gap-m3-xs text-[10px] text-surface-500">
               {project.isSaving ? (
                 <><Loader2 size={10} className="animate-spin text-mint" /> Saving...</>
               ) : project.lastSaved ? (
@@ -1384,7 +1384,7 @@ export default function StitcherSubTab({ apiKey, onHistoryAdd, loadProjectId, on
                 <span>New project</span>
               )}
             </div>
-            <div className="flex items-center gap-1">
+            <div className="flex items-center gap-m3-xs">
               {project.projectId && (
                 <button
                   onClick={project.exportProject}
@@ -1397,7 +1397,7 @@ export default function StitcherSubTab({ apiKey, onHistoryAdd, loadProjectId, on
               <button
                 onClick={() => project.saveProject().catch(() => {})}
                 disabled={project.isSaving}
-                className="flex items-center gap-1 px-2 py-1 rounded-md bg-mint/10 text-mint text-[10px] font-bold hover:bg-mint/20 transition-colors disabled:opacity-50"
+                className="flex items-center gap-m3-xs px-m3-sm py-m3-xs rounded-md bg-mint/10 text-mint text-[10px] font-bold hover:bg-mint/20 transition-colors disabled:opacity-50"
                 title="Save project (Ctrl+S)"
               >
                 <Save size={10} /> Save
@@ -1435,29 +1435,29 @@ export default function StitcherSubTab({ apiKey, onHistoryAdd, loadProjectId, on
         {/* 2. Selection Ratio */}
         <div>
           <div className="section-header"><span className="section-num">2</span> Selection Ratio</div>
-          <div className="grid grid-cols-2 gap-2">
+          <div className="grid grid-cols-2 gap-m3-sm">
             {['1:1', '16:9'].map(r => (
               <button key={r} onClick={() => { setAspectMode(r); setSelection(null); }}
-                className={`py-2.5 rounded-lg border transition-all duration-150 text-xs font-bold ${
+                className={`py-m3-sm rounded-lg border transition-all duration-150 text-xs font-bold ${
                   aspectMode === r ? 'bg-accent/15 border-accent/60 text-white' : 'bg-transparent border-white/[0.12] text-surface-400 hover:border-white/12 hover:text-surface-200'
                 }`}>
                 {r === '1:1' ? '■ 1:1 Square' : '▬ 16:9 Wide'}
               </button>
             ))}
           </div>
-          <p className="text-[11px] text-surface-500 mt-1.5">Click and drag on the image to select an area</p>
+          <p className="text-[11px] text-surface-500 mt-m3-xs">Click and drag on the image to select an area</p>
         </div>
 
         {/* 3. Reference Images */}
         <div>
-          <div className="section-header"><span className="section-num">3</span> References <span className="text-surface-500 text-[11px] font-normal ml-1">({entityRefs.length}/10)</span></div>
-          <p className="text-[10px] text-surface-500 mb-2">Upload named images, use <span className="text-mint font-mono">@name</span> in prompt to include them.</p>
+          <div className="section-header"><span className="section-num">3</span> References <span className="text-surface-500 text-[11px] font-normal ml-m3-xs">({entityRefs.length}/10)</span></div>
+          <p className="text-[10px] text-surface-500 mb-m3-sm">Upload named images, use <span className="text-mint font-mono">@name</span> in prompt to include them.</p>
           {entityRefs.length > 0 && (
-            <div className="space-y-2 mb-2">
+            <div className="space-y-m3-sm mb-m3-sm">
               {entityRefs.map((ref, i) => (
-                <div key={i} className="flex items-start gap-2 p-2 rounded-lg bg-white/[0.04] border border-white/[0.08]">
+                <div key={i} className="flex items-start gap-m3-sm p-m3-sm rounded-lg bg-white/[0.04] border border-white/[0.08]">
                   <img src={`data:${ref.mimeType};base64,${ref.base64}`} alt="" className="w-10 h-10 rounded object-cover shrink-0" />
-                  <div className="flex-1 min-w-0 space-y-1">
+                  <div className="flex-1 min-w-0 space-y-m3-xs">
                     <input value={ref.name || ''} onChange={e => updateRefName(i, e.target.value)}
                       placeholder="Name (use @name)" className="w-full bg-transparent border-b border-white/[0.1] text-[11px] text-white py-0.5 outline-none focus:border-mint/40 font-mono" />
                     <input value={ref.instruction || ''} onChange={e => updateRefInstruction(i, e.target.value)}
@@ -1471,7 +1471,7 @@ export default function StitcherSubTab({ apiKey, onHistoryAdd, loadProjectId, on
             </div>
           )}
           {entityRefs.length < 10 && (
-            <label className="flex items-center justify-center gap-2 py-2.5 rounded-lg border border-dashed border-surface-600/20 cursor-pointer hover:border-accent/30 hover:bg-accent/[0.02] transition-all text-xs text-surface-500 font-medium">
+            <label className="flex items-center justify-center gap-m3-sm py-m3-sm rounded-lg border border-dashed border-surface-600/20 cursor-pointer hover:border-accent/30 hover:bg-accent/[0.02] transition-all text-xs text-surface-500 font-medium">
               <ImagePlus size={14} /> Add reference
               <input type="file" accept="image/*" className="hidden" onChange={async (e) => {
                 const file = e.target.files?.[0];
@@ -1499,8 +1499,8 @@ export default function StitcherSubTab({ apiKey, onHistoryAdd, loadProjectId, on
 
         {/* 5. Edge Feather */}
         <div>
-          <div className="section-header"><span className="section-num">5</span> Edge Feather <span className="text-surface-500 text-[11px] font-normal ml-1">(new edits)</span></div>
-          <div className="flex items-center gap-3">
+          <div className="section-header"><span className="section-num">5</span> Edge Feather <span className="text-surface-500 text-[11px] font-normal ml-m3-xs">(new edits)</span></div>
+          <div className="flex items-center gap-m3-ms">
             <input type="range" min={0} max={60} step={1} value={featherRadius}
               onChange={e => setFeatherRadius(Number(e.target.value))} className="flex-1 accent-mint h-1.5 cursor-pointer" />
             <span className="text-[11px] font-mono text-surface-400 w-10 text-right">{featherRadius}px</span>
@@ -1510,12 +1510,12 @@ export default function StitcherSubTab({ apiKey, onHistoryAdd, loadProjectId, on
         {/* 6. Model */}
         <div>
           <div className="section-header"><span className="section-num">6</span> Model</div>
-          <div className="grid grid-cols-3 gap-2">
+          <div className="grid grid-cols-3 gap-m3-sm">
             {Object.entries(MODELS).map(([k, m]) => {
               const d = MODEL_DISPLAY[k] || {};
               return (
                 <button key={k} onClick={() => setModelKey(k)}
-                  className={`flex items-center justify-center gap-1.5 py-3 rounded-lg border transition-all duration-150 text-[13px] font-semibold ${
+                  className={`flex items-center justify-center gap-m3-xs py-m3-ms rounded-lg border transition-all duration-150 text-[13px] font-semibold ${
                     modelKey === k ? 'bg-accent/15 border-accent/60 text-white' : 'bg-transparent border-white/[0.12] text-surface-400 hover:border-white/12 hover:text-surface-200'
                   }`}>
                   <span>{d.emoji}</span>{d.label || m.label}
@@ -1528,11 +1528,11 @@ export default function StitcherSubTab({ apiKey, onHistoryAdd, loadProjectId, on
         {/* 7. Resolution */}
         <div>
           <div className="section-header"><span className="section-num">7</span> Resolution</div>
-          <div className="grid grid-cols-4 gap-1.5">
+          <div className="grid grid-cols-4 gap-m3-xs">
             {[{ key: 'auto', label: 'Auto' }, { key: '1K', label: '1K' }, { key: '2K', label: '2K' }, { key: '4K', label: '4K' }].map(r => (
               <button key={r.key} onClick={() => setResolution(r.key)}
                 disabled={modelKey === 'standard' && r.key !== 'auto'}
-                className={`py-2 rounded-lg border text-xs font-semibold transition-all duration-150 ${
+                className={`py-m3-sm rounded-lg border text-xs font-semibold transition-all duration-150 ${
                   resolution === r.key
                     ? 'bg-accent/15 border-accent/60 text-white'
                     : 'bg-transparent border-white/[0.12] text-surface-500 hover:border-white/12 disabled:opacity-30 disabled:cursor-not-allowed'
@@ -1541,7 +1541,7 @@ export default function StitcherSubTab({ apiKey, onHistoryAdd, loadProjectId, on
               </button>
             ))}
           </div>
-          {modelKey === 'standard' && <p className="text-[10px] text-surface-500 mt-1">Resolution only available for Pro & Banana 2.</p>}
+          {modelKey === 'standard' && <p className="text-[10px] text-surface-500 mt-m3-xs">Resolution only available for Pro & Banana 2.</p>}
         </div>
 
         {/* 8. Generate */}
@@ -1551,7 +1551,7 @@ export default function StitcherSubTab({ apiKey, onHistoryAdd, loadProjectId, on
         {/* 9. Layers */}
         <div>
           <div className="section-header"><span className="section-num">9</span> Layers</div>
-          <div className="space-y-1">
+          <div className="space-y-m3-xs">
             {/* Layers in reverse order (newest on top) */}
             {[...layers].reverse().map((layer, ri) => {
               const actualIdx = layers.length - 1 - ri;
@@ -1568,7 +1568,7 @@ export default function StitcherSubTab({ apiKey, onHistoryAdd, loadProjectId, on
                       ? 'bg-blue-500/[0.08] border-blue-500/30 ring-1 ring-blue-500/20'
                       : layer.visible ? 'bg-white/[0.04] border-white/[0.10]' : 'bg-white/[0.02] border-white/[0.05] opacity-50'
                   }`}>
-                  <div className="flex items-center gap-1.5 px-2 py-1.5">
+                  <div className="flex items-center gap-m3-xs px-m3-sm py-m3-sm">
                     {/* Visibility */}
                     <button onClick={() => toggleLayer(layer.id)} className="shrink-0 p-1 rounded hover:bg-white/[0.08] transition-colors" title={layer.visible ? 'Hide' : 'Show'}>
                       {layer.visible ? <Eye size={12} className="text-mint" /> : <EyeOff size={12} className="text-surface-500" />}
@@ -1598,15 +1598,15 @@ export default function StitcherSubTab({ apiKey, onHistoryAdd, loadProjectId, on
                   </div>
                   {/* Per-layer feather + opacity sliders */}
                   {layer.visible && (
-                    <div className="space-y-1 px-2 pb-1.5">
-                      <div className="flex items-center gap-2">
+                    <div className="space-y-m3-xs px-m3-sm pb-m3-xs">
+                      <div className="flex items-center gap-m3-sm">
                         <span className="text-[9px] text-surface-500 w-10">Feather</span>
                         <input type="range" min={0} max={60} step={1} value={layer.featherRadius}
                           onChange={e => updateLayerFeather(layer.id, Number(e.target.value))}
                           className="flex-1 accent-mint h-1 cursor-pointer" />
                         <span className="text-[9px] font-mono text-surface-500 w-8 text-right">{layer.featherRadius}px</span>
                       </div>
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-m3-sm">
                         <span className="text-[9px] text-surface-500 w-10">Opacity</span>
                         <input type="range" min={0} max={100} step={1} value={layer.opacity ?? 100}
                           onChange={e => updateLayerOpacity(layer.id, Number(e.target.value))}
@@ -1617,18 +1617,18 @@ export default function StitcherSubTab({ apiKey, onHistoryAdd, loadProjectId, on
                   )}
                   {/* Expandable Transform Details */}
                   {layer.visible && (
-                    <div className="px-2 pb-1.5">
+                    <div className="px-m3-sm pb-m3-xs">
                       <button
                         onClick={(e) => { e.stopPropagation(); setExpandedLayerId(isExpanded ? null : layer.id); }}
-                        className="flex items-center gap-1 text-[9px] text-surface-500 hover:text-surface-300 transition-colors w-full"
+                        className="flex items-center gap-m3-xs text-[9px] text-surface-500 hover:text-surface-300 transition-colors w-full"
                       >
                         <ChevronRight size={9} className={`transition-transform ${isExpanded ? 'rotate-90' : ''}`} />
                         Transform
                       </button>
                       {isExpanded && (
-                        <div className="mt-1.5 space-y-1.5 animate-slide-down">
+                        <div className="mt-m3-xs space-y-m3-xs animate-slide-down">
                           {/* Position */}
-                          <div className="flex items-center gap-1">
+                          <div className="flex items-center gap-m3-xs">
                             <span className="text-[8px] text-surface-500 w-5">Pos</span>
                             <label className="flex items-center gap-0.5 flex-1">
                               <span className="text-[8px] text-surface-600">X</span>
@@ -1644,7 +1644,7 @@ export default function StitcherSubTab({ apiKey, onHistoryAdd, loadProjectId, on
                             </label>
                           </div>
                           {/* Size */}
-                          <div className="flex items-center gap-1">
+                          <div className="flex items-center gap-m3-xs">
                             <span className="text-[8px] text-surface-500 w-5">Size</span>
                             <label className="flex items-center gap-0.5 flex-1">
                               <span className="text-[8px] text-surface-600">W</span>
@@ -1660,7 +1660,7 @@ export default function StitcherSubTab({ apiKey, onHistoryAdd, loadProjectId, on
                             </label>
                           </div>
                           {/* Crop */}
-                          <div className="flex items-center gap-1">
+                          <div className="flex items-center gap-m3-xs">
                             <span className="text-[8px] text-surface-500 w-5">Crop</span>
                             {['top', 'right', 'bottom', 'left'].map(side => (
                               <label key={side} className="flex items-center gap-0.5 flex-1">
@@ -1672,21 +1672,21 @@ export default function StitcherSubTab({ apiKey, onHistoryAdd, loadProjectId, on
                             ))}
                           </div>
                           {/* Flip + Reset */}
-                          <div className="flex items-center gap-1 pt-0.5">
+                          <div className="flex items-center gap-m3-xs pt-0.5">
                             <button onClick={(e) => { e.stopPropagation(); toggleLayerFlipH(layer.id); }}
-                              className={`flex items-center gap-1 px-2 py-1 rounded text-[9px] font-semibold transition-colors ${
+                              className={`flex items-center gap-m3-xs px-2 py-1 rounded text-[9px] font-semibold transition-colors ${
                                 layer.flipH ? 'bg-blue-500/15 text-blue-400 border border-blue-500/25' : 'text-surface-500 hover:text-surface-300 bg-white/[0.04] border border-white/[0.06]'
                               }`}>
                               <FlipHorizontal size={9} /> H
                             </button>
                             <button onClick={(e) => { e.stopPropagation(); toggleLayerFlipV(layer.id); }}
-                              className={`flex items-center gap-1 px-2 py-1 rounded text-[9px] font-semibold transition-colors ${
+                              className={`flex items-center gap-m3-xs px-2 py-1 rounded text-[9px] font-semibold transition-colors ${
                                 layer.flipV ? 'bg-blue-500/15 text-blue-400 border border-blue-500/25' : 'text-surface-500 hover:text-surface-300 bg-white/[0.04] border border-white/[0.06]'
                               }`}>
                               <FlipVertical size={9} /> V
                             </button>
                             <button onClick={(e) => { e.stopPropagation(); resetLayerTransform(layer.id); }}
-                              className="flex items-center gap-1 px-2 py-1 rounded text-[9px] font-semibold text-surface-500 hover:text-surface-300 bg-white/[0.04] border border-white/[0.06] transition-colors ml-auto">
+                              className="flex items-center gap-m3-xs px-2 py-1 rounded text-[9px] font-semibold text-surface-500 hover:text-surface-300 bg-white/[0.04] border border-white/[0.06] transition-colors ml-auto">
                               <RotateCcw size={9} /> Reset
                             </button>
                           </div>
@@ -1696,10 +1696,10 @@ export default function StitcherSubTab({ apiKey, onHistoryAdd, loadProjectId, on
                   )}
                   {/* Color Adjust */}
                   {layer.visible && (
-                    <div className="px-2 pb-1.5">
+                    <div className="px-m3-sm pb-m3-xs">
                       <button
                         onClick={(e) => { e.stopPropagation(); setExpandedLayerId(expandedLayerId === layer.id + '_adj' ? null : layer.id + '_adj'); }}
-                        className="flex items-center gap-1 text-[9px] text-surface-500 hover:text-surface-300 transition-colors w-full"
+                        className="flex items-center gap-m3-xs text-[9px] text-surface-500 hover:text-surface-300 transition-colors w-full"
                       >
                         <ChevronRight size={9} className={`transition-transform ${expandedLayerId === layer.id + '_adj' ? 'rotate-90' : ''}`} />
                         <SunMedium size={9} /> Adjust
@@ -1714,8 +1714,8 @@ export default function StitcherSubTab({ apiKey, onHistoryAdd, loadProjectId, on
                           project.markDirty();
                         };
                         return (
-                          <div className="mt-1.5 space-y-1 animate-slide-down">
-                            <div className="flex items-center gap-1">
+                          <div className="mt-m3-xs space-y-m3-xs animate-slide-down">
+                            <div className="flex items-center gap-m3-xs">
                               <span className="text-[8px] text-surface-500 w-12">Brightness</span>
                               <input type="range" min={0} max={200} step={1} value={adj.brightness}
                                 onChange={e => updateAdj('brightness', Number(e.target.value))}
@@ -1723,7 +1723,7 @@ export default function StitcherSubTab({ apiKey, onHistoryAdd, loadProjectId, on
                                 className="flex-1 accent-amber-400 h-1 cursor-pointer" />
                               <span className="text-[8px] font-mono text-surface-500 w-7 text-right">{adj.brightness}%</span>
                             </div>
-                            <div className="flex items-center gap-1">
+                            <div className="flex items-center gap-m3-xs">
                               <span className="text-[8px] text-surface-500 w-12">Contrast</span>
                               <input type="range" min={0} max={200} step={1} value={adj.contrast}
                                 onChange={e => updateAdj('contrast', Number(e.target.value))}
@@ -1731,7 +1731,7 @@ export default function StitcherSubTab({ apiKey, onHistoryAdd, loadProjectId, on
                                 className="flex-1 accent-amber-400 h-1 cursor-pointer" />
                               <span className="text-[8px] font-mono text-surface-500 w-7 text-right">{adj.contrast}%</span>
                             </div>
-                            <div className="flex items-center gap-1">
+                            <div className="flex items-center gap-m3-xs">
                               <span className="text-[8px] text-surface-500 w-12">Saturation</span>
                               <input type="range" min={0} max={200} step={1} value={adj.saturation}
                                 onChange={e => updateAdj('saturation', Number(e.target.value))}
@@ -1750,8 +1750,8 @@ export default function StitcherSubTab({ apiKey, onHistoryAdd, loadProjectId, on
                   )}
                   {/* Mask indicator + reset */}
                   {layerMasksRef.current[layer.id] && layer.visible && (
-                    <div className="px-2 pb-1.5 flex items-center gap-1.5">
-                      <span className="text-[9px] text-purple-400 flex items-center gap-1"><EyeOff size={8} /> Masked</span>
+                    <div className="px-m3-sm pb-m3-xs flex items-center gap-m3-xs">
+                      <span className="text-[9px] text-purple-400 flex items-center gap-m3-xs"><EyeOff size={8} /> Masked</span>
                       <button onClick={(e) => {
                         e.stopPropagation();
                         pushPaintUndo();
@@ -1768,14 +1768,14 @@ export default function StitcherSubTab({ apiKey, onHistoryAdd, loadProjectId, on
               );
             })}
             {/* Base layer */}
-            <div className="flex items-center gap-1.5 px-2 py-1.5 rounded-lg bg-white/[0.03] border border-white/[0.06]">
+            <div className="flex items-center gap-m3-xs px-m3-sm py-m3-sm rounded-lg bg-white/[0.03] border border-white/[0.06]">
               <span className="text-[10px]">🔒</span>
               <span className="text-[10px] text-surface-400 font-medium">Base Image</span>
             </div>
           </div>
           {layers.length > 0 && (
             <button onClick={resetAll}
-              className="w-full mt-2 py-2 rounded-lg text-[11px] font-semibold text-red-400/70 hover:text-red-400 border border-transparent hover:border-red-500/15 hover:bg-red-500/5 transition-all flex items-center justify-center gap-1.5">
+              className="w-full mt-m3-sm py-m3-sm rounded-lg text-[11px] font-semibold text-red-400/70 hover:text-red-400 border border-transparent hover:border-red-500/15 hover:bg-red-500/5 transition-all flex items-center justify-center gap-m3-xs">
               <RotateCcw size={11} /> Reset All Layers
             </button>
           )}
@@ -1784,7 +1784,7 @@ export default function StitcherSubTab({ apiKey, onHistoryAdd, loadProjectId, on
         {/* Save to History */}
         {layers.length > 0 && (
           <button onClick={handleSave}
-            className="w-full py-3 rounded-lg bg-white/[0.08] border border-white/[0.12] text-white font-semibold text-sm flex items-center justify-center gap-2 hover:bg-white/[0.12] hover:border-white/[0.18] transition-all">
+            className="w-full py-m3-ms rounded-lg bg-white/[0.08] border border-white/[0.12] text-white font-semibold text-sm flex items-center justify-center gap-m3-sm hover:bg-white/[0.12] hover:border-white/[0.18] transition-all">
             <Save size={14} /> Save to History
           </button>
         )}
@@ -1796,10 +1796,10 @@ export default function StitcherSubTab({ apiKey, onHistoryAdd, loadProjectId, on
       <div className="studio-preview relative" ref={containerRef}>
         {/* Canvas Mode Toolbar */}
         {currentImage && (
-          <div className="absolute top-3 left-1/2 -translate-x-1/2 z-10 flex items-center gap-1 px-2 py-1.5 rounded-xl bg-black/60 backdrop-blur-md border border-white/[0.12] shadow-xl">
+          <div className="absolute top-m3-ms left-1/2 -translate-x-1/2 z-10 flex items-center gap-m3-xs px-m3-sm py-m3-xs rounded-xl bg-black/60 backdrop-blur-md border border-white/[0.12] shadow-xl">
             <button
               onClick={() => { setCanvasMode('select'); setSelectedLayerId(null); }}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[11px] font-bold transition-all ${
+              className={`flex items-center gap-m3-xs px-m3-md py-m3-xs rounded-lg text-[11px] font-bold transition-all ${
                 canvasMode === 'select'
                   ? 'bg-mint/15 text-mint border border-mint/30'
                   : 'text-surface-400 hover:text-white hover:bg-white/[0.08] border border-transparent'
@@ -1810,7 +1810,7 @@ export default function StitcherSubTab({ apiKey, onHistoryAdd, loadProjectId, on
             {layers.length > 0 && (
               <button
                 onClick={() => setCanvasMode('transform')}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[11px] font-bold transition-all ${
+                className={`flex items-center gap-m3-xs px-m3-md py-m3-xs rounded-lg text-[11px] font-bold transition-all ${
                   canvasMode === 'transform'
                     ? 'bg-blue-500/15 text-blue-400 border border-blue-500/30'
                     : 'text-surface-400 hover:text-white hover:bg-white/[0.08] border border-transparent'
@@ -1819,10 +1819,10 @@ export default function StitcherSubTab({ apiKey, onHistoryAdd, loadProjectId, on
                 <Move size={12} /> Transform
               </button>
             )}
-            <div className="w-px h-5 bg-white/[0.12] mx-0.5" />
+            <div className="w-px h-5 bg-white/[0.12] mx-m3-xs" />
             <button
               onClick={() => setCanvasMode('paint')}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[11px] font-bold transition-all ${
+              className={`flex items-center gap-m3-xs px-m3-md py-m3-xs rounded-lg text-[11px] font-bold transition-all ${
                 canvasMode === 'paint'
                   ? 'bg-amber-500/15 text-amber-400 border border-amber-500/30'
                   : 'text-surface-400 hover:text-white hover:bg-white/[0.08] border border-transparent'
@@ -1830,11 +1830,11 @@ export default function StitcherSubTab({ apiKey, onHistoryAdd, loadProjectId, on
             >
               <Paintbrush size={12} /> Paint
             </button>
-            <div className="w-px h-5 bg-white/[0.12] mx-0.5" />
+            <div className="w-px h-5 bg-white/[0.12] mx-m3-xs" />
             {/* Zoom Controls */}
-            <div className="flex items-center gap-0.5">
+            <div className="flex items-center gap-m3-xs">
               <button onClick={handleZoomOut}
-                className="p-1.5 rounded-lg text-surface-400 hover:text-white hover:bg-white/[0.08] transition-all"
+                className="p-m3-xs rounded-lg text-surface-400 hover:text-white hover:bg-white/[0.08] transition-all"
                 title="Zoom out"
               >
                 <ZoomOut size={12} />
@@ -1843,13 +1843,13 @@ export default function StitcherSubTab({ apiKey, onHistoryAdd, loadProjectId, on
                 {Math.round(zoomLevel * 100)}%
               </span>
               <button onClick={handleZoomIn}
-                className="p-1.5 rounded-lg text-surface-400 hover:text-white hover:bg-white/[0.08] transition-all"
+                className="p-m3-xs rounded-lg text-surface-400 hover:text-white hover:bg-white/[0.08] transition-all"
                 title="Zoom in"
               >
                 <ZoomIn size={12} />
               </button>
               <button onClick={handleZoomFit}
-                className="p-1.5 rounded-lg text-surface-400 hover:text-white hover:bg-white/[0.08] transition-all"
+                className="p-m3-xs rounded-lg text-surface-400 hover:text-white hover:bg-white/[0.08] transition-all"
                 title="Fit to screen"
               >
                 <Maximize size={12} />
@@ -1860,17 +1860,17 @@ export default function StitcherSubTab({ apiKey, onHistoryAdd, loadProjectId, on
 
         {/* Paint Controls Bar */}
         {currentImage && canvasMode === 'paint' && (
-          <div className="absolute top-14 left-1/2 -translate-x-1/2 z-10 flex items-center gap-2 px-3 py-2 rounded-xl bg-black/70 backdrop-blur-md border border-white/[0.12] shadow-xl">
+          <div className="absolute top-14 left-1/2 -translate-x-1/2 z-10 flex items-center gap-m3-sm px-m3-md py-m3-sm rounded-xl bg-black/70 backdrop-blur-md border border-white/[0.12] shadow-xl">
             {/* Tool toggle */}
-            <div className="flex items-center gap-0.5 p-0.5 rounded-lg bg-white/[0.06]">
+            <div className="flex items-center gap-m3-xs p-m3-xs rounded-lg bg-white/[0.06]">
               <button onClick={() => setPaintTool('brush')}
-                className={`flex items-center gap-1 px-2 py-1 rounded-md text-[10px] font-bold transition-all ${
+                className={`flex items-center gap-m3-xs px-m3-sm py-m3-xs rounded-md text-[10px] font-bold transition-all ${
                   paintTool === 'brush' ? 'bg-amber-500/20 text-amber-400' : 'text-surface-400 hover:text-white'
                 }`}>
                 <Paintbrush size={10} /> Brush
               </button>
               <button onClick={() => setPaintTool('eraser')}
-                className={`flex items-center gap-1 px-2 py-1 rounded-md text-[10px] font-bold transition-all ${
+                className={`flex items-center gap-m3-xs px-m3-sm py-m3-xs rounded-md text-[10px] font-bold transition-all ${
                   paintTool === 'eraser' ? 'bg-red-500/20 text-red-400' : 'text-surface-400 hover:text-white'
                 }`}>
                 <Eraser size={10} /> Eraser
@@ -1879,17 +1879,17 @@ export default function StitcherSubTab({ apiKey, onHistoryAdd, loadProjectId, on
 
             {/* Mask tools divider */}
             <div className="w-px h-6 bg-white/[0.10]" />
-            <div className="flex items-center gap-0.5 p-0.5 rounded-lg bg-white/[0.06]">
+            <div className="flex items-center gap-m3-xs p-m3-xs rounded-lg bg-white/[0.06]">
               <button onClick={() => setPaintTool('mask')}
                 title="Erase parts of selected layer"
-                className={`flex items-center gap-1 px-2 py-1 rounded-md text-[10px] font-bold transition-all ${
+                className={`flex items-center gap-m3-xs px-m3-sm py-m3-xs rounded-md text-[10px] font-bold transition-all ${
                   paintTool === 'mask' ? 'bg-purple-500/20 text-purple-400' : 'text-surface-400 hover:text-white'
                 }`}>
                 <EyeOff size={10} /> Mask
               </button>
               <button onClick={() => setPaintTool('unmask')}
                 title="Restore masked parts of selected layer"
-                className={`flex items-center gap-1 px-2 py-1 rounded-md text-[10px] font-bold transition-all ${
+                className={`flex items-center gap-m3-xs px-m3-sm py-m3-xs rounded-md text-[10px] font-bold transition-all ${
                   paintTool === 'unmask' ? 'bg-green-500/20 text-green-400' : 'text-surface-400 hover:text-white'
                 }`}>
                 <Eye size={10} /> Unmask
@@ -1901,7 +1901,7 @@ export default function StitcherSubTab({ apiKey, onHistoryAdd, loadProjectId, on
                 <div className="w-px h-6 bg-white/[0.10]" />
                 <button onClick={() => setShowMaskOverlay(!showMaskOverlay)}
                   title="Toggle red overlay of masked areas (Quick Mask mode)"
-                  className={`flex items-center gap-1.5 px-2 py-1 rounded-lg text-[10px] font-bold transition-all border ${
+                  className={`flex items-center gap-m3-xs px-m3-sm py-m3-xs rounded-lg text-[10px] font-bold transition-all border ${
                     showMaskOverlay
                       ? 'bg-red-500/15 text-red-400 border-red-500/30'
                       : 'bg-white/[0.04] text-surface-400 border-transparent hover:text-white hover:bg-white/[0.08]'
@@ -1919,7 +1919,7 @@ export default function StitcherSubTab({ apiKey, onHistoryAdd, loadProjectId, on
 
             {/* Color picker */}
             {paintTool === 'brush' && (
-              <label className="flex items-center gap-1 cursor-pointer">
+              <label className="flex items-center gap-m3-xs cursor-pointer">
                 <input type="color" value={brushColor} onChange={e => setBrushColor(e.target.value)}
                   className="w-6 h-6 rounded-md border border-white/[0.15] cursor-pointer bg-transparent"
                   style={{ appearance: 'none', WebkitAppearance: 'none', padding: 0 }} />
@@ -1927,7 +1927,7 @@ export default function StitcherSubTab({ apiKey, onHistoryAdd, loadProjectId, on
             )}
 
             {/* Size */}
-            <div className="flex items-center gap-1">
+            <div className="flex items-center gap-m3-xs">
               <Circle size={9} className="text-surface-500" />
               <input type="range" min={1} max={100} step={1} value={brushSize}
                 onChange={e => setBrushSize(Number(e.target.value))}
@@ -1936,7 +1936,7 @@ export default function StitcherSubTab({ apiKey, onHistoryAdd, loadProjectId, on
             </div>
 
             {/* Opacity */}
-            <div className="flex items-center gap-1">
+            <div className="flex items-center gap-m3-xs">
               <span className="text-[8px] text-surface-500">Op</span>
               <input type="range" min={1} max={100} step={1} value={brushOpacity}
                 onChange={e => setBrushOpacity(Number(e.target.value))}
@@ -1945,7 +1945,7 @@ export default function StitcherSubTab({ apiKey, onHistoryAdd, loadProjectId, on
             </div>
 
             {/* Hardness */}
-            <div className="flex items-center gap-1">
+            <div className="flex items-center gap-m3-xs">
               <span className="text-[8px] text-surface-500">Hd</span>
               <input type="range" min={0} max={100} step={5} value={brushHardness}
                 onChange={e => setBrushHardness(Number(e.target.value))}
@@ -1958,15 +1958,15 @@ export default function StitcherSubTab({ apiKey, onHistoryAdd, loadProjectId, on
 
             {/* Undo / Redo / Clear */}
             <button onClick={paintUndo} disabled={undoStackRef.current.length === 0}
-              className="p-1.5 rounded-md text-surface-400 hover:text-white hover:bg-white/[0.08] disabled:opacity-30 transition-colors" title="Undo (Ctrl+Z)">
+              className="p-m3-xs rounded-md text-surface-400 hover:text-white hover:bg-white/[0.08] disabled:opacity-30 transition-colors" title="Undo (Ctrl+Z)">
               <Undo size={12} />
             </button>
             <button onClick={paintRedo} disabled={redoStackRef.current.length === 0}
-              className="p-1.5 rounded-md text-surface-400 hover:text-white hover:bg-white/[0.08] disabled:opacity-30 transition-colors" title="Redo (Ctrl+Y)">
+              className="p-m3-xs rounded-md text-surface-400 hover:text-white hover:bg-white/[0.08] disabled:opacity-30 transition-colors" title="Redo (Ctrl+Y)">
               <Redo size={12} />
             </button>
             <button onClick={clearPaintOverlay}
-              className="p-1.5 rounded-md text-surface-400 hover:text-red-400 hover:bg-red-500/10 transition-colors" title="Clear paint overlay">
+              className="p-m3-xs rounded-md text-surface-400 hover:text-red-400 hover:bg-red-500/10 transition-colors" title="Clear paint overlay">
               <Trash2 size={12} />
             </button>
           </div>
@@ -1974,7 +1974,7 @@ export default function StitcherSubTab({ apiKey, onHistoryAdd, loadProjectId, on
 
         {/* Mask tool hint */}
         {currentImage && canvasMode === 'paint' && (paintTool === 'mask' || paintTool === 'unmask') && (
-          <div className={`absolute z-10 left-1/2 -translate-x-1/2 px-3 py-1 rounded-lg text-[10px] font-semibold ${
+          <div className={`absolute z-10 left-1/2 -translate-x-1/2 px-m3-md py-m3-xs rounded-lg text-[10px] font-semibold ${
             selectedLayerId
               ? 'bg-purple-500/15 text-purple-300 border border-purple-500/20'
               : 'bg-red-500/15 text-red-300 border border-red-500/20'
@@ -1987,7 +1987,7 @@ export default function StitcherSubTab({ apiKey, onHistoryAdd, loadProjectId, on
         )}
 
         {currentImage ? (
-          <div className="flex flex-col items-center justify-center w-full h-full p-4 gap-3"
+          <div className="flex flex-col items-center justify-center w-full h-full p-m3-md gap-m3-sm"
             style={{ paddingTop: canvasMode === 'paint' ? '5rem' : '3.5rem', overflow: 'hidden' }}
             onWheel={handleWheel}
           >
@@ -2009,7 +2009,7 @@ export default function StitcherSubTab({ apiKey, onHistoryAdd, loadProjectId, on
               />
             </div>
             <button onClick={() => downloadImage(currentImage.base64, currentImage.mimeType, `sticherr_${Date.now()}.png`)}
-              className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white/[0.08] border border-white/[0.12] text-surface-300 text-xs font-semibold hover:bg-white/[0.12] hover:text-white transition-all">
+              className="flex items-center gap-m3-xs px-m3-md py-m3-sm rounded-lg bg-white/[0.08] border border-white/[0.12] text-surface-300 text-xs font-semibold hover:bg-white/[0.12] hover:text-white transition-all">
               <Download size={13} /> Download
             </button>
           </div>

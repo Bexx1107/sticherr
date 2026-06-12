@@ -84,7 +84,7 @@ export default function ProjectBrowser({
 
   const modal = (
     <div
-      className="fixed inset-0 z-[9999] flex items-center justify-center p-4"
+      className="fixed inset-0 z-[9999] flex items-center justify-center p-m3-md"
       onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
     >
       {/* Backdrop */}
@@ -96,8 +96,8 @@ export default function ProjectBrowser({
         style={{ background: 'linear-gradient(180deg, rgba(15,23,42,0.98) 0%, rgba(2,6,23,0.99) 100%)' }}
       >
         {/* Header */}
-        <div className="flex items-center justify-between px-5 py-4 border-b border-white/[0.12]">
-          <div className="flex items-center gap-3">
+        <div className="flex items-center justify-between px-m3-ml py-m3-md border-b border-white/[0.12]">
+          <div className="flex items-center gap-m3-ms">
             <div className="w-9 h-9 rounded-xl bg-mint/10 flex items-center justify-center">
               <FolderOpen size={18} className="text-mint" />
             </div>
@@ -106,22 +106,22 @@ export default function ProjectBrowser({
               <p className="text-[11px] text-surface-500 font-medium">{filtered.length} saved project{filtered.length !== 1 ? 's' : ''}</p>
             </div>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-m3-sm">
             <button
               onClick={handleImportClick}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/[0.07] border border-white/[0.10] text-surface-300 text-[11px] font-semibold hover:bg-white/[0.12] hover:text-white transition-all"
+              className="flex items-center gap-m3-xs px-m3-ms py-m3-xs rounded-lg bg-white/[0.07] border border-white/[0.10] text-surface-300 text-[11px] font-semibold hover:bg-white/[0.12] hover:text-white transition-all"
             >
               <Upload size={12} /> Import .dmd
             </button>
             <input ref={fileInputRef} type="file" accept=".dmd,.json" className="hidden" onChange={handleFileChange} />
-            <button onClick={onClose} className="p-1.5 rounded-lg hover:bg-white/[0.08] text-surface-400 hover:text-white transition-colors">
+            <button onClick={onClose} className="p-m3-xs rounded-lg hover:bg-white/[0.08] text-surface-400 hover:text-white transition-colors">
               <X size={18} />
             </button>
           </div>
         </div>
 
         {/* Search */}
-        <div className="px-5 py-3 border-b border-white/[0.08]">
+        <div className="px-m3-ml py-m3-ms border-b border-white/[0.08]">
           <div className="relative">
             <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-surface-500" />
             <input
@@ -135,16 +135,16 @@ export default function ProjectBrowser({
         </div>
 
         {/* Project Grid */}
-        <div className="flex-1 overflow-y-auto p-5">
+        <div className="flex-1 overflow-y-auto p-m3-ml">
           {isLoading ? (
-            <div className="grid grid-cols-3 gap-3">
+            <div className="grid grid-cols-3 gap-m3-ms">
               {Array.from({ length: 6 }).map((_, i) => (
                 <div key={i} className="aspect-[4/3] rounded-xl bg-white/[0.04] animate-pulse" />
               ))}
             </div>
           ) : filtered.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-16 text-center">
-              <div className="w-14 h-14 rounded-2xl bg-white/[0.05] flex items-center justify-center mb-4">
+              <div className="w-14 h-14 rounded-2xl bg-white/[0.05] flex items-center justify-center mb-m3-md">
                 <FolderOpen size={24} className="text-surface-500" />
               </div>
               <p className="text-sm font-semibold text-surface-400 mb-1">
@@ -155,7 +155,7 @@ export default function ProjectBrowser({
               </p>
             </div>
           ) : (
-            <div className="grid grid-cols-3 gap-3">
+            <div className="grid grid-cols-3 gap-m3-ms">
               {filtered.map(project => (
                 <div
                   key={project.id}
@@ -173,7 +173,7 @@ export default function ProjectBrowser({
                   </div>
 
                   {/* Info */}
-                  <div className="p-3">
+                  <div className="p-m3-ms">
                     {renamingId === project.id ? (
                       <div className="flex items-center gap-1">
                         <input
@@ -191,35 +191,35 @@ export default function ProjectBrowser({
                     ) : (
                       <h3 className="text-xs font-bold text-surface-200 truncate">{project.name || 'Untitled'}</h3>
                     )}
-                    <div className="flex items-center gap-2 mt-1.5 text-[10px] text-surface-500">
-                      <span className="flex items-center gap-1"><Layers size={9} />{project.layerCount || 0} layers</span>
+                    <div className="flex items-center gap-m3-sm mt-m3-xs text-[10px] text-surface-500">
+                      <span className="flex items-center gap-m3-xs"><Layers size={9} />{project.layerCount || 0} layers</span>
                       <span>·</span>
-                      <span className="flex items-center gap-1"><Clock size={9} />{timeAgo(project.updatedAt)}</span>
+                      <span className="flex items-center gap-m3-xs"><Clock size={9} />{timeAgo(project.updatedAt)}</span>
                     </div>
                   </div>
 
                   {/* Hover actions */}
                   <div
-                    className="absolute top-2 right-2 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                    className="absolute top-m3-sm right-m3-sm flex items-center gap-m3-xs opacity-0 group-hover:opacity-100 transition-opacity"
                     onClick={e => e.stopPropagation()}
                   >
                     <button
                       onClick={() => { setRenamingId(project.id); setRenameValue(project.name || ''); }}
-                      className="p-1.5 rounded-md bg-black/60 backdrop-blur-sm text-surface-300 hover:text-white transition-colors"
+                      className="p-m3-xs rounded-md bg-black/60 backdrop-blur-sm text-surface-300 hover:text-white transition-colors"
                       title="Rename"
                     >
                       <Pencil size={11} />
                     </button>
                     <button
                       onClick={() => onExport?.(project.id)}
-                      className="p-1.5 rounded-md bg-black/60 backdrop-blur-sm text-surface-300 hover:text-mint transition-colors"
+                      className="p-m3-xs rounded-md bg-black/60 backdrop-blur-sm text-surface-300 hover:text-mint transition-colors"
                       title="Export .dmd"
                     >
                       <FileDown size={11} />
                     </button>
                     <button
                       onClick={() => handleDelete(project.id)}
-                      className={`p-1.5 rounded-md backdrop-blur-sm transition-colors ${
+                      className={`p-m3-xs rounded-md backdrop-blur-sm transition-colors ${
                         confirmDeleteId === project.id
                           ? 'bg-red-500/80 text-white'
                           : 'bg-black/60 text-surface-300 hover:text-red-400'

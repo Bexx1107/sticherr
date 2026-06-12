@@ -56,33 +56,33 @@ export default function AdvancedSettings({ settings, setSeed, setSafetyTolerance
     <div className="advanced-settings-panel">
       <button
         onClick={() => setOpen(!open)}
-        className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg border transition-all duration-200 text-xs font-semibold ${
+        className={`w-full flex items-center justify-between px-m3-ms py-m3-xs rounded-lg border transition-all duration-200 text-xs font-semibold ${
           open 
             ? 'bg-white/[0.14] border-white/[0.10] text-surface-200' 
             : 'bg-transparent border-white/[0.07] text-surface-500 hover:text-surface-300 hover:border-white/[0.14]'
         }`}
       >
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-m3-sm">
           <Settings2 size={13} className={isModified ? 'text-accent' : ''} />
           <span>Advanced Settings</span>
-          {isModified && <span className="badge badge-accent text-[9px] px-1.5 py-0 bg-emerald-500/20 text-emerald-400">Modified</span>}
+          {isModified && <span className="badge badge-accent text-[9px] px-m3-xs py-0 bg-emerald-500/20 text-emerald-400">Modified</span>}
         </div>
         {open ? <ChevronDown size={13} /> : <ChevronRight size={13} />}
       </button>
 
       {open && (
-        <div className="mt-2 space-y-4 p-3 rounded-lg bg-white/[0.07] border border-white/[0.07] animate-fade-in">
+        <div className="mt-m3-sm space-y-m3-md p-m3-ms rounded-lg bg-white/[0.07] border border-white/[0.07] animate-fade-in">
           {/* Reset button */}
           {isModified && (
             <button onClick={reset}
-              className="flex items-center gap-1.5 text-[11px] text-surface-500 hover:text-emerald-400 transition-colors ml-auto">
+              className="flex items-center gap-m3-xs text-[11px] text-surface-500 hover:text-emerald-400 transition-colors ml-auto">
               <RotateCcw size={11} /> Reset to defaults
             </button>
           )}
 
           {/* Seed Input */}
           <div>
-            <div className="flex items-center justify-between mb-1.5">
+            <div className="flex items-center justify-between mb-m3-xs">
               <label className="text-[11px] text-surface-400 uppercase tracking-wider font-bold">Seed</label>
               {settings.seed !== '' && (
                 <button onClick={() => setSeed('')} className="text-[10px] text-surface-500 hover:text-emerald-400 transition-colors">
@@ -106,15 +106,15 @@ export default function AdvancedSettings({ settings, setSeed, setSafetyTolerance
                 🎲 Random
               </button>
             </div>
-            <p className="text-[9px] text-surface-500 mt-1">Set a seed for reproducible results. Leave empty for random.</p>
+            <p className="text-[9px] text-surface-500 mt-m3-xs">Set a seed for reproducible results. Leave empty for random.</p>
           </div>
 
           {/* Safety Tolerance Select Buttons */}
           <div>
-            <label className="text-[11px] text-surface-400 uppercase tracking-wider font-bold block mb-1.5">
+            <label className="text-[11px] text-surface-400 uppercase tracking-wider font-bold block mb-m3-xs">
               Safety Block Threshold
             </label>
-            <div className="grid grid-cols-4 gap-1 p-0.5 rounded-lg bg-white/[0.04] border border-white/[0.06]">
+            <div className="grid grid-cols-4 gap-m3-xs p-m3-xs rounded-lg bg-white/[0.04] border border-white/[0.06]">
               {['1', '2', '3', '4'].map(val => (
                 <button
                   key={val}
@@ -130,11 +130,11 @@ export default function AdvancedSettings({ settings, setSeed, setSafetyTolerance
                 </button>
               ))}
             </div>
-            <p className="text-[9px] text-surface-500 mt-1">Configures content filtering strictness for generated outputs.</p>
+            <p className="text-[9px] text-surface-500 mt-m3-xs">Configures content filtering strictness for generated outputs.</p>
           </div>
 
           {/* Web Search Grounding Toggle */}
-          <div className="flex items-center justify-between p-2.5 rounded-lg bg-white/[0.03] border border-white/[0.06]">
+          <div className="flex items-center justify-between p-m3-ms rounded-lg bg-white/[0.03] border border-white/[0.06]">
             <div>
               <label className="text-[11px] font-bold text-surface-300 block">Web Search Grounding</label>
               <span className="text-[9px] text-surface-500 block">Enables live Google search results to guide prompt generation</span>

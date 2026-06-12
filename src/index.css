@@ -45,6 +45,29 @@
   --color-danger-light: #F87171;
   --color-warning: #F59E0B;
   --color-success: #10B981;
+
+  /* ── Spacing Tokens (Material Design 3 Scale) ── */
+  --md-sys-spacing-none: 0px;
+  --md-sys-spacing-xs: 4px;
+  --md-sys-spacing-sm: 8px;
+  --md-sys-spacing-ms: 12px;
+  --md-sys-spacing-md: 16px;
+  --md-sys-spacing-ml: 24px;
+  --md-sys-spacing-lg: 32px;
+  --md-sys-spacing-xl: 48px;
+  --md-sys-spacing-2xl: 64px;
+  --md-sys-spacing-3xl: 80px;
+
+  --spacing-m3-none: var(--md-sys-spacing-none);
+  --spacing-m3-xs: var(--md-sys-spacing-xs);
+  --spacing-m3-sm: var(--md-sys-spacing-sm);
+  --spacing-m3-ms: var(--md-sys-spacing-ms);
+  --spacing-m3-md: var(--md-sys-spacing-md);
+  --spacing-m3-ml: var(--md-sys-spacing-ml);
+  --spacing-m3-lg: var(--md-sys-spacing-lg);
+  --spacing-m3-xl: var(--md-sys-spacing-xl);
+  --spacing-m3-2xl: var(--md-sys-spacing-2xl);
+  --spacing-m3-3xl: var(--md-sys-spacing-3xl);
 }
 
 /* ── Reset ─────────────────────────────────────── */
@@ -180,7 +203,7 @@ textarea:focus-visible, input:focus-visible, select:focus-visible {
   background: rgba(2,6,23,0.5);
   border: 1px solid rgba(16,185,129,0.18);
   border-radius: 8px;
-  padding: 10px 13px;
+  padding: var(--md-sys-spacing-sm) var(--md-sys-spacing-ms);
   font-size: 0.8125rem;
   color: white;
   transition: all 0.2s cubic-bezier(0.22, 1, 0.36, 1);
@@ -311,7 +334,7 @@ textarea.input-field { resize: vertical; min-height: 60px; line-height: 1.5; }
   flex-shrink: 0;
   overflow-y: auto;
   border-right: 1px solid rgba(16,185,129,0.15);
-  padding: 24px 22px;
+  padding: var(--md-sys-spacing-ml);
   background: rgba(15,23,42,0.45);
 }
 .studio-preview {
@@ -321,7 +344,7 @@ textarea.input-field { resize: vertical; min-height: 60px; line-height: 1.5; }
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  padding: 24px 28px;
+  padding: var(--md-sys-spacing-ml) var(--md-sys-spacing-lg);
   background: rgba(2,6,23,0.5);
 }
 
@@ -375,12 +398,12 @@ textarea.input-field { resize: vertical; min-height: 60px; line-height: 1.5; }
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 11px 14px;
+  padding: var(--md-sys-spacing-ms) var(--md-sys-spacing-md);
   cursor: pointer;
   transition: background 0.2s;
 }
 .collapsible-header:hover { background: rgba(16,185,129,0.08); }
-.collapsible-body { padding: 0 14px 14px; }
+.collapsible-body { padding: 0 var(--md-sys-spacing-md) var(--md-sys-spacing-md); }
 
 /* ── Toggle Switch ──────────────────────────────── */
 .toggle-switch {
@@ -477,7 +500,7 @@ textarea.input-field { resize: vertical; min-height: 60px; line-height: 1.5; }
   align-items: center;
   justify-content: center;
   text-align: center;
-  padding: 60px 24px;
+  padding: var(--md-sys-spacing-2xl) var(--md-sys-spacing-ml);
 }
 .empty-state-icon {
   width: 52px; height: 52px;
@@ -485,7 +508,7 @@ textarea.input-field { resize: vertical; min-height: 60px; line-height: 1.5; }
   background: rgba(16,185,129,0.1);
   border: 1px solid rgba(16,185,129,0.2);
   display: flex; align-items: center; justify-content: center;
-  margin-bottom: 16px;
+  margin-bottom: var(--md-sys-spacing-md);
   box-shadow: 0 2px 8px rgba(0,0,0,0.15);
 }
 
@@ -494,8 +517,8 @@ textarea.input-field { resize: vertical; min-height: 60px; line-height: 1.5; }
   background: rgba(15,23,42,0.5);
   border: 1px solid rgba(16,185,129,0.18);
   border-radius: 10px;
-  padding: 12px 14px;
-  margin-bottom: 8px;
+  padding: var(--md-sys-spacing-ms) var(--md-sys-spacing-md);
+  margin-bottom: var(--md-sys-spacing-sm);
 }
 .chain-bar {
   height: 3px;
@@ -514,7 +537,7 @@ textarea.input-field { resize: vertical; min-height: 60px; line-height: 1.5; }
 .chain-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 12px;
+  gap: var(--md-sys-spacing-ms);
 }
 
 /* ── Skeleton Loaders ──────────────────────────── */
@@ -684,7 +707,7 @@ input[type="color"]::-webkit-color-swatch {
     max-width: 100% !important;
     border-right: none;
     border-bottom: 1px solid rgba(16,185,129,0.15);
-    padding: 16px;
+    padding: var(--md-sys-spacing-md) !important;
   }
   
   /* Give the canvas preview a fixed height so it's fully visible & interactable */
@@ -692,7 +715,7 @@ input[type="color"]::-webkit-color-swatch {
     width: 100% !important;
     height: 480px !important;
     min-height: 400px !important;
-    padding: 16px;
+    padding: var(--md-sys-spacing-md) !important;
     flex-shrink: 0;
   }
   
