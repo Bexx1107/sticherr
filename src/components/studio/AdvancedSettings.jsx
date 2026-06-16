@@ -56,36 +56,36 @@ export default function AdvancedSettings({ settings, setSeed, setSafetyTolerance
     <div className="advanced-settings-panel">
       <button
         onClick={() => setOpen(!open)}
-        className={`w-full flex items-center justify-between px-m3-ms py-m3-xs rounded-lg border transition-all duration-200 text-xs font-semibold ${
+        className={`w-full flex items-center justify-between px-m3-md py-m3-sm rounded-xl border transition-all duration-200 text-xs font-bold cursor-pointer ${
           open 
-            ? 'bg-white/[0.14] border-white/[0.10] text-surface-200' 
-            : 'bg-transparent border-white/[0.07] text-surface-500 hover:text-surface-300 hover:border-white/[0.14]'
+            ? 'bg-slate-900 border-mint/35 text-white shadow-sm' 
+            : 'bg-slate-900/50 border-white/10 text-surface-300 hover:bg-slate-900 hover:text-white hover:border-white/20'
         }`}
       >
         <div className="flex items-center gap-m3-sm">
-          <Settings2 size={13} className={isModified ? 'text-accent' : ''} />
-          <span>Advanced Settings</span>
-          {isModified && <span className="badge badge-accent text-[9px] px-m3-xs py-0 bg-emerald-500/20 text-emerald-400">Modified</span>}
+          <Settings2 size={14} className={isModified ? 'text-mint' : 'text-surface-400'} />
+          <span>Advanced Generation Config</span>
+          {isModified && <span className="badge badge-accent text-[9px] px-2 py-0.5 bg-emerald-500/20 text-emerald-400 font-bold border border-emerald-500/40">Modified</span>}
         </div>
-        {open ? <ChevronDown size={13} /> : <ChevronRight size={13} />}
+        {open ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
       </button>
 
       {open && (
-        <div className="mt-m3-sm space-y-m3-md p-m3-ms rounded-lg bg-white/[0.07] border border-white/[0.07] animate-fade-in">
+        <div className="mt-m3-sm space-y-m3-md p-m3-md rounded-xl bg-slate-950/80 border border-white/10 shadow-lg animate-fade-in">
           {/* Reset button */}
           {isModified && (
             <button onClick={reset}
-              className="flex items-center gap-m3-xs text-[11px] text-surface-500 hover:text-emerald-400 transition-colors ml-auto">
-              <RotateCcw size={11} /> Reset to defaults
+              className="flex items-center gap-m3-xs text-[11px] font-bold text-surface-400 hover:text-mint transition-colors ml-auto cursor-pointer">
+              <RotateCcw size={12} /> Reset to defaults
             </button>
           )}
 
           {/* Seed Input */}
-          <div>
-            <div className="flex items-center justify-between mb-m3-xs">
-              <label className="text-[11px] text-surface-400 uppercase tracking-wider font-bold">Seed</label>
+          <div className="space-y-m3-xs">
+            <div className="flex items-center justify-between">
+              <label className="text-[10px] text-surface-400 uppercase tracking-wider font-extrabold">Seed</label>
               {settings.seed !== '' && (
-                <button onClick={() => setSeed('')} className="text-[10px] text-surface-500 hover:text-emerald-400 transition-colors">
+                <button onClick={() => setSeed('')} className="text-[10px] font-bold text-surface-400 hover:text-red-400 transition-colors cursor-pointer">
                   Clear
                 </button>
               )}
@@ -96,33 +96,33 @@ export default function AdvancedSettings({ settings, setSeed, setSafetyTolerance
                 value={settings.seed}
                 onChange={e => setSeed(e.target.value)}
                 placeholder="Random (empty)"
-                className="input-field font-mono text-xs w-full pr-16 bg-black/40 border border-white/[0.12] rounded-lg p-2 text-white outline-none focus:border-emerald-500/40"
+                className="input-field font-mono text-xs w-full pr-20 bg-black/40 border border-white/10 rounded-lg p-2.5 text-white outline-none focus:border-mint/50"
               />
               <button
                 type="button"
                 onClick={() => setSeed(Math.floor(Math.random() * 2147483647).toString())}
-                className="absolute right-1 top-1 bottom-1 px-2 text-[9px] font-bold rounded bg-white/[0.08] hover:bg-white/[0.15] text-surface-300 hover:text-white transition-all"
+                className="absolute right-1 top-1 bottom-1 px-3 text-[10px] font-extrabold rounded-md bg-white/[0.08] hover:bg-white/[0.15] text-white transition-all cursor-pointer border border-white/10"
               >
                 🎲 Random
               </button>
             </div>
-            <p className="text-[9px] text-surface-500 mt-m3-xs">Set a seed for reproducible results. Leave empty for random.</p>
+            <p className="text-[9px] text-surface-500">Set a specific seed value for reproducible edit generation.</p>
           </div>
 
           {/* Safety Tolerance Select Buttons */}
-          <div>
-            <label className="text-[11px] text-surface-400 uppercase tracking-wider font-bold block mb-m3-xs">
+          <div className="space-y-m3-xs">
+            <label className="text-[10px] text-surface-400 uppercase tracking-wider font-extrabold block">
               Safety Block Threshold
             </label>
-            <div className="grid grid-cols-4 gap-m3-xs p-m3-xs rounded-lg bg-white/[0.04] border border-white/[0.06]">
+            <div className="grid grid-cols-4 gap-m3-sm p-m3-xs rounded-lg bg-black/40 border border-white/10">
               {['1', '2', '3', '4'].map(val => (
                 <button
                   key={val}
                   type="button"
                   onClick={() => setSafetyTolerance(val)}
-                  className={`py-1 rounded-md text-[10px] font-bold transition-all cursor-pointer ${
+                  className={`py-1.5 rounded-md text-[10px] font-bold transition-all cursor-pointer ${
                     settings.safetyTolerance === val
-                      ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
+                      ? 'bg-mint/20 text-white border border-mint/45 shadow-sm'
                       : 'text-surface-400 hover:text-white hover:bg-white/[0.04] border border-transparent'
                   }`}
                 >
@@ -130,23 +130,23 @@ export default function AdvancedSettings({ settings, setSeed, setSafetyTolerance
                 </button>
               ))}
             </div>
-            <p className="text-[9px] text-surface-500 mt-m3-xs">Configures content filtering strictness for generated outputs.</p>
+            <p className="text-[9px] text-surface-500">Configures content filtering strictness for generated outputs.</p>
           </div>
 
           {/* Web Search Grounding Toggle */}
-          <div className="flex items-center justify-between p-m3-ms rounded-lg bg-white/[0.03] border border-white/[0.06]">
-            <div>
-              <label className="text-[11px] font-bold text-surface-300 block">Web Search Grounding</label>
-              <span className="text-[9px] text-surface-500 block">Enables live Google search results to guide prompt generation</span>
+          <div className="flex items-center justify-between p-m3-md rounded-xl bg-black/40 border border-white/10">
+            <div className="space-y-0.5 pr-2">
+              <label className="text-[11px] font-bold text-white block">Web Search Grounding</label>
+              <span className="text-[9px] text-surface-500 block leading-tight">Enables live Google search results to guide prompt generation</span>
             </div>
-            <label className="relative inline-flex items-center cursor-pointer">
+            <label className="relative inline-flex items-center cursor-pointer shrink-0">
               <input 
                 type="checkbox" 
                 checked={settings.enableWebSearch} 
                 onChange={e => setEnableWebSearch(e.target.checked)}
                 className="sr-only peer" 
               />
-              <div className="w-9 h-5 bg-white/[0.10] peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-surface-400 after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-emerald-500 peer-checked:after:bg-white peer-checked:after:border-transparent"></div>
+              <div className="w-9 h-5 bg-white/[0.10] peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-surface-400 after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-mint peer-checked:after:bg-slate-950 peer-checked:after:border-transparent"></div>
             </label>
           </div>
         </div>

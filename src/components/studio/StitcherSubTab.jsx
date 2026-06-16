@@ -1,6 +1,6 @@
 import { useState, useCallback, useRef, useEffect } from 'react';
 import { usePersistedState, usePersistedImage, usePersistedImages } from '../../lib/usePersistedState';
-import { Scissors, Undo2, RotateCcw, Save, Download, Eye, EyeOff, Trash2, ChevronUp, ChevronDown, RefreshCw, ImagePlus, X, FolderOpen, FileDown, Upload, CheckCircle, Loader2, MousePointer2, Move, FlipHorizontal, FlipVertical, ChevronRight, Paintbrush, Eraser, Undo, Redo, Circle, SunMedium, ZoomIn, ZoomOut, Maximize } from 'lucide-react';
+import { Scissors, Undo2, RotateCcw, Save, Download, Eye, EyeOff, Trash2, ChevronUp, ChevronDown, RefreshCw, ImagePlus, X, FolderOpen, FileDown, Upload, CheckCircle, Loader2, MousePointer2, Move, FlipHorizontal, FlipVertical, ChevronRight, Paintbrush, Eraser, Undo, Redo, Circle, SunMedium, ZoomIn, ZoomOut, Maximize, Layers } from 'lucide-react';
 import { ImageUpload, ErrorBanner, LoadingButton } from '../Shared';
 import { stitcherEdit } from '../../lib/floyo';
 import { resizeImage, downloadImage } from '../../lib/imageUtils';
@@ -704,14 +704,18 @@ export default function StitcherSubTab({ apiKey, onHistoryAdd, loadProjectId, on
     const container = containerRef.current;
     const img = imgRef.current;
     if (!canvas || !container || !img) return;
-    const baseScale = Math.min(container.clientWidth / img.naturalWidth, container.clientHeight / img.naturalHeight, 1);
+
+    const availableWidth = container.clientWidth - 40;
+    const availableHeight = container.clientHeight - (canvasMode === 'paint' ? 180 : 150);
+    const baseScale = Math.min(availableWidth / img.naturalWidth, availableHeight / img.naturalHeight, 1);
+
     baseScaleRef.current = baseScale;
     const scale = baseScale * zoomLevel;
     scaleRef.current = scale;
     canvas.width = Math.floor(img.naturalWidth * scale);
     canvas.height = Math.floor(img.naturalHeight * scale);
     redraw();
-  }, [zoomLevel]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [zoomLevel, canvasMode]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     const container = containerRef.current;
@@ -853,12 +857,21 @@ export default function StitcherSubTab({ apiKey, onHistoryAdd, loadProjectId, on
   }, []);
 
   // ── Wheel zoom handler ──
-  const handleWheel = useCallback((e) => {
-    if (!e.ctrlKey && !e.metaKey) return;
-    if (e.cancelable) e.preventDefault();
-    const delta = -e.deltaY;
-    const factor = delta > 0 ? 1.1 : 1 / 1.1;
-    setZoomLevel(prev => Math.min(Math.max(prev * factor, 0.25), 8));
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    const handleNativeWheel = (e) => {
+      e.preventDefault();
+      const delta = -e.deltaY;
+      const factor = delta > 0 ? 1.08 : 1 / 1.08;
+      setZoomLevel(prev => Math.min(Math.max(prev * factor, 0.25), 8));
+    };
+
+    container.addEventListener('wheel', handleNativeWheel, { passive: false });
+    return () => {
+      container.removeEventListener('wheel', handleNativeWheel);
+    };
   }, []);
 
   // ── Pan handlers (middle-click or space+drag) ──
@@ -1355,52 +1368,52 @@ export default function StitcherSubTab({ apiKey, onHistoryAdd, loadProjectId, on
   // ── Render ──
   return (
     <div className="studio-split">
-      <div className="studio-controls space-y-m3-ml">
+      <div className="studio-controls">
         {/* Project Bar */}
-        <div className="rounded-xl border border-white/[0.10] bg-white/[0.03] p-m3-ms space-y-m3-sm">
+        <div className="rounded-xl border border-mint/25 bg-slate-950/80 p-m3-md space-y-m3-md shadow-lg">
           <div className="flex items-center gap-m3-sm">
             <button
               onClick={() => setShowProjectBrowser(true)}
-              className="flex items-center gap-m3-xs px-m3-ms py-m3-xs rounded-lg bg-white/[0.06] border border-white/[0.08] text-surface-300 text-[11px] font-semibold hover:bg-white/[0.10] hover:text-white transition-all"
+              className="btn-cyan flex items-center gap-2 text-xs font-bold cursor-pointer"
             >
-              <FolderOpen size={12} /> Projects
+              <FolderOpen size={14} /> Projects
             </button>
             <input
               value={project.projectName}
               onChange={e => project.renameProject(e.target.value)}
-              className="flex-1 bg-transparent text-[12px] font-bold text-white truncate outline-none border-b border-transparent focus:border-mint/30 px-1 py-0.5 transition-colors min-w-0"
+              className="flex-1 px-5 py-[10px] rounded-[10px] bg-black/40 border border-white/10 text-sm font-semibold text-white placeholder:text-surface-600 focus:border-mint/50 focus:bg-black/60 outline-none transition-all min-w-0"
               placeholder="Project name..."
             />
           </div>
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-m3-xs text-[10px] text-surface-500">
+            <div className="flex items-center gap-m3-xs text-[10px] text-surface-500 font-medium">
               {project.isSaving ? (
-                <><Loader2 size={10} className="animate-spin text-mint" /> Saving...</>
+                <><Loader2 size={12} className="animate-spin text-mint" /> Saving...</>
               ) : project.lastSaved ? (
-                <><CheckCircle size={10} className="text-mint" /> Saved {saveTimeAgo}</>
+                <><CheckCircle size={12} className="text-mint" /> Saved {saveTimeAgo}</>
               ) : project.projectId ? (
                 <span className="text-surface-500">Saved</span>
               ) : (
                 <span>New project</span>
               )}
             </div>
-            <div className="flex items-center gap-m3-xs">
+            <div className="flex items-center gap-m3-sm">
               {project.projectId && (
                 <button
-                  onClick={project.exportProject}
-                  className="p-1 rounded hover:bg-white/[0.08] text-surface-400 hover:text-mint transition-colors"
+                  onClick={() => project.exportProject()}
+                  className="btn-ghost flex items-center gap-2 text-xs font-bold cursor-pointer"
                   title="Export .dmd"
                 >
-                  <FileDown size={12} />
+                  <FileDown size={14} /> Export
                 </button>
               )}
               <button
                 onClick={() => project.saveProject().catch(() => {})}
                 disabled={project.isSaving}
-                className="flex items-center gap-m3-xs px-m3-sm py-m3-xs rounded-md bg-mint/10 text-mint text-[10px] font-bold hover:bg-mint/20 transition-colors disabled:opacity-50"
+                className="btn-mint flex items-center gap-2 text-xs font-bold cursor-pointer"
                 title="Save project (Ctrl+S)"
               >
-                <Save size={10} /> Save
+                <Save size={14} /> Save
               </button>
             </div>
           </div>
@@ -1414,380 +1427,284 @@ export default function StitcherSubTab({ apiKey, onHistoryAdd, loadProjectId, on
           isLoading={project.isLoadingList}
           onLoad={(id) => project.loadProjectById(id)}
           onDelete={(id) => project.removeProject(id)}
-          onExport={(id) => {
-            const link = document.createElement('a');
-            link.href = `/api/projects/${id}/export`;
-            link.download = 'project.dmd';
-            link.click();
-          }}
+          onExport={(id) => project.exportProject(id)}
           onImport={(file) => project.importProjectFile(file)}
           onRefresh={project.refreshProjects}
         />
 
         <ErrorBanner error={error} onDismiss={() => setError('')} />
 
-        {/* 1. Source Image */}
-        <div>
-          <div className="section-header"><span className="section-num">1</span> Source Image</div>
-          <ImageUpload label="" image={sourceImage} onImageChange={setSourceImage} onClear={() => setSourceImage(null)} compact fullRes />
-        </div>
-
-        {/* 2. Selection Ratio */}
-        <div>
-          <div className="section-header"><span className="section-num">2</span> Selection Ratio</div>
-          <div className="grid grid-cols-2 gap-m3-sm">
-            {['1:1', '16:9'].map(r => (
-              <button key={r} onClick={() => { setAspectMode(r); setSelection(null); }}
-                className={`py-m3-sm rounded-lg border transition-all duration-150 text-xs font-bold ${
-                  aspectMode === r ? 'bg-accent/15 border-accent/60 text-white' : 'bg-transparent border-white/[0.12] text-surface-400 hover:border-white/12 hover:text-surface-200'
-                }`}>
-                {r === '1:1' ? '■ 1:1 Square' : '▬ 16:9 Wide'}
-              </button>
-            ))}
+        {/* Card 1: Project & Image Setup */}
+        <div className="control-card">
+          <div className="border-b border-white/[0.08] pb-m3-sm mb-m3-sm">
+            <h3 className="text-xs font-extrabold text-white uppercase tracking-wider">1. Upload and Select</h3>
           </div>
-          <p className="text-[11px] text-surface-500 mt-m3-xs">Click and drag on the image to select an area</p>
-        </div>
+          
+          {/* Source Image Upload */}
+          <div className="space-y-m3-xs">
+            <label className="section-label">Source Image</label>
+            <ImageUpload label="" image={sourceImage} onImageChange={setSourceImage} onClear={() => setSourceImage(null)} compact fullRes />
+          </div>
 
-        {/* 3. Reference Images */}
-        <div>
-          <div className="section-header"><span className="section-num">3</span> References <span className="text-surface-500 text-[11px] font-normal ml-m3-xs">({entityRefs.length}/10)</span></div>
-          <p className="text-[10px] text-surface-500 mb-m3-sm">Upload named images, use <span className="text-mint font-mono">@name</span> in prompt to include them.</p>
-          {entityRefs.length > 0 && (
-            <div className="space-y-m3-sm mb-m3-sm">
-              {entityRefs.map((ref, i) => (
-                <div key={i} className="flex items-start gap-m3-sm p-m3-sm rounded-lg bg-white/[0.04] border border-white/[0.08]">
-                  <img src={`data:${ref.mimeType};base64,${ref.base64}`} alt="" className="w-10 h-10 rounded object-cover shrink-0" />
-                  <div className="flex-1 min-w-0 space-y-m3-xs">
-                    <input value={ref.name || ''} onChange={e => updateRefName(i, e.target.value)}
-                      placeholder="Name (use @name)" className="w-full bg-transparent border-b border-white/[0.1] text-[11px] text-white py-0.5 outline-none focus:border-mint/40 font-mono" />
-                    <input value={ref.instruction || ''} onChange={e => updateRefInstruction(i, e.target.value)}
-                      placeholder="Instruction (optional)" className="w-full bg-transparent border-b border-white/[0.06] text-[10px] text-surface-400 py-0.5 outline-none focus:border-white/20" />
-                  </div>
-                  <button onClick={() => removeRef(i)} className="shrink-0 p-1 rounded hover:bg-white/[0.08] text-surface-500 hover:text-red-400 transition-colors">
-                    <X size={12} />
-                  </button>
-                </div>
+          {/* Selection Ratio */}
+          <div className="space-y-m3-xs">
+            <label className="section-label">Selection Aspect Ratio</label>
+            <div className="grid grid-cols-2 gap-m3-sm">
+              {['1:1', '16:9'].map(r => (
+                <button key={r} onClick={() => { setAspectMode(r); setSelection(null); }}
+                  className={`py-m3-sm rounded-lg border transition-all duration-150 text-xs font-bold cursor-pointer ${
+                    aspectMode === r 
+                      ? 'bg-mint/20 border-mint text-white shadow-[0_0_10px_rgba(52,211,153,0.15)]' 
+                      : 'bg-slate-900 border-white/10 text-surface-300 hover:bg-slate-800 hover:border-white/20 hover:text-white'
+                  }`}>
+                  {r === '1:1' ? '■ 1:1 Square' : '▬ 16:9 Wide'}
+                </button>
               ))}
             </div>
-          )}
-          {entityRefs.length < 10 && (
-            <label className="flex items-center justify-center gap-m3-sm py-m3-sm rounded-lg border border-dashed border-surface-600/20 cursor-pointer hover:border-accent/30 hover:bg-accent/[0.02] transition-all text-xs text-surface-500 font-medium">
-              <ImagePlus size={14} /> Add reference
-              <input type="file" accept="image/*" className="hidden" onChange={async (e) => {
-                const file = e.target.files?.[0];
-                if (!file?.type.startsWith('image/')) return;
-                const result = await resizeImage(file);
-                setEntityRefs(prev => [...prev, { ...result, name: `ref${prev.length + 1}`, instruction: '' }]);
-                e.target.value = '';
-              }} />
-            </label>
-          )}
-        </div>
-
-        {/* 4. Edit Prompt */}
-        <div>
-          <div className="section-header"><span className="section-num">4</span> Edit Prompt</div>
-          <MentionTextarea
-            value={editPrompt}
-            onChange={setEditPrompt}
-            entities={entityRefs.filter(r => r.name).map(r => ({ name: r.name, type: 'reference', thumbnail: `data:${r.mimeType};base64,${r.base64}` }))}
-            rows={3}
-            placeholder="What should change? e.g. 'change clothes to match @jacket'..."
-            onSubmit={handleGenerate}
-          />
-        </div>
-
-        {/* 5. Edge Feather */}
-        <div>
-          <div className="section-header"><span className="section-num">5</span> Edge Feather <span className="text-surface-500 text-[11px] font-normal ml-m3-xs">(new edits)</span></div>
-          <div className="flex items-center gap-m3-ms">
-            <input type="range" min={0} max={60} step={1} value={featherRadius}
-              onChange={e => setFeatherRadius(Number(e.target.value))} className="flex-1 accent-mint h-1.5 cursor-pointer" />
-            <span className="text-[11px] font-mono text-surface-400 w-10 text-right">{featherRadius}px</span>
+            <p className="text-[10px] text-surface-500 mt-m3-xs">Click and drag on the canvas to define your editing bounds.</p>
           </div>
         </div>
 
-        {/* 6. Model */}
-        <div>
-          <div className="section-header"><span className="section-num">6</span> Model</div>
-          <div className="grid grid-cols-3 gap-m3-sm">
-            {Object.entries(MODELS).map(([k, m]) => {
-              const d = MODEL_DISPLAY[k] || {};
-              return (
-                <button key={k} onClick={() => setModelKey(k)}
-                  className={`flex items-center justify-center gap-m3-xs py-m3-ms rounded-lg border transition-all duration-150 text-[13px] font-semibold ${
-                    modelKey === k ? 'bg-accent/15 border-accent/60 text-white' : 'bg-transparent border-white/[0.12] text-surface-400 hover:border-white/12 hover:text-surface-200'
-                  }`}>
-                  <span>{d.emoji}</span>{d.label || m.label}
-                </button>
-              );
-            })}
+        {/* Card 2: Edit Operations */}
+        <div className="control-card">
+          <div className="border-b border-white/[0.08] pb-m3-sm mb-m3-sm">
+            <h3 className="text-xs font-extrabold text-white uppercase tracking-wider">2. Prompt and Reference Images</h3>
           </div>
-        </div>
 
-        {/* 7. Resolution */}
-        <div>
-          <div className="section-header"><span className="section-num">7</span> Resolution</div>
-          <div className="grid grid-cols-4 gap-m3-xs">
-            {[{ key: 'auto', label: 'Auto' }, { key: '1K', label: '1K' }, { key: '2K', label: '2K' }, { key: '4K', label: '4K' }].map(r => (
-              <button key={r.key} onClick={() => setResolution(r.key)}
-                disabled={modelKey === 'standard' && r.key !== 'auto'}
-                className={`py-m3-sm rounded-lg border text-xs font-semibold transition-all duration-150 ${
-                  resolution === r.key
-                    ? 'bg-accent/15 border-accent/60 text-white'
-                    : 'bg-transparent border-white/[0.12] text-surface-500 hover:border-white/12 disabled:opacity-30 disabled:cursor-not-allowed'
-                }`}>
-                {r.label}
-              </button>
-            ))}
-          </div>
-          {modelKey === 'standard' && <p className="text-[10px] text-surface-500 mt-m3-xs">Resolution only available for Pro & Banana 2.</p>}
-        </div>
-
-        {/* 8. Generate */}
-        <LoadingButton onClick={handleGenerate} disabled={!canGenerate} loading={loading}
-          icon={Scissors} label="Generate Edit" loadingLabel="Editing area..." className="btn-mint w-full" />
-
-        {/* 9. Layers */}
-        <div>
-          <div className="section-header"><span className="section-num">9</span> Layers</div>
+          {/* Edit Prompt */}
           <div className="space-y-m3-xs">
-            {/* Layers in reverse order (newest on top) */}
-            {[...layers].reverse().map((layer, ri) => {
-              const actualIdx = layers.length - 1 - ri;
-              const isRegen = regenLayerId === layer.id;
-              const isSelected = selectedLayerId === layer.id;
-              const isExpanded = expandedLayerId === layer.id;
-              const t = layer.transform || layer.selection;
-              const crop = layer.cropInsets || { top: 0, right: 0, bottom: 0, left: 0 };
-              return (
-                <div key={layer.id}
-                  onClick={() => { setSelectedLayerId(layer.id); if (canvasMode !== 'paint') setCanvasMode('transform'); }}
-                  className={`rounded-lg border transition-all cursor-pointer ${
-                    isSelected
-                      ? 'bg-blue-500/[0.08] border-blue-500/30 ring-1 ring-blue-500/20'
-                      : layer.visible ? 'bg-white/[0.04] border-white/[0.10]' : 'bg-white/[0.02] border-white/[0.05] opacity-50'
-                  }`}>
-                  <div className="flex items-center gap-m3-xs px-m3-sm py-m3-sm">
-                    {/* Visibility */}
-                    <button onClick={() => toggleLayer(layer.id)} className="shrink-0 p-1 rounded hover:bg-white/[0.08] transition-colors" title={layer.visible ? 'Hide' : 'Show'}>
-                      {layer.visible ? <Eye size={12} className="text-mint" /> : <EyeOff size={12} className="text-surface-500" />}
-                    </button>
-                    {/* Name */}
-                    <div className="flex-1 min-w-0">
-                      <div className="text-[10px] text-surface-300 truncate">{layer.prompt}</div>
-                      <div className="text-[9px] text-surface-500">{Math.round(layer.selection.width)}×{Math.round(layer.selection.height)}</div>
+            <label className="section-label">Edit Instructions</label>
+            <MentionTextarea
+              value={editPrompt}
+              onChange={setEditPrompt}
+              entities={entityRefs.filter(r => r.name).map(r => ({ name: r.name, type: 'reference', thumbnail: `data:${r.mimeType};base64,${r.base64}` }))}
+              rows={3}
+              placeholder="What should change? Use @refname to inject reference images (e.g. 'replace jacket with @jacket')..."
+              onSubmit={handleGenerate}
+            />
+          </div>
+
+          {/* References */}
+          <div className="space-y-m3-xs">
+            <div className="flex items-center justify-between">
+              <label className="section-label mb-0">Reference Images ({entityRefs.length}/10)</label>
+            </div>
+            <p className="text-[10px] text-surface-500 mb-m3-sm">Inject reference images into your prompt by typing their <span className="text-mint font-mono font-bold">@name</span>.</p>
+            {entityRefs.length > 0 && (
+              <div className="space-y-m3-sm mb-m3-sm">
+                {entityRefs.map((ref, i) => (
+                  <div key={i} className="flex items-start gap-m3-sm p-m3-sm rounded-lg bg-black/30 border border-white/10">
+                    <img src={`data:${ref.mimeType};base64,${ref.base64}`} alt="" className="w-10 h-10 rounded object-cover shrink-0 border border-white/10" />
+                    <div className="flex-1 min-w-0 space-y-m3-xs">
+                      <input value={ref.name || ''} onChange={e => updateRefName(i, e.target.value)}
+                        placeholder="Name (use @name)" className="w-full bg-slate-900 border border-white/10 rounded px-2 py-1 text-xs text-white outline-none focus:border-mint/50 font-mono" />
+                      <input value={ref.instruction || ''} onChange={e => updateRefInstruction(i, e.target.value)}
+                        placeholder="Instruction (optional)" className="w-full bg-slate-900 border border-white/10 rounded px-2 py-1 text-[11px] text-surface-300 outline-none focus:border-mint/50" />
                     </div>
-                    {/* Controls */}
-                    <button onClick={() => moveLayer(layer.id, 1)} disabled={actualIdx >= layers.length - 1}
-                      className="shrink-0 p-0.5 rounded hover:bg-white/[0.08] text-surface-500 hover:text-white transition-colors disabled:opacity-20" title="Move up">
-                      <ChevronUp size={11} />
-                    </button>
-                    <button onClick={() => moveLayer(layer.id, -1)} disabled={actualIdx <= 0}
-                      className="shrink-0 p-0.5 rounded hover:bg-white/[0.08] text-surface-500 hover:text-white transition-colors disabled:opacity-20" title="Move down">
-                      <ChevronDown size={11} />
-                    </button>
-                    <button onClick={() => handleRegen(layer.id)} disabled={isRegen}
-                      className="shrink-0 p-0.5 rounded hover:bg-white/[0.08] text-surface-500 hover:text-mint transition-colors" title="Regenerate">
-                      <RefreshCw size={11} className={isRegen ? 'animate-spin' : ''} />
-                    </button>
-                    <button onClick={() => deleteLayer(layer.id)}
-                      className="shrink-0 p-0.5 rounded hover:bg-white/[0.08] text-surface-500 hover:text-red-400 transition-colors" title="Delete">
-                      <Trash2 size={11} />
+                    <button onClick={() => removeRef(i)} className="shrink-0 p-1.5 rounded-lg hover:bg-red-500/10 text-surface-400 hover:text-red-400 transition-colors cursor-pointer border border-transparent hover:border-red-500/20">
+                      <X size={14} />
                     </button>
                   </div>
-                  {/* Per-layer feather + opacity sliders */}
-                  {layer.visible && (
-                    <div className="space-y-m3-xs px-m3-sm pb-m3-xs">
-                      <div className="flex items-center gap-m3-sm">
-                        <span className="text-[9px] text-surface-500 w-10">Feather</span>
-                        <input type="range" min={0} max={60} step={1} value={layer.featherRadius}
-                          onChange={e => updateLayerFeather(layer.id, Number(e.target.value))}
-                          className="flex-1 accent-mint h-1 cursor-pointer" />
-                        <span className="text-[9px] font-mono text-surface-500 w-8 text-right">{layer.featherRadius}px</span>
+                ))}
+              </div>
+            )}
+            {entityRefs.length < 10 && (
+              <label className="flex items-center justify-center gap-m3-sm py-m3-md rounded-xl bg-slate-900 border border-dashed border-white/15 cursor-pointer hover:border-mint/40 hover:bg-mint/5 hover:text-white transition-all text-xs text-surface-400 font-medium">
+                <ImagePlus size={16} className="text-mint" /> Add Reference Image
+                <input type="file" accept="image/*" className="hidden" onChange={async (e) => {
+                  const file = e.target.files?.[0];
+                  if (!file?.type.startsWith('image/')) return;
+                  const result = await resizeImage(file);
+                  setEntityRefs(prev => [...prev, { ...result, name: `ref${prev.length + 1}`, instruction: '' }]);
+                  e.target.value = '';
+                }} />
+              </label>
+            )}
+          </div>
+        </div>
+
+        {/* Card 3: Model, Quality & Execution */}
+        <div className="control-card">
+          <div className="border-b border-white/[0.08] pb-m3-sm mb-m3-sm">
+            <h3 className="text-xs font-extrabold text-white uppercase tracking-wider">3. Model Select & Run</h3>
+          </div>
+
+          {/* Model */}
+          <div className="space-y-m3-xs">
+            <label className="section-label">Model Selection</label>
+            <div className="grid grid-cols-3 gap-m3-sm">
+              {Object.entries(MODELS).map(([k, m]) => {
+                const d = MODEL_DISPLAY[k] || {};
+                return (
+                  <button key={k} onClick={() => setModelKey(k)}
+                    className={`flex items-center justify-center gap-m3-xs py-m3-md rounded-lg border transition-all duration-150 text-[13px] font-bold cursor-pointer ${
+                      modelKey === k 
+                        ? 'bg-mint/20 border-mint text-white shadow-[0_0_10px_rgba(52,211,153,0.15)]' 
+                        : 'bg-slate-900 border-white/10 text-surface-300 hover:bg-slate-800 hover:border-white/20 hover:text-white'
+                    }`}>
+                    <span className="text-sm">{d.emoji}</span>{d.label || m.label}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Resolution */}
+          <div className="space-y-m3-xs">
+            <label className="section-label">Output Resolution</label>
+            <div className="grid grid-cols-4 gap-m3-sm">
+              {[{ key: 'auto', label: 'Auto' }, { key: '1K', label: '1K' }, { key: '2K', label: '2K' }, { key: '4K', label: '4K' }].map(r => (
+                <button key={r.key} onClick={() => setResolution(r.key)}
+                  disabled={modelKey === 'standard' && r.key !== 'auto'}
+                  className={`py-m3-sm rounded-lg border text-xs font-bold transition-all duration-150 cursor-pointer ${
+                    resolution === r.key
+                      ? 'bg-mint/20 border-mint text-white shadow-[0_0_10px_rgba(52,211,153,0.15)]'
+                      : 'bg-slate-900 border-white/10 text-surface-400 hover:bg-slate-800 hover:border-white/20 hover:text-white disabled:opacity-20 disabled:pointer-events-none'
+                  }`}>
+                  {r.label}
+                </button>
+              ))}
+            </div>
+            {modelKey === 'standard' && <p className="text-[10px] text-surface-500 mt-m3-xs">Resolution choice only available for NB 2 & NB PRO models.</p>}
+          </div>
+
+          {/* Execution Action Button */}
+          <div className="pt-m3-sm">
+            <LoadingButton onClick={handleGenerate} disabled={!canGenerate} loading={loading}
+              icon={Scissors} label="Generate Edit" loadingLabel="Generating edit layers..." className="btn-mint w-full py-m3-md text-sm cursor-pointer" />
+          </div>
+        </div>
+
+        {/* Card 4: Layers Manager */}
+        <div className="control-card">
+          <div className="border-b border-white/[0.08] pb-m3-sm mb-m3-sm flex items-center justify-between">
+            <h3 className="text-xs font-extrabold text-white uppercase tracking-wider">4. Layers Manager</h3>
+            <span className="badge badge-cyan text-[9px] px-2 py-0.5 font-bold">{layers.length} layer{layers.length !== 1 ? 's' : ''}</span>
+          </div>
+
+          {layers.length === 0 ? (
+            <div className="flex flex-col items-center justify-center py-m3-lg text-center text-surface-500 space-y-m3-xs">
+              <Layers size={20} className="opacity-40" />
+              <p className="text-xs">No edit layers generated yet.</p>
+              <p className="text-[10px] opacity-70">Define an edit area and write a prompt to generate your first edit layer.</p>
+            </div>
+          ) : (
+            <div className="space-y-m3-sm">
+              <div className="space-y-m3-xs">
+                {/* Layers in reverse order (newest on top) */}
+                {[...layers].reverse().map((layer, ri) => {
+                  const actualIdx = layers.length - 1 - ri;
+                  const isRegen = regenLayerId === layer.id;
+                  const isSelected = selectedLayerId === layer.id;
+                  const isExpanded = expandedLayerId === layer.id;
+                  const t = layer.transform || layer.selection;
+                  const crop = layer.cropInsets || { top: 0, right: 0, bottom: 0, left: 0 };
+                  return (
+                    <div key={layer.id}
+                      onClick={() => { setSelectedLayerId(layer.id); if (canvasMode !== 'paint') setCanvasMode('transform'); }}
+                      className={`rounded-xl border transition-all cursor-pointer overflow-hidden ${
+                        isSelected
+                          ? 'bg-blue-500/[0.12] border-blue-500/50 ring-1 ring-blue-500/30'
+                          : layer.visible ? 'bg-slate-900 border-white/10' : 'bg-slate-900/40 border-white/5 opacity-55'
+                      }`}>
+                      <div className="flex items-center gap-m3-sm px-m3-md py-m3-sm">
+                        {/* Visibility */}
+                        <button onClick={(e) => { e.stopPropagation(); toggleLayer(layer.id); }} className="shrink-0 p-1.5 rounded-lg hover:bg-white/[0.10] border border-transparent hover:border-white/10 transition-all cursor-pointer" title={layer.visible ? 'Hide layer' : 'Show layer'}>
+                          {layer.visible ? <Eye size={14} className="text-mint" /> : <EyeOff size={14} className="text-surface-500" />}
+                        </button>
+                        {/* Name */}
+                        <div className="flex-1 min-w-0">
+                          <div className="text-[11px] font-semibold text-white truncate">{layer.prompt || 'Seamless Edit'}</div>
+                          <div className="text-[9px] font-mono text-surface-500 mt-0.5">{Math.round(layer.selection.width)}×{Math.round(layer.selection.height)} px</div>
+                        </div>
+                        {/* Controls */}
+                        <div className="flex items-center gap-0.5" onClick={e => e.stopPropagation()}>
+                          <button onClick={() => moveLayer(layer.id, 1)} disabled={actualIdx >= layers.length - 1}
+                            className="shrink-0 p-1 rounded-md hover:bg-white/[0.10] text-surface-400 hover:text-white transition-all disabled:opacity-20 cursor-pointer" title="Move up">
+                            <ChevronUp size={14} />
+                          </button>
+                          <button onClick={() => moveLayer(layer.id, -1)} disabled={actualIdx <= 0}
+                            className="shrink-0 p-1 rounded-md hover:bg-white/[0.10] text-surface-400 hover:text-white transition-all disabled:opacity-20 cursor-pointer" title="Move down">
+                            <ChevronDown size={14} />
+                          </button>
+                          <button onClick={() => handleRegen(layer.id)} disabled={isRegen}
+                            className="shrink-0 p-1 rounded-md hover:bg-white/[0.10] text-surface-400 hover:text-mint transition-all cursor-pointer" title="Regenerate">
+                            <RefreshCw size={13} className={isRegen ? 'animate-spin' : ''} />
+                          </button>
+                          <button onClick={() => deleteLayer(layer.id)}
+                            className="shrink-0 p-1 rounded-md hover:bg-white/[0.10] text-surface-400 hover:text-red-400 transition-all cursor-pointer" title="Delete">
+                            <Trash2 size={13} />
+                          </button>
+                        </div>
                       </div>
-                      <div className="flex items-center gap-m3-sm">
-                        <span className="text-[9px] text-surface-500 w-10">Opacity</span>
-                        <input type="range" min={0} max={100} step={1} value={layer.opacity ?? 100}
-                          onChange={e => updateLayerOpacity(layer.id, Number(e.target.value))}
-                          className="flex-1 accent-accent h-1 cursor-pointer" />
-                        <span className="text-[9px] font-mono text-surface-500 w-8 text-right">{layer.opacity ?? 100}%</span>
-                      </div>
-                    </div>
-                  )}
-                  {/* Expandable Transform Details */}
-                  {layer.visible && (
-                    <div className="px-m3-sm pb-m3-xs">
-                      <button
-                        onClick={(e) => { e.stopPropagation(); setExpandedLayerId(isExpanded ? null : layer.id); }}
-                        className="flex items-center gap-m3-xs text-[9px] text-surface-500 hover:text-surface-300 transition-colors w-full"
-                      >
-                        <ChevronRight size={9} className={`transition-transform ${isExpanded ? 'rotate-90' : ''}`} />
-                        Transform
-                      </button>
-                      {isExpanded && (
-                        <div className="mt-m3-xs space-y-m3-xs animate-slide-down">
-                          {/* Position */}
-                          <div className="flex items-center gap-m3-xs">
-                            <span className="text-[8px] text-surface-500 w-5">Pos</span>
-                            <label className="flex items-center gap-0.5 flex-1">
-                              <span className="text-[8px] text-surface-600">X</span>
-                              <input type="number" value={Math.round(t.x)} onChange={e => updateLayerTransform(layer.id, { ...t, x: Number(e.target.value) })}
-                                onClick={e => e.stopPropagation()}
-                                className="w-full bg-white/[0.06] border border-white/[0.08] rounded px-1 py-0.5 text-[9px] text-surface-300 font-mono outline-none focus:border-blue-500/40" />
-                            </label>
-                            <label className="flex items-center gap-0.5 flex-1">
-                              <span className="text-[8px] text-surface-600">Y</span>
-                              <input type="number" value={Math.round(t.y)} onChange={e => updateLayerTransform(layer.id, { ...t, y: Number(e.target.value) })}
-                                onClick={e => e.stopPropagation()}
-                                className="w-full bg-white/[0.06] border border-white/[0.08] rounded px-1 py-0.5 text-[9px] text-surface-300 font-mono outline-none focus:border-blue-500/40" />
-                            </label>
+
+                      {/* Per-layer feather + opacity sliders */}
+                      {layer.visible && (
+                        <div className="space-y-m3-xs px-m3-md pb-m3-sm border-t border-white/[0.04] pt-m3-xs bg-black/20">
+                          <div className="flex items-center gap-m3-sm">
+                            <span className="text-[10px] font-medium text-surface-400 w-12">Feather</span>
+                            <input type="range" min={0} max={60} step={1} value={layer.featherRadius}
+                              onChange={e => updateLayerFeather(layer.id, Number(e.target.value))}
+                              onClick={e => e.stopPropagation()}
+                              className="flex-1 accent-mint h-1 cursor-pointer" />
+                            <span className="text-[10px] font-mono text-surface-300 w-8 text-right">{layer.featherRadius}px</span>
                           </div>
-                          {/* Size */}
-                          <div className="flex items-center gap-m3-xs">
-                            <span className="text-[8px] text-surface-500 w-5">Size</span>
-                            <label className="flex items-center gap-0.5 flex-1">
-                              <span className="text-[8px] text-surface-600">W</span>
-                              <input type="number" value={Math.round(t.width)} onChange={e => updateLayerTransform(layer.id, { ...t, width: Math.max(MIN_SEL, Number(e.target.value)) })}
-                                onClick={e => e.stopPropagation()}
-                                className="w-full bg-white/[0.06] border border-white/[0.08] rounded px-1 py-0.5 text-[9px] text-surface-300 font-mono outline-none focus:border-blue-500/40" />
-                            </label>
-                            <label className="flex items-center gap-0.5 flex-1">
-                              <span className="text-[8px] text-surface-600">H</span>
-                              <input type="number" value={Math.round(t.height)} onChange={e => updateLayerTransform(layer.id, { ...t, height: Math.max(MIN_SEL, Number(e.target.value)) })}
-                                onClick={e => e.stopPropagation()}
-                                className="w-full bg-white/[0.06] border border-white/[0.08] rounded px-1 py-0.5 text-[9px] text-surface-300 font-mono outline-none focus:border-blue-500/40" />
-                            </label>
-                          </div>
-                          {/* Crop */}
-                          <div className="flex items-center gap-m3-xs">
-                            <span className="text-[8px] text-surface-500 w-5">Crop</span>
-                            {['top', 'right', 'bottom', 'left'].map(side => (
-                              <label key={side} className="flex items-center gap-0.5 flex-1">
-                                <span className="text-[8px] text-surface-600 capitalize">{side[0].toUpperCase()}</span>
-                                <input type="number" min={0} value={crop[side]} onChange={e => updateLayerCrop(layer.id, { ...crop, [side]: Math.max(0, Number(e.target.value)) })}
-                                  onClick={e => e.stopPropagation()}
-                                  className="w-full bg-white/[0.06] border border-white/[0.08] rounded px-1 py-0.5 text-[9px] text-surface-300 font-mono outline-none focus:border-blue-500/40" />
-                              </label>
-                            ))}
-                          </div>
-                          {/* Flip + Reset */}
-                          <div className="flex items-center gap-m3-xs pt-0.5">
-                            <button onClick={(e) => { e.stopPropagation(); toggleLayerFlipH(layer.id); }}
-                              className={`flex items-center gap-m3-xs px-2 py-1 rounded text-[9px] font-semibold transition-colors ${
-                                layer.flipH ? 'bg-blue-500/15 text-blue-400 border border-blue-500/25' : 'text-surface-500 hover:text-surface-300 bg-white/[0.04] border border-white/[0.06]'
-                              }`}>
-                              <FlipHorizontal size={9} /> H
-                            </button>
-                            <button onClick={(e) => { e.stopPropagation(); toggleLayerFlipV(layer.id); }}
-                              className={`flex items-center gap-m3-xs px-2 py-1 rounded text-[9px] font-semibold transition-colors ${
-                                layer.flipV ? 'bg-blue-500/15 text-blue-400 border border-blue-500/25' : 'text-surface-500 hover:text-surface-300 bg-white/[0.04] border border-white/[0.06]'
-                              }`}>
-                              <FlipVertical size={9} /> V
-                            </button>
-                            <button onClick={(e) => { e.stopPropagation(); resetLayerTransform(layer.id); }}
-                              className="flex items-center gap-m3-xs px-2 py-1 rounded text-[9px] font-semibold text-surface-500 hover:text-surface-300 bg-white/[0.04] border border-white/[0.06] transition-colors ml-auto">
-                              <RotateCcw size={9} /> Reset
-                            </button>
+                          <div className="flex items-center gap-m3-sm">
+                            <span className="text-[10px] font-medium text-surface-400 w-12">Opacity</span>
+                            <input type="range" min={0} max={100} step={1} value={layer.opacity ?? 100}
+                              onChange={e => updateLayerOpacity(layer.id, Number(e.target.value))}
+                              onClick={e => e.stopPropagation()}
+                              className="flex-1 accent-accent h-1 cursor-pointer" />
+                            <span className="text-[10px] font-mono text-surface-300 w-8 text-right">{layer.opacity ?? 100}%</span>
                           </div>
                         </div>
                       )}
+
+
+                      
+                      {/* Mask indicator + reset */}
+                      {layerMasksRef.current[layer.id] && layer.visible && (
+                        <div className="px-m3-md pb-m3-sm bg-black/20 border-t border-white/[0.04] pt-m3-xs flex items-center gap-m3-xs">
+                          <span className="text-[10px] text-purple-400 flex items-center gap-m3-xs font-semibold"><EyeOff size={10} /> Active Mask Applied</span>
+                          <button onClick={(e) => {
+                            e.stopPropagation();
+                            pushPaintUndo();
+                            delete layerMasksRef.current[layer.id];
+                            recompose(layers);
+                            project.markDirty();
+                          }}
+                            className="text-[10px] font-bold text-surface-450 hover:text-white ml-auto transition-colors cursor-pointer">
+                            Reset Mask
+                          </button>
+                        </div>
+                      )}
                     </div>
-                  )}
-                  {/* Color Adjust */}
-                  {layer.visible && (
-                    <div className="px-m3-sm pb-m3-xs">
-                      <button
-                        onClick={(e) => { e.stopPropagation(); setExpandedLayerId(expandedLayerId === layer.id + '_adj' ? null : layer.id + '_adj'); }}
-                        className="flex items-center gap-m3-xs text-[9px] text-surface-500 hover:text-surface-300 transition-colors w-full"
-                      >
-                        <ChevronRight size={9} className={`transition-transform ${expandedLayerId === layer.id + '_adj' ? 'rotate-90' : ''}`} />
-                        <SunMedium size={9} /> Adjust
-                      </button>
-                      {expandedLayerId === layer.id + '_adj' && (() => {
-                        const adj = layerAdjustments[layer.id] || { brightness: 100, contrast: 100, saturation: 100 };
-                        const updateAdj = (prop, val) => {
-                          const next = { ...adj, [prop]: val };
-                          setLayerAdjustments(prev => ({ ...prev, [layer.id]: next }));
-                          // Apply CSS filter to layer
-                          setLayers(prev => prev.map(l => l.id === layer.id ? { ...l, adjustments: next } : l));
-                          project.markDirty();
-                        };
-                        return (
-                          <div className="mt-m3-xs space-y-m3-xs animate-slide-down">
-                            <div className="flex items-center gap-m3-xs">
-                              <span className="text-[8px] text-surface-500 w-12">Brightness</span>
-                              <input type="range" min={0} max={200} step={1} value={adj.brightness}
-                                onChange={e => updateAdj('brightness', Number(e.target.value))}
-                                onClick={e => e.stopPropagation()}
-                                className="flex-1 accent-amber-400 h-1 cursor-pointer" />
-                              <span className="text-[8px] font-mono text-surface-500 w-7 text-right">{adj.brightness}%</span>
-                            </div>
-                            <div className="flex items-center gap-m3-xs">
-                              <span className="text-[8px] text-surface-500 w-12">Contrast</span>
-                              <input type="range" min={0} max={200} step={1} value={adj.contrast}
-                                onChange={e => updateAdj('contrast', Number(e.target.value))}
-                                onClick={e => e.stopPropagation()}
-                                className="flex-1 accent-amber-400 h-1 cursor-pointer" />
-                              <span className="text-[8px] font-mono text-surface-500 w-7 text-right">{adj.contrast}%</span>
-                            </div>
-                            <div className="flex items-center gap-m3-xs">
-                              <span className="text-[8px] text-surface-500 w-12">Saturation</span>
-                              <input type="range" min={0} max={200} step={1} value={adj.saturation}
-                                onChange={e => updateAdj('saturation', Number(e.target.value))}
-                                onClick={e => e.stopPropagation()}
-                                className="flex-1 accent-amber-400 h-1 cursor-pointer" />
-                              <span className="text-[8px] font-mono text-surface-500 w-7 text-right">{adj.saturation}%</span>
-                            </div>
-                            <button onClick={(e) => { e.stopPropagation(); updateAdj('brightness', 100); updateAdj('contrast', 100); updateAdj('saturation', 100); }}
-                              className="text-[8px] text-surface-500 hover:text-surface-300 transition-colors">
-                              Reset Adjustments
-                            </button>
-                          </div>
-                        );
-                      })()}
-                    </div>
-                  )}
-                  {/* Mask indicator + reset */}
-                  {layerMasksRef.current[layer.id] && layer.visible && (
-                    <div className="px-m3-sm pb-m3-xs flex items-center gap-m3-xs">
-                      <span className="text-[9px] text-purple-400 flex items-center gap-m3-xs"><EyeOff size={8} /> Masked</span>
-                      <button onClick={(e) => {
-                        e.stopPropagation();
-                        pushPaintUndo();
-                        delete layerMasksRef.current[layer.id];
-                        recompose(layers);
-                        project.markDirty();
-                      }}
-                        className="text-[8px] text-surface-500 hover:text-surface-300 ml-auto transition-colors">
-                        Reset Mask
-                      </button>
-                    </div>
-                  )}
-                </div>
-              );
-            })}
-            {/* Base layer */}
-            <div className="flex items-center gap-m3-xs px-m3-sm py-m3-sm rounded-lg bg-white/[0.03] border border-white/[0.06]">
-              <span className="text-[10px]">🔒</span>
-              <span className="text-[10px] text-surface-400 font-medium">Base Image</span>
+                  );
+                })}
+              </div>
+
+              {/* Base layer */}
+              <div className="flex items-center gap-m3-sm px-m3-md py-m3-sm rounded-xl bg-slate-900 border border-white/5 select-none">
+                <span className="text-xs">🔒</span>
+                <span className="text-xs text-surface-400 font-bold">Original Base Image</span>
+                <span className="badge badge-surface text-[8px] ml-auto">Background</span>
+              </div>
+
+              <div className="flex flex-col gap-m3-xs pt-m3-sm border-t border-white/[0.08]">
+                <button onClick={resetAll}
+                  className="w-full py-m3-sm rounded-lg text-xs font-semibold text-red-400 hover:text-red-300 border border-transparent hover:border-red-500/20 hover:bg-red-500/5 transition-all flex items-center justify-center gap-m3-xs cursor-pointer">
+                  <RotateCcw size={13} /> Reset All Layers
+                </button>
+                
+                {/* Save to History Button */}
+                <button onClick={handleSave}
+                  className="w-full py-m3-sm rounded-lg bg-slate-900 border border-white/15 text-white hover:text-mint hover:border-mint/40 font-bold text-xs flex items-center justify-center gap-m3-xs hover:bg-slate-800 transition-all cursor-pointer shadow-sm">
+                  <Save size={13} /> Save to History
+                </button>
+              </div>
             </div>
-          </div>
-          {layers.length > 0 && (
-            <button onClick={resetAll}
-              className="w-full mt-m3-sm py-m3-sm rounded-lg text-[11px] font-semibold text-red-400/70 hover:text-red-400 border border-transparent hover:border-red-500/15 hover:bg-red-500/5 transition-all flex items-center justify-center gap-m3-xs">
-              <RotateCcw size={11} /> Reset All Layers
-            </button>
           )}
         </div>
-
-        {/* Save to History */}
-        {layers.length > 0 && (
-          <button onClick={handleSave}
-            className="w-full py-m3-ms rounded-lg bg-white/[0.08] border border-white/[0.12] text-white font-semibold text-sm flex items-center justify-center gap-m3-sm hover:bg-white/[0.12] hover:border-white/[0.18] transition-all">
-            <Save size={14} /> Save to History
-          </button>
-        )}
 
         <AdvancedSettings {...advanced} />
       </div>
@@ -1796,63 +1713,63 @@ export default function StitcherSubTab({ apiKey, onHistoryAdd, loadProjectId, on
       <div className="studio-preview relative" ref={containerRef}>
         {/* Canvas Mode Toolbar */}
         {currentImage && (
-          <div className="absolute top-m3-ms left-1/2 -translate-x-1/2 z-10 flex items-center gap-m3-xs px-m3-sm py-m3-xs rounded-xl bg-black/60 backdrop-blur-md border border-white/[0.12] shadow-xl">
+          <div className="absolute top-m3-md left-1/2 -translate-x-1/2 z-10 flex items-center gap-m3-sm px-m3-md py-m3-sm rounded-2xl bg-black/85 backdrop-blur-lg border border-mint/25 shadow-2xl">
             <button
               onClick={() => { setCanvasMode('select'); setSelectedLayerId(null); }}
-              className={`flex items-center gap-m3-xs px-m3-md py-m3-xs rounded-lg text-[11px] font-bold transition-all ${
+              className={`flex items-center gap-m3-xs px-m3-md py-m3-sm rounded-lg text-xs font-bold transition-all cursor-pointer ${
                 canvasMode === 'select'
-                  ? 'bg-mint/15 text-mint border border-mint/30'
-                  : 'text-surface-400 hover:text-white hover:bg-white/[0.08] border border-transparent'
+                  ? 'bg-mint/20 text-mint border border-mint/50 shadow-sm'
+                  : 'text-surface-300 hover:text-white hover:bg-white/[0.10] border border-white/10'
               }`}
             >
-              <MousePointer2 size={12} /> Select
+              <MousePointer2 size={14} /> Select
             </button>
             {layers.length > 0 && (
               <button
                 onClick={() => setCanvasMode('transform')}
-                className={`flex items-center gap-m3-xs px-m3-md py-m3-xs rounded-lg text-[11px] font-bold transition-all ${
+                className={`flex items-center gap-m3-xs px-m3-md py-m3-sm rounded-lg text-xs font-bold transition-all cursor-pointer ${
                   canvasMode === 'transform'
-                    ? 'bg-blue-500/15 text-blue-400 border border-blue-500/30'
-                    : 'text-surface-400 hover:text-white hover:bg-white/[0.08] border border-transparent'
+                    ? 'bg-blue-500/20 text-blue-300 border border-blue-500/50 shadow-sm'
+                    : 'text-surface-300 hover:text-white hover:bg-white/[0.10] border border-white/10'
                 }`}
               >
-                <Move size={12} /> Transform
+                <Move size={14} /> Transform
               </button>
             )}
-            <div className="w-px h-5 bg-white/[0.12] mx-m3-xs" />
+            <div className="w-px h-6 bg-white/[0.15] mx-m3-xs" />
             <button
               onClick={() => setCanvasMode('paint')}
-              className={`flex items-center gap-m3-xs px-m3-md py-m3-xs rounded-lg text-[11px] font-bold transition-all ${
+              className={`flex items-center gap-m3-xs px-m3-md py-m3-sm rounded-lg text-xs font-bold transition-all cursor-pointer ${
                 canvasMode === 'paint'
-                  ? 'bg-amber-500/15 text-amber-400 border border-amber-500/30'
-                  : 'text-surface-400 hover:text-white hover:bg-white/[0.08] border border-transparent'
+                  ? 'bg-amber-500/20 text-amber-300 border border-amber-500/50 shadow-sm'
+                  : 'text-surface-300 hover:text-white hover:bg-white/[0.10] border border-white/10'
               }`}
             >
-              <Paintbrush size={12} /> Paint
+              <Paintbrush size={14} /> Paint
             </button>
-            <div className="w-px h-5 bg-white/[0.12] mx-m3-xs" />
+            <div className="w-px h-6 bg-white/[0.15] mx-m3-xs" />
             {/* Zoom Controls */}
             <div className="flex items-center gap-m3-xs">
               <button onClick={handleZoomOut}
-                className="p-m3-xs rounded-lg text-surface-400 hover:text-white hover:bg-white/[0.08] transition-all"
+                className="p-m3-sm rounded-lg text-surface-300 hover:text-white hover:bg-white/[0.10] border border-transparent hover:border-white/10 transition-all cursor-pointer"
                 title="Zoom out"
               >
-                <ZoomOut size={12} />
+                <ZoomOut size={14} />
               </button>
-              <span className="text-[10px] font-mono text-surface-400 min-w-[36px] text-center select-none">
+              <span className="text-xs font-semibold font-mono text-surface-200 min-w-[42px] text-center select-none">
                 {Math.round(zoomLevel * 100)}%
               </span>
               <button onClick={handleZoomIn}
-                className="p-m3-xs rounded-lg text-surface-400 hover:text-white hover:bg-white/[0.08] transition-all"
+                className="p-m3-sm rounded-lg text-surface-300 hover:text-white hover:bg-white/[0.10] border border-transparent hover:border-white/10 transition-all cursor-pointer"
                 title="Zoom in"
               >
-                <ZoomIn size={12} />
+                <ZoomIn size={14} />
               </button>
               <button onClick={handleZoomFit}
-                className="p-m3-xs rounded-lg text-surface-400 hover:text-white hover:bg-white/[0.08] transition-all"
+                className="p-m3-sm rounded-lg text-surface-300 hover:text-white hover:bg-white/[0.10] border border-transparent hover:border-white/10 transition-all cursor-pointer"
                 title="Fit to screen"
               >
-                <Maximize size={12} />
+                <Maximize size={14} />
               </button>
             </div>
           </div>
@@ -1989,7 +1906,6 @@ export default function StitcherSubTab({ apiKey, onHistoryAdd, loadProjectId, on
         {currentImage ? (
           <div className="flex flex-col items-center justify-center w-full h-full p-m3-md gap-m3-sm"
             style={{ paddingTop: canvasMode === 'paint' ? '5rem' : '3.5rem', overflow: 'hidden' }}
-            onWheel={handleWheel}
           >
             <div style={{
               transform: `translate(${panOffset.x}px, ${panOffset.y}px)`,
@@ -2009,8 +1925,10 @@ export default function StitcherSubTab({ apiKey, onHistoryAdd, loadProjectId, on
               />
             </div>
             <button onClick={() => downloadImage(currentImage.base64, currentImage.mimeType, `sticherr_${Date.now()}.png`)}
-              className="flex items-center gap-m3-xs px-m3-md py-m3-sm rounded-lg bg-white/[0.08] border border-white/[0.12] text-surface-300 text-xs font-semibold hover:bg-white/[0.12] hover:text-white transition-all">
-              <Download size={13} /> Download
+              className="btn-accent flex items-center gap-2 text-xs font-bold cursor-pointer hover:scale-105 active:scale-95 transition-all duration-200 shadow-lg"
+              title="Download final edited image"
+            >
+              <Download size={14} /> Download Image
             </button>
           </div>
         ) : !loading ? (

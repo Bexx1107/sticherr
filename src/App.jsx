@@ -34,7 +34,7 @@ export default function App() {
         {/* Toggle Button */}
         <button
           onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
-          className="absolute -right-4 top-7 w-8 h-8 rounded-full border border-white/[0.08] bg-slate-900 text-surface-300 hover:text-white flex items-center justify-center z-30 shadow-md cursor-pointer transition-colors"
+          className="absolute -right-4 top-7 w-8 h-8 rounded-full border border-mint/40 bg-slate-950 text-mint hover:text-mint-light hover:border-mint hover:bg-mint/5 flex items-center justify-center z-30 shadow-[0_0_12px_rgba(52,211,153,0.25)] hover:shadow-[0_0_18px_rgba(52,211,153,0.5)] active:scale-90 cursor-pointer transition-all duration-200"
           title={isSidebarCollapsed ? "Expand Sidebar" : "Collapse Sidebar"}
         >
           {isSidebarCollapsed ? <ChevronRight size={16} /> : <ChevronLeft size={16} />}
@@ -63,24 +63,95 @@ export default function App() {
           <div className="mx-m3-md h-px bg-white/[0.10]" />
 
           {/* Configurations */}
-          <div className="flex-1 p-m3-ml overflow-y-auto space-y-m3-ml">
+          <div className="flex-1 p-m3-ml overflow-y-auto flex flex-col gap-m3-ml">
             {/* API Key */}
             <ApiKeyInput apiKey={apiKey} setApiKey={handleSetApiKey} compact={false} />
 
-            {/* Quick Help */}
-            <div className="rounded-xl border border-white/[0.08] bg-white/[0.02] p-m3-md space-y-m3-ms">
-              <div className="flex items-center gap-m3-sm text-surface-300 font-semibold text-xs">
+            {/* Workspace Guide */}
+            <div className="rounded-xl border border-mint/20 bg-slate-950/40 p-m3-md flex flex-col gap-m3-md shadow-lg">
+              <div className="flex items-center gap-2 text-white font-extrabold text-xs uppercase tracking-wider">
                 <HelpCircle size={14} className="text-mint" />
-                <span>Workspace Help</span>
+                <span>Workspace Guide</span>
               </div>
-              <p className="text-[11px] text-surface-400 leading-relaxed">
-                Upload a source image, draw an edit mask, specify a prompt, and hit generate. 
-                The editor lets you layer multiple edit results over the base image.
-              </p>
-              <div className="text-[10px] text-surface-500 space-y-m3-xs pt-m3-xs">
-                <div>• <b>Space + Drag</b> to pan the canvas</div>
-                <div>• <b>Ctrl + S</b> to save project</div>
-                <div>• <b>Scroll</b> to zoom in/out</div>
+              
+              {/* Steps */}
+              <div className="flex flex-col gap-3.5">
+                <div className="flex gap-2">
+                  <span className="flex items-center justify-center w-5 h-5 rounded-md bg-mint/10 border border-mint/30 text-[10px] text-mint font-extrabold shrink-0 mt-0.5">1</span>
+                  <div className="text-[11px] leading-tight">
+                    <b className="text-white block font-semibold">Upload Image</b>
+                    <span className="text-surface-400">Select a base source image in card 1.</span>
+                  </div>
+                </div>
+                
+                <div className="flex gap-2">
+                  <span className="flex items-center justify-center w-5 h-5 rounded-md bg-mint/10 border border-mint/30 text-[10px] text-mint font-extrabold shrink-0 mt-0.5">2</span>
+                  <div className="text-[11px] leading-tight">
+                    <b className="text-white block font-semibold">Select Edit Area</b>
+                    <span className="text-surface-400">Click and drag on the canvas to define your editing bounds.</span>
+                  </div>
+                </div>
+
+                <div className="flex gap-2">
+                  <span className="flex items-center justify-center w-5 h-5 rounded-md bg-mint/10 border border-mint/30 text-[10px] text-mint font-extrabold shrink-0 mt-0.5">3</span>
+                  <div className="text-[11px] leading-tight">
+                    <b className="text-white block font-semibold">Prompt & Run</b>
+                    <span className="text-surface-400">Write instructions (mention <span className="text-mint font-mono">@ref</span> names) in card 2 and generate edits in card 3.</span>
+                  </div>
+                </div>
+
+                <div className="flex gap-2">
+                  <span className="flex items-center justify-center w-5 h-5 rounded-md bg-mint/10 border border-mint/30 text-[10px] text-mint font-extrabold shrink-0 mt-0.5">4</span>
+                  <div className="text-[11px] leading-tight">
+                    <b className="text-white block font-semibold">Refine Layer</b>
+                    <span className="text-surface-400">Mask (brush/erase) generated layers and tweak feathering or opacity in card 4.</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Separator */}
+              <div className="h-px bg-white/[0.08]" />
+
+              {/* Keyboard Shortcuts */}
+              <div className="flex flex-col gap-3">
+                <div className="text-[10px] text-surface-400 uppercase tracking-wider font-extrabold">
+                  Canvas Shortcuts
+                </div>
+                
+                <div className="flex flex-col gap-2.5">
+                  <div className="flex items-center justify-between text-[11px] text-surface-300">
+                    <span className="flex items-center gap-1.5">
+                      <span className="w-1.5 h-1.5 rounded-full bg-mint" /> Pan Canvas
+                    </span>
+                    <div className="flex items-center gap-1">
+                      <kbd className="px-1.5 py-0.5 rounded text-[9px] font-mono font-bold bg-slate-950 border border-white/20 text-white shadow-sm">Middle Mouse</kbd>
+                      <span>+</span>
+                      <span className="text-[10px] font-medium text-surface-400">Drag</span>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center justify-between text-[11px] text-surface-300">
+                    <span className="flex items-center gap-1.5">
+                      <span className="w-1.5 h-1.5 rounded-full bg-mint" /> Zoom Canvas
+                    </span>
+                    <div className="flex items-center gap-1">
+                      <kbd className="px-1.5 py-0.5 rounded text-[9px] font-mono font-bold bg-slate-950 border border-white/20 text-white shadow-sm">Scroll</kbd>
+                      <span className="text-[10px] text-surface-400">or</span>
+                      <kbd className="px-1.5 py-0.5 rounded text-[9px] font-mono font-bold bg-slate-950 border border-white/20 text-white shadow-sm">Pinch</kbd>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center justify-between text-[11px] text-surface-300">
+                    <span className="flex items-center gap-1.5">
+                      <span className="w-1.5 h-1.5 rounded-full bg-mint" /> Save Project
+                    </span>
+                    <div className="flex items-center gap-1">
+                      <kbd className="px-1.5 py-0.5 rounded text-[9px] font-mono font-bold bg-slate-950 border border-white/20 text-white shadow-sm">Ctrl</kbd>
+                      <span>+</span>
+                      <kbd className="px-1.5 py-0.5 rounded text-[9px] font-mono font-bold bg-slate-950 border border-white/20 text-white shadow-sm">S</kbd>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>

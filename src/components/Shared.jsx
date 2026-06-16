@@ -92,7 +92,7 @@ export function ApiKeyInput({ apiKey, setApiKey, compact = false }) {
             isKeyPresent ? (isValidFormat ? 'border-mint/30 focus:border-mint' : 'border-accent/40 focus:border-accent') : ''
           }`}
         />
-        <button onClick={() => setVisible(!visible)} className="absolute right-3 top-1/2 -translate-y-1/2 text-surface-500 hover:text-surface-300 transition-colors">
+        <button onClick={() => setVisible(!visible)} className="absolute right-3 top-1/2 -translate-y-1/2 text-surface-400 hover:text-mint transition-all duration-150 hover:scale-110 active:scale-90 cursor-pointer" title={visible ? "Hide API key" : "Show API key"}>
           {visible ? <EyeOff size={14} /> : <Eye size={14} />}
         </button>
       </div>
@@ -255,7 +255,7 @@ export function ErrorBanner({ error, onDismiss }) {
 // ─── Loading Button ─────────────────────────────────────────────
 export function LoadingButton({ onClick, disabled, loading, icon: Icon, label, loadingLabel, className = 'btn-accent' }) {
   return (
-    <button onClick={onClick} disabled={disabled || loading} className={`${className} px-5 py-2.5 rounded-lg text-white text-[13px] font-semibold flex items-center justify-center gap-2 transition-all`}>
+    <button onClick={onClick} disabled={disabled || loading} className={`${className} px-5 py-2.5 rounded-lg text-[13px] font-semibold flex items-center justify-center gap-2 transition-all`}>
       {loading ? <><div className="spinner" /> {loadingLabel || 'Processing...'}</> : <>{Icon && <Icon size={15} />} {label}</>}
     </button>
   );

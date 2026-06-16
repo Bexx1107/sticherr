@@ -123,13 +123,13 @@ export default function ProjectBrowser({
         {/* Search */}
         <div className="px-m3-ml py-m3-ms border-b border-white/[0.08]">
           <div className="relative">
-            <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-surface-500" />
+            <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-surface-500 z-10 pointer-events-none" />
             <input
               type="text"
               value={search}
               onChange={e => setSearch(e.target.value)}
               placeholder="Search projects..."
-              className="w-full pl-9 pr-4 py-2 rounded-lg bg-white/[0.05] border border-white/[0.08] text-sm text-white placeholder:text-surface-500 outline-none focus:border-mint/30 transition-colors"
+              className="w-full pl-[36px] pr-4 py-2 rounded-lg bg-white/[0.05] border border-white/[0.08] text-sm text-white placeholder:text-surface-500 outline-none focus:border-mint/30 transition-colors"
             />
           </div>
         </div>
@@ -198,35 +198,35 @@ export default function ProjectBrowser({
                     </div>
                   </div>
 
-                  {/* Hover actions */}
+                  {/* Actions overlay */}
                   <div
-                    className="absolute top-m3-sm right-m3-sm flex items-center gap-m3-xs opacity-0 group-hover:opacity-100 transition-opacity"
+                    className="absolute top-2 right-2 flex items-center gap-1.5 z-20"
                     onClick={e => e.stopPropagation()}
                   >
                     <button
-                      onClick={() => { setRenamingId(project.id); setRenameValue(project.name || ''); }}
-                      className="p-m3-xs rounded-md bg-black/60 backdrop-blur-sm text-surface-300 hover:text-white transition-colors"
+                      onClick={(e) => { e.stopPropagation(); setRenamingId(project.id); setRenameValue(project.name || ''); }}
+                      className="p-2 rounded-lg bg-black/80 backdrop-blur-sm text-surface-300 hover:text-white transition-all hover:scale-105 active:scale-95 cursor-pointer border border-white/10"
                       title="Rename"
                     >
-                      <Pencil size={11} />
+                      <Pencil size={14} />
                     </button>
                     <button
-                      onClick={() => onExport?.(project.id)}
-                      className="p-m3-xs rounded-md bg-black/60 backdrop-blur-sm text-surface-300 hover:text-mint transition-colors"
+                      onClick={(e) => { e.stopPropagation(); onExport?.(project.id); }}
+                      className="p-2 rounded-lg bg-black/80 backdrop-blur-sm text-surface-300 hover:text-mint transition-all hover:scale-105 active:scale-95 cursor-pointer border border-white/10"
                       title="Export .dmd"
                     >
-                      <FileDown size={11} />
+                      <FileDown size={14} />
                     </button>
                     <button
-                      onClick={() => handleDelete(project.id)}
-                      className={`p-m3-xs rounded-md backdrop-blur-sm transition-colors ${
+                      onClick={(e) => { e.stopPropagation(); handleDelete(project.id); }}
+                      className={`p-2 rounded-lg backdrop-blur-sm transition-all hover:scale-105 active:scale-95 cursor-pointer border ${
                         confirmDeleteId === project.id
-                          ? 'bg-red-500/80 text-white'
-                          : 'bg-black/60 text-surface-300 hover:text-red-400'
+                          ? 'bg-red-500 text-white border-red-400/50 shadow-[0_0_12px_rgba(239,68,68,0.4)]'
+                          : 'bg-black/80 text-surface-300 hover:text-red-400 border-white/10'
                       }`}
                       title={confirmDeleteId === project.id ? 'Click again to confirm' : 'Delete'}
                     >
-                      <Trash2 size={11} />
+                      <Trash2 size={14} />
                     </button>
                   </div>
                 </div>

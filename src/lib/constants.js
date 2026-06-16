@@ -1,13 +1,13 @@
 export const MODELS = {
-  standard: { id: 'gemini-2.5-flash-image', label: 'Nano Banana', desc: 'Fast & efficient image generation' },
-  pro: { id: 'gemini-3-pro-image-preview', label: 'Nano Banana Pro', desc: 'Studio-quality 4K output' },
-  banana2: { id: 'gemini-3.1-flash-image-preview', label: 'Nano Banana 2', desc: 'Latest gen, high fidelity' },
+  standard: { id: 'gemini-2.5-flash-image', label: 'NB', desc: 'Fast & efficient image generation' },
+  banana2: { id: 'gemini-3.1-flash-image-preview', label: 'NB 2', desc: 'Latest gen, high fidelity' },
+  pro: { id: 'gemini-3-pro-image-preview', label: 'NB PRO', desc: 'Studio-quality 4K output' },
 };
 
 export const MODEL_DISPLAY = {
-  standard: { emoji: '🍌', label: 'Nano Banana' },
-  banana2: { emoji: '🍌', label: 'Nano Banana 2' },
-  pro: { emoji: '⚡', label: 'Nano Banana Pro' },
+  standard: { emoji: '🍌', label: 'NB' },
+  banana2: { emoji: '🍌', label: 'NB 2' },
+  pro: { emoji: '🍌', label: 'NB PRO' },
 };
 
 export const ENTITY_INSTRUCTIONS = {
