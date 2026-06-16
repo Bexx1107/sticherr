@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Sparkles, Scissors, HelpCircle, ChevronLeft, ChevronRight } from 'lucide-react';
 import StitcherSubTab from './components/studio/StitcherSubTab';
 import { ApiKeyInput } from './components/Shared';
@@ -14,6 +14,19 @@ export default function App() {
     }
     return false;
   });
+  const [theme, setTheme] = useState(() => {
+    return localStorage.getItem('dmd_theme') || 'dark';
+  });
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+  }, [theme]);
+
+  const toggleTheme = () => {
+    const nextTheme = theme === 'dark' ? 'light' : 'dark';
+    setTheme(nextTheme);
+    localStorage.setItem('dmd_theme', nextTheme);
+  };
 
   const handleSetApiKey = (key) => {
     const cleaned = (key || '').trim().replace(/['"\s]/g, '');
@@ -22,13 +35,12 @@ export default function App() {
   };
 
   return (
-    <div className="h-dvh flex text-surface-100 overflow-hidden" style={{ background: '#020617' }}>
+    <div className="h-dvh flex text-surface-100 overflow-hidden bg-surface-950">
       {/* Sidebar */}
       <aside 
-        className="shrink-0 flex flex-col z-20 border-r border-white/[0.08] relative transition-all duration-300 ease-in-out"
+        className="sidebar-panel shrink-0 flex flex-col z-20 border-r border-white/[0.08] relative transition-all duration-300 ease-in-out"
         style={{ 
-          width: isSidebarCollapsed ? '0px' : '280px',
-          background: 'linear-gradient(180deg, rgba(15,23,42,0.95) 0%, rgba(2,6,23,0.98) 100%)' 
+          width: isSidebarCollapsed ? '0px' : '280px'
         }}
       >
         {/* Toggle Button */}
@@ -65,7 +77,7 @@ export default function App() {
           {/* Configurations */}
           <div className="flex-1 p-m3-ml overflow-y-auto flex flex-col gap-m3-ml">
             {/* API Key */}
-            <ApiKeyInput apiKey={apiKey} setApiKey={handleSetApiKey} compact={false} />
+            <ApiKeyInput apiKey={apiKey} setApiKey={handleSetApiKey} theme={theme} toggleTheme={toggleTheme} compact={false} />
 
             {/* Workspace Guide */}
             <div className="rounded-xl border border-mint/20 bg-slate-950/40 p-m3-md flex flex-col gap-m3-md shadow-lg">
@@ -157,16 +169,14 @@ export default function App() {
           </div>
 
           {/* Footer */}
-          <div className="p-m3-ml border-t border-white/[0.08] text-[10px] text-surface-500 font-medium">
-            Stand-alone App v1.0.0
+          <div className="p-m3-ml border-t border-white/[0.08] text-[10px] text-surface-500 font-medium select-none">
+            Sticherr v1.2
           </div>
         </div>
       </aside>
 
       {/* Main Workspace */}
-      <main className="flex-1 flex flex-col min-h-0 relative z-10 w-full overflow-hidden"
-        style={{ background: 'rgba(2,6,23,0.4)' }}
-      >
+      <main className="main-workspace flex-1 flex flex-col min-h-0 relative z-10 w-full overflow-hidden">
         <StitcherSubTab apiKey={apiKey} />
       </main>
     </div>

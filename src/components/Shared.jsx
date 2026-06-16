@@ -1,6 +1,6 @@
 import { useState, useRef, useCallback } from 'react';
 import { createPortal } from 'react-dom';
-import { Upload, X, Download, AlertCircle, Eye, EyeOff, Maximize2, Check } from 'lucide-react';
+import { Upload, X, Download, AlertCircle, Eye, EyeOff, Maximize2, Check, Sun, Moon } from 'lucide-react';
 import { resizeImage, readImageFullRes, imageToDataUrl, downloadImage } from '../lib/imageUtils';
 
 // ─── Reusable Image Lightbox ────────────────────────────────────
@@ -58,7 +58,7 @@ export function ImageLightbox({ src, name, onClose }) {
 }
 
 // ─── API Key Input ──────────────────────────────────────────────
-export function ApiKeyInput({ apiKey, setApiKey, compact = false }) {
+export function ApiKeyInput({ apiKey, setApiKey, theme, toggleTheme, compact = false }) {
   const [visible, setVisible] = useState(false);
 
   const handleChange = (e) => {
@@ -74,13 +74,22 @@ export function ApiKeyInput({ apiKey, setApiKey, compact = false }) {
     <div className={compact ? 'mb-1.5' : 'mb-5'}>
       <label className="section-label flex items-center justify-between select-none">
         <span>Floyo API key</span>
-        {isKeyPresent && (
-          <span className={`text-[10px] font-bold tracking-wide uppercase transition-colors duration-200 ${
-            isValidFormat ? 'text-mint' : 'text-accent'
-          }`}>
-            {isValidFormat ? '✓ Key set' : '✗ Key too short'}
-          </span>
-        )}
+        <div className="flex items-center gap-2.5">
+          {isKeyPresent && (
+            <span className={`text-[10px] font-bold tracking-wide uppercase transition-colors duration-200 ${
+              isValidFormat ? 'text-mint' : 'text-accent'
+            }`}>
+              {isValidFormat ? '✓ Key set' : '✗ Key too short'}
+            </span>
+          )}
+          <button
+            onClick={toggleTheme}
+            className="flex items-center justify-center p-1.5 rounded-lg hover:bg-white/10 text-surface-400 hover:text-mint transition-all cursor-pointer border border-transparent hover:border-white/10"
+            title={theme === 'dark' ? "Switch to Light Mode" : "Switch to Dark Mode"}
+          >
+            {theme === 'dark' ? <Sun size={13} /> : <Moon size={13} />}
+          </button>
+        </div>
       </label>
       <div className="relative">
         <input
