@@ -126,7 +126,7 @@ async function compositeLayer(compCtx, layer, maskData) {
   compCtx.globalAlpha = prevAlpha;
 }
 
-export default function StitcherSubTab({ apiKey, onHistoryAdd, loadProjectId, onProjectLoaded: onProjectLoadedProp }) {
+export default function StitcherSubTab({ apiKey, theme, onHistoryAdd, loadProjectId, onProjectLoaded: onProjectLoadedProp }) {
   // ── Persisted state ──
   const [modelKey, setModelKey] = usePersistedState('stitcher_model', 'standard');
   const [sourceImage, setSourceImage] = usePersistedImage('stitcher_source');
@@ -1710,7 +1710,7 @@ export default function StitcherSubTab({ apiKey, onHistoryAdd, loadProjectId, on
       </div>
 
       {/* Right Panel — Canvas */}
-      <div className="studio-preview relative" ref={containerRef}>
+      <div className={`studio-preview relative ${theme === 'light' ? 'canvas-light' : ''}`} ref={containerRef}>
         {/* Canvas Mode Toolbar */}
         {currentImage && (
           <div className="absolute top-m3-md left-1/2 -translate-x-1/2 z-10 flex items-center gap-m3-sm px-m3-md py-m3-sm rounded-2xl bg-black/85 backdrop-blur-lg border border-mint/25 shadow-2xl">
@@ -1891,10 +1891,10 @@ export default function StitcherSubTab({ apiKey, onHistoryAdd, loadProjectId, on
 
         {/* Mask tool hint */}
         {currentImage && canvasMode === 'paint' && (paintTool === 'mask' || paintTool === 'unmask') && (
-          <div className={`absolute z-10 left-1/2 -translate-x-1/2 px-m3-md py-m3-xs rounded-lg text-[10px] font-semibold ${
+          <div className={`absolute z-10 left-1/2 -translate-x-1/2 px-m3-md py-m3-xs rounded-lg text-[10px] font-semibold shadow-md backdrop-blur-md ${
             selectedLayerId
-              ? 'bg-purple-500/15 text-purple-300 border border-purple-500/20'
-              : 'bg-red-500/15 text-red-300 border border-red-500/20'
+              ? 'bg-purple-950/90 text-purple-200 border border-purple-500/30'
+              : 'bg-red-950/90 text-red-200 border border-red-500/30'
           }`} style={{ top: canvasMode === 'paint' ? '6.5rem' : '5rem' }}>
             {selectedLayerId
               ? `${paintTool === 'mask' ? '🎭 Masking' : '✨ Unmasking'}: Layer ${layers.findIndex(l => l.id === selectedLayerId) + 1} — click layer in panel to switch`
@@ -1904,7 +1904,7 @@ export default function StitcherSubTab({ apiKey, onHistoryAdd, loadProjectId, on
         )}
 
         {currentImage ? (
-          <div className="flex flex-col items-center justify-center w-full h-full p-m3-md gap-m3-sm"
+          <div className="flex flex-col items-center justify-center w-full h-full p-m3-md"
             style={{ paddingTop: canvasMode === 'paint' ? '5rem' : '3.5rem', overflow: 'hidden' }}
           >
             <div style={{
@@ -1914,7 +1914,7 @@ export default function StitcherSubTab({ apiKey, onHistoryAdd, loadProjectId, on
               alignItems: 'center',
               justifyContent: 'center',
               maxWidth: '100%',
-              maxHeight: 'calc(100% - 48px)',
+              maxHeight: '100%',
             }}>
               <canvas ref={canvasRef}
                 onMouseDown={handlePointerDown}
@@ -1925,7 +1925,7 @@ export default function StitcherSubTab({ apiKey, onHistoryAdd, loadProjectId, on
               />
             </div>
             <button onClick={() => downloadImage(currentImage.base64, currentImage.mimeType, `sticherr_${Date.now()}.png`)}
-              className="btn-accent flex items-center gap-2 text-xs font-bold cursor-pointer hover:scale-105 active:scale-95 transition-all duration-200 shadow-lg"
+              className="absolute bottom-m3-md left-1/2 -translate-x-1/2 z-10 btn-accent flex items-center gap-2 text-xs font-bold cursor-pointer hover:scale-105 active:scale-95 transition-all duration-200 shadow-lg"
               title="Download final edited image"
             >
               <Download size={14} /> Download Image
