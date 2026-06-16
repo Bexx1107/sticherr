@@ -950,7 +950,7 @@ input[type="color"]::-webkit-color-swatch {
 
   /* Workspace guide card */
   .border-mint\/20.bg-slate-950\/40 {
-    background: rgba(255, 255, 255, 0.8) !important;
+    background: #ffffff !important;
     border-color: rgba(16, 185, 129, 0.18) !important;
     box-shadow: 0 4px 18px rgba(15, 23, 42, 0.03) !important;
   }
@@ -960,6 +960,12 @@ input[type="color"]::-webkit-color-swatch {
     background-color: rgba(16, 185, 129, 0.08) !important;
     border-color: rgba(16, 185, 129, 0.45) !important;
     color: #047857 !important;
+  }
+  .bg-mint\/10 {
+    background-color: rgba(16, 185, 129, 0.08) !important;
+  }
+  .border-mint\/30 {
+    border-color: rgba(16, 185, 129, 0.35) !important;
   }
   .bg-blue-500\/20,
   .bg-blue-500\/\[0\.12\] {
