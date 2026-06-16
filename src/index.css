@@ -795,11 +795,221 @@ input[type="color"]::-webkit-color-swatch {
   background: rgba(2,6,23,0.4);
 }
 
-/* ── Light Canvas Override ── */
-.studio-preview.canvas-light {
-  background: #ffffff !important;
-}
-.studio-preview.canvas-light .text-surface-500 {
-  color: #475569 !important;
+/* ── Light Mode Override System ── */
+[data-theme="light"] {
+  color-scheme: light;
+
+  /* Theme surface colors (soft slate theme) */
+  --color-surface-50: #0f172a;      /* Dark slate text */
+  --color-surface-100: #1e293b;     /* Dark slate text */
+  --color-surface-200: #334155;     /* Dark slate text */
+  --color-surface-300: #475569;     /* Slate text */
+  --color-surface-400: #64748b;     /* Slate text */
+  --color-surface-500: #8898a5;     /* Muted slate text */
+  --color-surface-600: #cbd5e1;     /* Border / Separator line */
+  --color-surface-700: #e2e8f0;     /* Light gray input bg border */
+  --color-surface-800: #f1f5f9;     /* Light gray panel container bg */
+  --color-surface-900: #f8fafc;     /* Soft off-white page background */
+  --color-surface-950: #ffffff;     /* Solid pure white */
+
+  /* Tailwind slate variables override (for standard bg-slate-900 etc. classes) */
+  --color-slate-50: #0f172a;
+  --color-slate-100: #1e293b;
+  --color-slate-200: #334155;
+  --color-slate-300: #475569;
+  --color-slate-400: #64748b;
+  --color-slate-500: #94a3b8;
+  --color-slate-600: #cbd5e1;
+  --color-slate-700: #e2e8f0;
+  --color-slate-800: #f1f5f9;
+  --color-slate-900: #f8fafc;
+  --color-slate-950: #ffffff;
+
+  /* Overrides for sidebar and main background */
+  .sidebar-panel {
+    background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%) !important;
+    border-color: rgba(0, 0, 0, 0.08) !important;
+  }
+  .main-workspace {
+    background: #ffffff !important;
+  }
+  .studio-preview {
+    background: #ffffff !important;
+  }
+
+  /* Specific element overrides to handle hardcoded styling */
+  .text-white {
+    color: #0f172a !important;
+  }
+  .text-surface-100 {
+    color: #0f172a !important;
+  }
+  .text-surface-200 {
+    color: #1e293b !important;
+  }
+  .text-surface-300 {
+    color: #334155 !important;
+  }
+  .text-surface-400 {
+    color: #475569 !important;
+  }
+  .text-surface-500 {
+    color: #64748b !important;
+  }
+  
+  /* Input fields */
+  .input-field {
+    background: #ffffff !important;
+    border-color: rgba(0, 0, 0, 0.12) !important;
+    color: #0f172a !important;
+  }
+  .input-field::placeholder {
+    color: rgba(15, 23, 42, 0.35) !important;
+  }
+  .input-field:focus {
+    background: #ffffff !important;
+    border-color: var(--color-mint) !important;
+    box-shadow: 0 0 0 1px var(--color-mint) !important;
+  }
+  
+  /* Buttons and overlays */
+  .btn-cyan {
+    background: rgba(255, 255, 255, 0.8) !important;
+    border-color: rgba(16, 185, 129, 0.3) !important;
+    color: #10B981 !important;
+  }
+  .btn-cyan:hover {
+    background: rgba(16, 185, 129, 0.08) !important;
+    border-color: rgba(16, 185, 129, 0.6) !important;
+    color: #047857 !important;
+  }
+
+  /* Keyboard shortcuts kbd block */
+  kbd {
+    background: #f1f5f9 !important;
+    border-color: rgba(0, 0, 0, 0.12) !important;
+    color: #0f172a !important;
+  }
+
+  /* Overrides for hardcoded semi-transparent border names */
+  .border-white\/10,
+  .border-white\/15,
+  .border-white\/5,
+  .border-white\/\[0\.04\],
+  .border-white\/\[0\.08\],
+  .border-white\/\[0\.10\],
+  .border-white\/\[0\.12\],
+  .border-white\/\[0\.15\] {
+    border-color: rgba(0, 0, 0, 0.08) !important;
+  }
+
+  /* Overrides for hardcoded semi-transparent backgrounds */
+  .bg-white\/\[0\.08\],
+  .bg-white\/\[0\.10\],
+  .bg-white\/\[0\.15\],
+  .bg-mint\/5 {
+    background-color: rgba(0, 0, 0, 0.03) !important;
+  }
+  .bg-black\/30 {
+    background-color: rgba(0, 0, 0, 0.02) !important;
+  }
+  .bg-black\/20 {
+    background-color: rgba(0, 0, 0, 0.01) !important;
+  }
+  .bg-black\/40 {
+    background-color: rgba(0, 0, 0, 0.04) !important;
+  }
+  .bg-black\/60 {
+    background-color: rgba(0, 0, 0, 0.07) !important;
+  }
+  .bg-black\/70,
+  .bg-black\/80,
+  .bg-black\/85 {
+    background-color: rgba(255, 255, 255, 0.92) !important;
+    backdrop-filter: blur(16px);
+    border-color: rgba(0, 0, 0, 0.08) !important;
+  }
+
+  /* Interactive items inside project browser and list cards */
+  .control-card {
+    background: #ffffff !important;
+    border-color: rgba(16, 185, 129, 0.15) !important;
+    box-shadow: 0 4px 18px rgba(15, 23, 42, 0.03) !important;
+  }
+  .control-card:hover {
+    border-color: rgba(16, 185, 129, 0.35) !important;
+    box-shadow: 0 6px 22px rgba(16, 185, 129, 0.05), 0 4px 18px rgba(15, 23, 42, 0.03) !important;
+  }
+
+  /* Project bar */
+  .rounded-xl.border-mint\/25 {
+    background: #ffffff !important;
+    border-color: rgba(16, 185, 129, 0.22) !important;
+    box-shadow: 0 4px 18px rgba(15, 23, 42, 0.03) !important;
+  }
+
+  /* Workspace guide card */
+  .border-mint\/20.bg-slate-950\/40 {
+    background: rgba(255, 255, 255, 0.8) !important;
+    border-color: rgba(16, 185, 129, 0.18) !important;
+    box-shadow: 0 4px 18px rgba(15, 23, 42, 0.03) !important;
+  }
+
+  /* Active ratio / model / resolution buttons (make them soft pastel instead of blinding neon) */
+  .bg-mint\/20 {
+    background-color: rgba(16, 185, 129, 0.08) !important;
+    border-color: rgba(16, 185, 129, 0.45) !important;
+    color: #047857 !important;
+  }
+  .bg-blue-500\/20,
+  .bg-blue-500\/\[0\.12\] {
+    background-color: rgba(59, 130, 246, 0.08) !important;
+    border-color: rgba(59, 130, 246, 0.45) !important;
+    color: #1e3a8a !important;
+  }
+  .bg-amber-500\/20 {
+    background-color: rgba(245, 158, 11, 0.08) !important;
+    border-color: rgba(245, 158, 11, 0.45) !important;
+    color: #78350f !important;
+  }
+  .bg-slate-900.border-white\/10 {
+    background: #f8fafc !important;
+    border-color: rgba(0, 0, 0, 0.08) !important;
+  }
+  .bg-slate-900.border-white\/10:hover {
+    background: #f1f5f9 !important;
+    border-color: rgba(0, 0, 0, 0.15) !important;
+  }
+
+  /* Badges */
+  .badge-cyan {
+    background: rgba(16, 185, 129, 0.08) !important;
+    color: #047857 !important;
+  }
+  .badge-surface {
+    background: rgba(0, 0, 0, 0.05) !important;
+    color: #475569 !important;
+  }
+  .text-mint {
+    color: #047857 !important;
+  }
+
+  /* Scrollbar thumb */
+  ::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.12) !important;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, 0.22) !important;
+  }
+
+  /* Fix for sidebar toggle button */
+  aside .absolute.bg-slate-950 {
+    background-color: #ffffff !important;
+    border-color: rgba(16, 185, 129, 0.35) !important;
+    color: #047857 !important;
+  }
+  aside .absolute.bg-slate-950:hover {
+    box-shadow: 0 0 12px rgba(16, 185, 129, 0.15) !important;
+  }
 }
 
