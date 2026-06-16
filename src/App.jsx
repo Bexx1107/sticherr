@@ -192,7 +192,7 @@ export default function App() {
 
       {/* Main Workspace */}
       <main className="main-workspace flex-1 flex flex-col min-h-0 relative z-10 w-full overflow-hidden">
-        <StitcherSubTab apiKey={apiKey} />
+        <StitcherSubTab apiKey={apiKey} theme={theme} />
       </main>
     </div>
   );
