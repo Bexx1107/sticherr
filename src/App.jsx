@@ -95,7 +95,7 @@ export default function App() {
             <ApiKeyInput apiKey={apiKey} setApiKey={handleSetApiKey} compact={false} />
 
             {/* Workspace Guide */}
-            <div className="rounded-xl border border-mint/20 bg-slate-950/40 p-m3-md flex flex-col gap-m3-md shadow-lg">
+            <div className="workspace-guide-card rounded-xl border border-mint/20 bg-slate-950/40 p-m3-md flex flex-col gap-m3-md shadow-lg">
               <div className="flex items-center gap-2 text-white font-extrabold text-xs uppercase tracking-wider">
                 <HelpCircle size={14} className="text-mint" />
                 <span>Workspace Guide</span>
@@ -104,7 +104,7 @@ export default function App() {
               {/* Steps */}
               <div className="flex flex-col gap-3.5">
                 <div className="flex gap-2">
-                  <span className="flex items-center justify-center w-5 h-5 rounded-md bg-mint/10 border border-mint/30 text-[10px] text-mint font-extrabold shrink-0 mt-0.5">1</span>
+                  <span className="step-number-pill flex items-center justify-center w-5 h-5 rounded-md bg-mint/10 border border-mint/30 text-[10px] text-mint font-extrabold shrink-0 mt-0.5">1</span>
                   <div className="text-[11px] leading-tight">
                     <b className="text-white block font-semibold">Upload Image</b>
                     <span className="text-surface-400">Select a base source image in card 1.</span>
@@ -112,7 +112,7 @@ export default function App() {
                 </div>
                 
                 <div className="flex gap-2">
-                  <span className="flex items-center justify-center w-5 h-5 rounded-md bg-mint/10 border border-mint/30 text-[10px] text-mint font-extrabold shrink-0 mt-0.5">2</span>
+                  <span className="step-number-pill flex items-center justify-center w-5 h-5 rounded-md bg-mint/10 border border-mint/30 text-[10px] text-mint font-extrabold shrink-0 mt-0.5">2</span>
                   <div className="text-[11px] leading-tight">
                     <b className="text-white block font-semibold">Select Edit Area</b>
                     <span className="text-surface-400">Click and drag on the canvas to define your editing bounds.</span>
@@ -120,7 +120,7 @@ export default function App() {
                 </div>
 
                 <div className="flex gap-2">
-                  <span className="flex items-center justify-center w-5 h-5 rounded-md bg-mint/10 border border-mint/30 text-[10px] text-mint font-extrabold shrink-0 mt-0.5">3</span>
+                  <span className="step-number-pill flex items-center justify-center w-5 h-5 rounded-md bg-mint/10 border border-mint/30 text-[10px] text-mint font-extrabold shrink-0 mt-0.5">3</span>
                   <div className="text-[11px] leading-tight">
                     <b className="text-white block font-semibold">Prompt & Run</b>
                     <span className="text-surface-400">Write instructions (mention <span className="text-mint font-mono">@ref</span> names) in card 2 and generate edits in card 3.</span>
@@ -128,7 +128,7 @@ export default function App() {
                 </div>
 
                 <div className="flex gap-2">
-                  <span className="flex items-center justify-center w-5 h-5 rounded-md bg-mint/10 border border-mint/30 text-[10px] text-mint font-extrabold shrink-0 mt-0.5">4</span>
+                  <span className="step-number-pill flex items-center justify-center w-5 h-5 rounded-md bg-mint/10 border border-mint/30 text-[10px] text-mint font-extrabold shrink-0 mt-0.5">4</span>
                   <div className="text-[11px] leading-tight">
                     <b className="text-white block font-semibold">Refine Layer</b>
                     <span className="text-surface-400">Mask (brush/erase) generated layers and tweak feathering or opacity in card 4.</span>
@@ -146,33 +146,33 @@ export default function App() {
                 </div>
                 
                 <div className="flex flex-col gap-2.5">
-                  <div className="flex items-center justify-between text-[11px] text-surface-300">
-                    <span className="flex items-center gap-1.5">
+                  <div className="flex flex-col gap-1 text-[11px] text-surface-300">
+                    <span className="flex items-center gap-1.5 font-semibold text-white">
                       <span className="w-1.5 h-1.5 rounded-full bg-mint" /> Pan Canvas
                     </span>
-                    <div className="flex items-center gap-1">
+                    <div className="flex items-center gap-1 pl-[15px]">
                       <kbd className="px-1.5 py-0.5 rounded text-[9px] font-mono font-bold bg-slate-950 border border-white/20 text-white shadow-sm">Middle Mouse</kbd>
                       <span>+</span>
                       <span className="text-[10px] font-medium text-surface-400">Drag</span>
                     </div>
                   </div>
 
-                  <div className="flex items-center justify-between text-[11px] text-surface-300">
-                    <span className="flex items-center gap-1.5">
+                  <div className="flex flex-col gap-1 text-[11px] text-surface-300">
+                    <span className="flex items-center gap-1.5 font-semibold text-white">
                       <span className="w-1.5 h-1.5 rounded-full bg-mint" /> Zoom Canvas
                     </span>
-                    <div className="flex items-center gap-1">
+                    <div className="flex items-center gap-1 pl-[15px]">
                       <kbd className="px-1.5 py-0.5 rounded text-[9px] font-mono font-bold bg-slate-950 border border-white/20 text-white shadow-sm">Scroll</kbd>
                       <span className="text-[10px] text-surface-400">or</span>
                       <kbd className="px-1.5 py-0.5 rounded text-[9px] font-mono font-bold bg-slate-950 border border-white/20 text-white shadow-sm">Pinch</kbd>
                     </div>
                   </div>
 
-                  <div className="flex items-center justify-between text-[11px] text-surface-300">
-                    <span className="flex items-center gap-1.5">
+                  <div className="flex flex-col gap-1 text-[11px] text-surface-300">
+                    <span className="flex items-center gap-1.5 font-semibold text-white">
                       <span className="w-1.5 h-1.5 rounded-full bg-mint" /> Save Project
                     </span>
-                    <div className="flex items-center gap-1">
+                    <div className="flex items-center gap-1 pl-[15px]">
                       <kbd className="px-1.5 py-0.5 rounded text-[9px] font-mono font-bold bg-slate-950 border border-white/20 text-white shadow-sm">Ctrl</kbd>
                       <span>+</span>
                       <kbd className="px-1.5 py-0.5 rounded text-[9px] font-mono font-bold bg-slate-950 border border-white/20 text-white shadow-sm">S</kbd>

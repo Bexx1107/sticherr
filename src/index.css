@@ -833,6 +833,10 @@ input[type="color"]::-webkit-color-swatch {
   .main-workspace {
     background: #ffffff !important;
   }
+  .studio-controls {
+    background: #f8fafc !important;
+    border-right-color: rgba(0, 0, 0, 0.08) !important;
+  }
   .studio-preview {
     background: #ffffff !important;
   }
@@ -949,10 +953,17 @@ input[type="color"]::-webkit-color-swatch {
   }
 
   /* Workspace guide card */
-  .border-mint\/20.bg-slate-950\/40 {
+  .workspace-guide-card {
     background: #ffffff !important;
     border-color: rgba(16, 185, 129, 0.18) !important;
     box-shadow: 0 4px 18px rgba(15, 23, 42, 0.03) !important;
+  }
+
+  /* Step number pills */
+  .step-number-pill {
+    background: #e6f4ea !important;
+    border-color: #a3cfbb !important;
+    color: #047857 !important;
   }
 
   /* Active ratio / model / resolution buttons (make them soft pastel instead of blinding neon) */
@@ -979,12 +990,13 @@ input[type="color"]::-webkit-color-swatch {
     color: #78350f !important;
   }
   .bg-slate-900.border-white\/10 {
-    background: #f8fafc !important;
-    border-color: rgba(0, 0, 0, 0.08) !important;
+    background: #ffffff !important;
+    border-color: rgba(0, 0, 0, 0.12) !important;
   }
   .bg-slate-900.border-white\/10:hover {
-    background: #f1f5f9 !important;
-    border-color: rgba(0, 0, 0, 0.15) !important;
+    background: #f8fafc !important;
+    border-color: rgba(0, 0, 0, 0.20) !important;
+    color: #0f172a !important;
   }
 
   /* Badges */
