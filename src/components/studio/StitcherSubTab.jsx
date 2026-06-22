@@ -1319,6 +1319,9 @@ export default function StitcherSubTab({ apiKey, theme, onHistoryAdd, loadProjec
 
 
   const resetAll = useCallback(() => {
+    setSourceImage(null);
+    setEditPrompt('');
+    setEntityRefs([]);
     setLayers([]); setSelection(null);
     paintDataRef.current = null;
     layerMasksRef.current = {};
@@ -1331,7 +1334,7 @@ export default function StitcherSubTab({ apiKey, theme, onHistoryAdd, loadProjec
     setZoomLevel(1);
     setPanOffset({ x: 0, y: 0 });
     project.newProject();
-  }, [project.newProject]);
+  }, [setSourceImage, setEditPrompt, setEntityRefs, project.newProject]);
 
   // ── Save to history + project ──
   const handleSave = useCallback(() => {
@@ -1374,9 +1377,17 @@ export default function StitcherSubTab({ apiKey, theme, onHistoryAdd, loadProjec
           <div className="flex items-center gap-m3-sm">
             <button
               onClick={() => setShowProjectBrowser(true)}
-              className="btn-cyan flex items-center gap-2 text-xs font-bold cursor-pointer"
+              className="btn-cyan flex items-center gap-2 text-xs font-bold cursor-pointer shrink-0"
+              title="Browse projects"
             >
               <FolderOpen size={14} /> Projects
+            </button>
+            <button
+              onClick={resetAll}
+              className="btn-ghost flex items-center gap-2 text-xs font-bold cursor-pointer border border-white/10 hover:border-red-500/20 hover:text-red-400 shrink-0"
+              title="Start a new blank project (Resets all)"
+            >
+              <RotateCcw size={14} /> New
             </button>
             <input
               value={project.projectName}

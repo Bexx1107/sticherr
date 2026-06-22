@@ -157,11 +157,11 @@ export function ImageUpload({ label, image, onImageChange, onClear, compact = fa
 
   if (image && !multiple) {
     return (
-      <div className="relative group">
+      <div className="relative">
         {label && <label className="section-label">{label}</label>}
-        <div className="image-card">
+        <div className="image-card relative">
           <img src={imageToDataUrl(image.base64, image.mimeType)} alt="Uploaded" className={`w-full object-cover ${compact ? 'max-h-32' : 'max-h-48'}`} />
-          <button onClick={onClear} className="absolute top-2 right-2 bg-red-500/80 hover:bg-red-500 text-white rounded-lg p-1.5 opacity-0 group-hover:opacity-100 transition-all shadow-lg">
+          <button onClick={onClear} className="absolute top-2 right-2 bg-red-600/90 hover:bg-red-500 text-white rounded-lg p-1.5 transition-all shadow-lg z-10 cursor-pointer" title="Remove image">
             <X size={12} />
           </button>
         </div>
