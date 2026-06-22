@@ -129,7 +129,7 @@ export default function ProjectBrowser({
               value={search}
               onChange={e => setSearch(e.target.value)}
               placeholder="Search projects..."
-              className="w-full pl-[36px] pr-4 py-2 rounded-lg bg-white/[0.05] border border-white/[0.08] text-sm text-white placeholder:text-surface-500 outline-none focus:border-mint/30 transition-colors"
+              className="w-full pl-10 pr-4 py-2 rounded-lg bg-white/[0.05] border border-white/[0.08] text-sm text-white placeholder:text-surface-500 outline-none focus:border-mint/30 transition-colors"
             />
           </div>
         </div>
