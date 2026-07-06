@@ -1373,61 +1373,40 @@ export default function StitcherSubTab({ apiKey, theme, onHistoryAdd, loadProjec
     <div className="studio-split">
       <div className="studio-controls">
         {/* Project Bar */}
-        <div className="rounded-xl border border-mint/25 bg-slate-950/80 p-m3-md space-y-m3-md shadow-lg">
-          <div className="flex items-center gap-m3-sm">
+        <div className="flex items-center gap-2 rounded-xl border border-mint/25 bg-slate-950/80 px-3 py-2 shadow-lg">
             <button
               onClick={() => setShowProjectBrowser(true)}
-              className="btn-cyan flex items-center gap-2 text-xs font-bold cursor-pointer shrink-0"
+              className="p-2 rounded-lg text-surface-300 hover:text-white hover:bg-white/[0.06] transition-all cursor-pointer border border-white/10 shrink-0"
               title="Browse projects"
             >
-              <FolderOpen size={14} /> Projects
-            </button>
-            <button
-              onClick={resetAll}
-              className="btn-ghost flex items-center gap-2 text-xs font-bold cursor-pointer border border-white/10 hover:border-red-500/20 hover:text-red-400 shrink-0"
-              title="Start a new blank project (Resets all)"
-            >
-              <RotateCcw size={14} /> New
+              <FolderOpen size={14} />
             </button>
             <input
               value={project.projectName}
               onChange={e => project.renameProject(e.target.value)}
-              className="flex-1 px-5 py-[10px] rounded-[10px] bg-black/40 border border-white/10 text-sm font-semibold text-white placeholder:text-surface-600 focus:border-mint/50 focus:bg-black/60 outline-none transition-all min-w-0"
+              className="flex-1 px-3 py-2 rounded-lg bg-transparent text-sm font-semibold text-white placeholder:text-surface-600 focus:bg-black/30 outline-none transition-all min-w-0"
               placeholder="Project name..."
             />
-          </div>
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-m3-xs text-[10px] text-surface-500 font-medium">
-              {project.isSaving ? (
-                <><Loader2 size={12} className="animate-spin text-mint" /> Saving...</>
-              ) : project.lastSaved ? (
-                <><CheckCircle size={12} className="text-mint" /> Saved {saveTimeAgo}</>
-              ) : project.projectId ? (
-                <span className="text-surface-500">Saved</span>
-              ) : (
-                <span>New project</span>
-              )}
-            </div>
-            <div className="flex items-center gap-m3-sm">
-              {project.projectId && (
-                <button
-                  onClick={() => project.exportProject()}
-                  className="btn-ghost flex items-center gap-2 text-xs font-bold cursor-pointer"
-                  title="Export .dmd"
-                >
-                  <FileDown size={14} /> Export
-                </button>
-              )}
-              <button
-                onClick={() => project.saveProject().catch(() => {})}
-                disabled={project.isSaving}
-                className="btn-mint flex items-center gap-2 text-xs font-bold cursor-pointer"
-                title="Save project (Ctrl+S)"
-              >
-                <Save size={14} /> Save
-              </button>
-            </div>
-          </div>
+            <button
+              onClick={resetAll}
+              className="p-2 rounded-lg text-surface-400 hover:text-red-400 hover:bg-red-500/10 transition-all cursor-pointer shrink-0"
+              title="New project (Reset all)"
+            >
+              <RotateCcw size={13} />
+            </button>
+            {project.isSaving ? (
+              <Loader2 size={14} className="animate-spin text-mint shrink-0" />
+            ) : project.lastSaved ? (
+              <span className="w-2 h-2 rounded-full bg-mint shrink-0" title={`Saved ${saveTimeAgo}`} />
+            ) : null}
+            <button
+              onClick={() => project.saveProject().catch(() => {})}
+              disabled={project.isSaving}
+              className="btn-mint flex items-center gap-1.5 text-xs font-bold cursor-pointer shrink-0 !px-3 !py-2"
+              title="Save project (Ctrl+S)"
+            >
+              <Save size={13} /> Save
+            </button>
         </div>
 
         {/* Project Browser Modal */}
@@ -1447,19 +1426,17 @@ export default function StitcherSubTab({ apiKey, theme, onHistoryAdd, loadProjec
 
         {/* Card 1: Project & Image Setup */}
         <div className="control-card">
-          <div className="border-b border-white/[0.08] pb-m3-sm mb-m3-sm">
-            <h3 className="text-xs font-extrabold text-white uppercase tracking-wider">1. Upload and Select</h3>
-          </div>
+          <h3 className="text-[11px] font-bold text-surface-300 uppercase tracking-wider">Upload</h3>
           
           {/* Source Image Upload */}
           <div className="space-y-m3-xs">
-            <label className="section-label">Source Image</label>
+
             <ImageUpload label="" image={sourceImage} onImageChange={setSourceImage} onClear={() => setSourceImage(null)} compact fullRes />
           </div>
 
           {/* Selection Ratio */}
           <div className="space-y-m3-xs">
-            <label className="section-label">Selection Aspect Ratio</label>
+
             <div className="grid grid-cols-2 gap-m3-sm">
               {['1:1', '16:9'].map(r => (
                 <button key={r} onClick={() => { setAspectMode(r); setSelection(null); }}
@@ -1472,19 +1449,17 @@ export default function StitcherSubTab({ apiKey, theme, onHistoryAdd, loadProjec
                 </button>
               ))}
             </div>
-            <p className="text-[10px] text-surface-500 mt-m3-xs">Click and drag on the canvas to define your editing bounds.</p>
+
           </div>
         </div>
 
         {/* Card 2: Edit Operations */}
         <div className="control-card">
-          <div className="border-b border-white/[0.08] pb-m3-sm mb-m3-sm">
-            <h3 className="text-xs font-extrabold text-white uppercase tracking-wider">2. Prompt and Reference Images</h3>
-          </div>
+          <h3 className="text-[11px] font-bold text-surface-300 uppercase tracking-wider">Prompt</h3>
 
           {/* Edit Prompt */}
           <div className="space-y-m3-xs">
-            <label className="section-label">Edit Instructions</label>
+
             <MentionTextarea
               value={editPrompt}
               onChange={setEditPrompt}
@@ -1497,10 +1472,7 @@ export default function StitcherSubTab({ apiKey, theme, onHistoryAdd, loadProjec
 
           {/* References */}
           <div className="space-y-m3-xs">
-            <div className="flex items-center justify-between">
-              <label className="section-label mb-0">Reference Images ({entityRefs.length}/10)</label>
-            </div>
-            <p className="text-[10px] text-surface-500 mb-m3-sm">Inject reference images into your prompt by typing their <span className="text-mint font-mono font-bold">@name</span>.</p>
+
             {entityRefs.length > 0 && (
               <div className="space-y-m3-sm mb-m3-sm">
                 {entityRefs.map((ref, i) => (
@@ -1536,13 +1508,11 @@ export default function StitcherSubTab({ apiKey, theme, onHistoryAdd, loadProjec
 
         {/* Card 3: Model, Quality & Execution */}
         <div className="control-card">
-          <div className="border-b border-white/[0.08] pb-m3-sm mb-m3-sm">
-            <h3 className="text-xs font-extrabold text-white uppercase tracking-wider">3. Model Select & Run</h3>
-          </div>
+          <h3 className="text-[11px] font-bold text-surface-300 uppercase tracking-wider">Generate</h3>
 
           {/* Model */}
           <div className="space-y-m3-xs">
-            <label className="section-label">Model Selection</label>
+
             <div className="grid grid-cols-3 gap-m3-sm">
               {Object.entries(MODELS).map(([k, m]) => {
                 const d = MODEL_DISPLAY[k] || {};
@@ -1562,7 +1532,7 @@ export default function StitcherSubTab({ apiKey, theme, onHistoryAdd, loadProjec
 
           {/* Resolution */}
           <div className="space-y-m3-xs">
-            <label className="section-label">Output Resolution</label>
+
             <div className="grid grid-cols-4 gap-m3-sm">
               {[{ key: 'auto', label: 'Auto' }, { key: '1K', label: '1K' }, { key: '2K', label: '2K' }, { key: '4K', label: '4K' }].map(r => (
                 <button key={r.key} onClick={() => setResolution(r.key)}
@@ -1576,7 +1546,7 @@ export default function StitcherSubTab({ apiKey, theme, onHistoryAdd, loadProjec
                 </button>
               ))}
             </div>
-            {modelKey === 'standard' && <p className="text-[10px] text-surface-500 mt-m3-xs">Resolution choice only available for NB 2 & NB PRO models.</p>}
+
           </div>
 
           {/* Execution Action Button */}
@@ -1588,10 +1558,7 @@ export default function StitcherSubTab({ apiKey, theme, onHistoryAdd, loadProjec
 
         {/* Card 4: Layers Manager */}
         <div className="control-card">
-          <div className="border-b border-white/[0.08] pb-m3-sm mb-m3-sm flex items-center justify-between">
-            <h3 className="text-xs font-extrabold text-white uppercase tracking-wider">4. Layers Manager</h3>
-            <span className="badge badge-cyan text-[9px] px-2 py-0.5 font-bold">{layers.length} layer{layers.length !== 1 ? 's' : ''}</span>
-          </div>
+          <div className="flex items-center justify-between"><h3 className="text-[11px] font-bold text-surface-300 uppercase tracking-wider">Layers</h3><span className="text-[10px] text-surface-500 font-medium">{layers.length}</span></div>
 
           {layers.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-m3-lg text-center text-surface-500 space-y-m3-xs">
@@ -1612,7 +1579,7 @@ export default function StitcherSubTab({ apiKey, theme, onHistoryAdd, loadProjec
                   const crop = layer.cropInsets || { top: 0, right: 0, bottom: 0, left: 0 };
                   return (
                     <div key={layer.id}
-                      onClick={() => { setSelectedLayerId(layer.id); if (canvasMode !== 'paint') setCanvasMode('transform'); }}
+                      onClick={() => { setSelectedLayerId(layer.id); setExpandedLayerId(prev => prev === layer.id ? null : layer.id); if (canvasMode !== 'paint') setCanvasMode('transform'); }}
                       className={`rounded-xl border transition-all cursor-pointer overflow-hidden ${
                         isSelected
                           ? 'bg-blue-500/[0.12] border-blue-500/50 ring-1 ring-blue-500/30'
@@ -1626,7 +1593,7 @@ export default function StitcherSubTab({ apiKey, theme, onHistoryAdd, loadProjec
                         {/* Name */}
                         <div className="flex-1 min-w-0">
                           <div className="text-[11px] font-semibold text-white truncate">{layer.prompt || 'Seamless Edit'}</div>
-                          <div className="text-[9px] font-mono text-surface-500 mt-0.5">{Math.round(layer.selection.width)}×{Math.round(layer.selection.height)} px</div>
+
                         </div>
                         {/* Controls */}
                         <div className="flex items-center gap-0.5" onClick={e => e.stopPropagation()}>
@@ -1650,7 +1617,7 @@ export default function StitcherSubTab({ apiKey, theme, onHistoryAdd, loadProjec
                       </div>
 
                       {/* Per-layer feather + opacity sliders */}
-                      {layer.visible && (
+                      {isExpanded && (
                         <div className="space-y-m3-xs px-m3-md pb-m3-sm border-t border-white/[0.04] pt-m3-xs bg-black/20">
                           <div className="flex items-center gap-m3-sm">
                             <span className="text-[10px] font-medium text-surface-400 w-12">Feather</span>
@@ -1694,25 +1661,7 @@ export default function StitcherSubTab({ apiKey, theme, onHistoryAdd, loadProjec
                 })}
               </div>
 
-              {/* Base layer */}
-              <div className="flex items-center gap-m3-sm px-m3-md py-m3-sm rounded-xl bg-slate-900 border border-white/5 select-none">
-                <span className="text-xs">🔒</span>
-                <span className="text-xs text-surface-400 font-bold">Original Base Image</span>
-                <span className="badge badge-surface text-[8px] ml-auto">Background</span>
-              </div>
 
-              <div className="flex flex-col gap-m3-xs pt-m3-sm border-t border-white/[0.08]">
-                <button onClick={resetAll}
-                  className="w-full py-m3-sm rounded-lg text-xs font-semibold text-red-400 hover:text-red-300 border border-transparent hover:border-red-500/20 hover:bg-red-500/5 transition-all flex items-center justify-center gap-m3-xs cursor-pointer">
-                  <RotateCcw size={13} /> Reset All Layers
-                </button>
-                
-                {/* Save to History Button */}
-                <button onClick={handleSave}
-                  className="w-full py-m3-sm rounded-lg bg-slate-900 border border-white/15 text-white hover:text-mint hover:border-mint/40 font-bold text-xs flex items-center justify-center gap-m3-xs hover:bg-slate-800 transition-all cursor-pointer shadow-sm">
-                  <Save size={13} /> Save to History
-                </button>
-              </div>
             </div>
           )}
         </div>
@@ -1724,63 +1673,74 @@ export default function StitcherSubTab({ apiKey, theme, onHistoryAdd, loadProjec
       <div className={`studio-preview relative ${theme === 'light' ? 'canvas-light' : ''}`} ref={containerRef}>
         {/* Canvas Mode Toolbar */}
         {currentImage && (
-          <div className="absolute top-m3-md left-1/2 -translate-x-1/2 z-10 flex items-center gap-m3-sm px-m3-md py-m3-sm rounded-2xl bg-black/85 backdrop-blur-lg border border-mint/25 shadow-2xl">
+          <div className="absolute top-4 left-1/2 -translate-x-1/2 z-10 flex items-center rounded-2xl border shadow-2xl"
+            style={{ gap: '6px', padding: '8px 14px', background: 'var(--color-surface-950)', borderColor: 'rgba(16,185,129,0.18)', backdropFilter: 'blur(16px)' }}
+          >
             <button
               onClick={() => { setCanvasMode('select'); setSelectedLayerId(null); }}
-              className={`flex items-center gap-m3-xs px-m3-md py-m3-sm rounded-lg text-xs font-bold transition-all cursor-pointer ${
+              title="Select"
+              className={`flex items-center justify-center rounded-xl transition-all cursor-pointer ${
                 canvasMode === 'select'
                   ? 'bg-mint/20 text-mint border border-mint/50 shadow-sm'
-                  : 'text-surface-300 hover:text-white hover:bg-white/[0.10] border border-white/10'
+                  : 'text-surface-400 hover:text-surface-100 hover:bg-surface-800/40 border border-transparent'
               }`}
+              style={{ width: '36px', height: '36px' }}
             >
-              <MousePointer2 size={14} /> Select
+              <MousePointer2 size={16} />
             </button>
             {layers.length > 0 && (
               <button
                 onClick={() => setCanvasMode('transform')}
-                className={`flex items-center gap-m3-xs px-m3-md py-m3-sm rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                title="Transform"
+                className={`flex items-center justify-center rounded-xl transition-all cursor-pointer ${
                   canvasMode === 'transform'
                     ? 'bg-blue-500/20 text-blue-300 border border-blue-500/50 shadow-sm'
-                    : 'text-surface-300 hover:text-white hover:bg-white/[0.10] border border-white/10'
+                    : 'text-surface-400 hover:text-surface-100 hover:bg-surface-800/40 border border-transparent'
                 }`}
+                style={{ width: '36px', height: '36px' }}
               >
-                <Move size={14} /> Transform
+                <Move size={16} />
               </button>
             )}
-            <div className="w-px h-6 bg-white/[0.15] mx-m3-xs" />
+            <div style={{ width: '1px', height: '24px', background: 'var(--color-surface-600)', opacity: 0.2, margin: '0 2px' }} />
             <button
               onClick={() => setCanvasMode('paint')}
-              className={`flex items-center gap-m3-xs px-m3-md py-m3-sm rounded-lg text-xs font-bold transition-all cursor-pointer ${
+              title="Paint"
+              className={`flex items-center justify-center rounded-xl transition-all cursor-pointer ${
                 canvasMode === 'paint'
                   ? 'bg-amber-500/20 text-amber-300 border border-amber-500/50 shadow-sm'
-                  : 'text-surface-300 hover:text-white hover:bg-white/[0.10] border border-white/10'
+                  : 'text-surface-400 hover:text-surface-100 hover:bg-surface-800/40 border border-transparent'
               }`}
+              style={{ width: '36px', height: '36px' }}
             >
-              <Paintbrush size={14} /> Paint
+              <Paintbrush size={16} />
             </button>
-            <div className="w-px h-6 bg-white/[0.15] mx-m3-xs" />
+            <div style={{ width: '1px', height: '24px', background: 'var(--color-surface-600)', opacity: 0.2, margin: '0 2px' }} />
             {/* Zoom Controls */}
-            <div className="flex items-center gap-m3-xs">
+            <div className="flex items-center" style={{ gap: '4px' }}>
               <button onClick={handleZoomOut}
-                className="p-m3-sm rounded-lg text-surface-300 hover:text-white hover:bg-white/[0.10] border border-transparent hover:border-white/10 transition-all cursor-pointer"
+                className="flex items-center justify-center rounded-lg text-surface-400 hover:text-surface-100 hover:bg-surface-800/40 transition-all cursor-pointer"
+                style={{ width: '32px', height: '32px' }}
                 title="Zoom out"
               >
-                <ZoomOut size={14} />
+                <ZoomOut size={15} />
               </button>
-              <span className="text-xs font-semibold font-mono text-surface-200 min-w-[42px] text-center select-none">
+              <span className="text-[11px] font-semibold font-mono text-surface-300 text-center select-none" style={{ minWidth: '42px' }}>
                 {Math.round(zoomLevel * 100)}%
               </span>
               <button onClick={handleZoomIn}
-                className="p-m3-sm rounded-lg text-surface-300 hover:text-white hover:bg-white/[0.10] border border-transparent hover:border-white/10 transition-all cursor-pointer"
+                className="flex items-center justify-center rounded-lg text-surface-400 hover:text-surface-100 hover:bg-surface-800/40 transition-all cursor-pointer"
+                style={{ width: '32px', height: '32px' }}
                 title="Zoom in"
               >
-                <ZoomIn size={14} />
+                <ZoomIn size={15} />
               </button>
               <button onClick={handleZoomFit}
-                className="p-m3-sm rounded-lg text-surface-300 hover:text-white hover:bg-white/[0.10] border border-transparent hover:border-white/10 transition-all cursor-pointer"
+                className="flex items-center justify-center rounded-lg text-surface-400 hover:text-surface-100 hover:bg-surface-800/40 transition-all cursor-pointer"
+                style={{ width: '32px', height: '32px' }}
                 title="Fit to screen"
               >
-                <Maximize size={14} />
+                <Maximize size={15} />
               </button>
             </div>
           </div>
@@ -1788,75 +1748,82 @@ export default function StitcherSubTab({ apiKey, theme, onHistoryAdd, loadProjec
 
         {/* Paint Controls Bar */}
         {currentImage && canvasMode === 'paint' && (
-          <div className="absolute top-14 left-1/2 -translate-x-1/2 z-10 flex items-center gap-m3-sm px-m3-md py-m3-sm rounded-xl bg-black/70 backdrop-blur-md border border-white/[0.12] shadow-xl">
+          <div className="absolute z-10 flex items-center rounded-xl border shadow-xl"
+            style={{ top: '68px', left: '50%', transform: 'translateX(-50%)', gap: '8px', padding: '6px 12px', background: 'var(--color-surface-950)', borderColor: 'rgba(16,185,129,0.12)', backdropFilter: 'blur(12px)' }}
+          >
             {/* Tool toggle */}
-            <div className="flex items-center gap-m3-xs p-m3-xs rounded-lg bg-white/[0.06]">
+            <div className="flex items-center rounded-lg" style={{ gap: '2px', padding: '3px', background: 'var(--color-surface-900)' }}>
               <button onClick={() => setPaintTool('brush')}
-                className={`flex items-center gap-m3-xs px-m3-sm py-m3-xs rounded-md text-[10px] font-bold transition-all ${
-                  paintTool === 'brush' ? 'bg-amber-500/20 text-amber-400' : 'text-surface-400 hover:text-white'
-                }`}>
-                <Paintbrush size={10} /> Brush
+                className={`flex items-center rounded-md text-[10px] font-bold transition-all cursor-pointer ${
+                  paintTool === 'brush' ? 'bg-amber-500/20 text-amber-400' : 'text-surface-400 hover:text-surface-100'
+                }`}
+                style={{ gap: '4px', padding: '5px 8px' }}>
+                <Paintbrush size={11} /> Brush
               </button>
               <button onClick={() => setPaintTool('eraser')}
-                className={`flex items-center gap-m3-xs px-m3-sm py-m3-xs rounded-md text-[10px] font-bold transition-all ${
-                  paintTool === 'eraser' ? 'bg-red-500/20 text-red-400' : 'text-surface-400 hover:text-white'
-                }`}>
-                <Eraser size={10} /> Eraser
+                className={`flex items-center rounded-md text-[10px] font-bold transition-all cursor-pointer ${
+                  paintTool === 'eraser' ? 'bg-red-500/20 text-red-400' : 'text-surface-400 hover:text-surface-100'
+                }`}
+                style={{ gap: '4px', padding: '5px 8px' }}>
+                <Eraser size={11} /> Eraser
               </button>
             </div>
 
             {/* Mask tools divider */}
-            <div className="w-px h-6 bg-white/[0.10]" />
-            <div className="flex items-center gap-m3-xs p-m3-xs rounded-lg bg-white/[0.06]">
+            <div style={{ width: '1px', height: '20px', background: 'var(--color-surface-600)', opacity: 0.2 }} />
+            <div className="flex items-center rounded-lg" style={{ gap: '2px', padding: '3px', background: 'var(--color-surface-900)' }}>
               <button onClick={() => setPaintTool('mask')}
                 title="Erase parts of selected layer"
-                className={`flex items-center gap-m3-xs px-m3-sm py-m3-xs rounded-md text-[10px] font-bold transition-all ${
-                  paintTool === 'mask' ? 'bg-purple-500/20 text-purple-400' : 'text-surface-400 hover:text-white'
-                }`}>
-                <EyeOff size={10} /> Mask
+                className={`flex items-center rounded-md text-[10px] font-bold transition-all cursor-pointer ${
+                  paintTool === 'mask' ? 'bg-purple-500/20 text-purple-400' : 'text-surface-400 hover:text-surface-100'
+                }`}
+                style={{ gap: '4px', padding: '5px 8px' }}>
+                <EyeOff size={11} /> Mask
               </button>
               <button onClick={() => setPaintTool('unmask')}
                 title="Restore masked parts of selected layer"
-                className={`flex items-center gap-m3-xs px-m3-sm py-m3-xs rounded-md text-[10px] font-bold transition-all ${
-                  paintTool === 'unmask' ? 'bg-green-500/20 text-green-400' : 'text-surface-400 hover:text-white'
-                }`}>
-                <Eye size={10} /> Unmask
+                className={`flex items-center rounded-md text-[10px] font-bold transition-all cursor-pointer ${
+                  paintTool === 'unmask' ? 'bg-green-500/20 text-green-400' : 'text-surface-400 hover:text-surface-100'
+                }`}
+                style={{ gap: '4px', padding: '5px 8px' }}>
+                <Eye size={11} /> Unmask
               </button>
             </div>
 
             {(paintTool === 'mask' || paintTool === 'unmask') && (
               <>
-                <div className="w-px h-6 bg-white/[0.10]" />
+                <div style={{ width: '1px', height: '20px', background: 'var(--color-surface-600)', opacity: 0.2 }} />
                 <button onClick={() => setShowMaskOverlay(!showMaskOverlay)}
                   title="Toggle red overlay of masked areas (Quick Mask mode)"
-                  className={`flex items-center gap-m3-xs px-m3-sm py-m3-xs rounded-lg text-[10px] font-bold transition-all border ${
+                  className={`flex items-center rounded-lg text-[10px] font-bold transition-all border cursor-pointer ${
                     showMaskOverlay
                       ? 'bg-red-500/15 text-red-400 border-red-500/30'
-                      : 'bg-white/[0.04] text-surface-400 border-transparent hover:text-white hover:bg-white/[0.08]'
-                  }`}>
+                      : 'text-surface-400 border-transparent hover:text-surface-100'
+                  }`}
+                  style={{ gap: '5px', padding: '5px 8px' }}>
                   <span className={`w-2 h-2 rounded-full transition-all ${
                     showMaskOverlay ? 'bg-red-500 animate-pulse' : 'bg-surface-500'
                   }`} />
-                  Mask Overlay
+                  Overlay
                 </button>
               </>
             )}
 
             {/* Divider */}
-            <div className="w-px h-6 bg-white/[0.10]" />
+            <div style={{ width: '1px', height: '20px', background: 'var(--color-surface-600)', opacity: 0.2 }} />
 
             {/* Color picker */}
             {paintTool === 'brush' && (
-              <label className="flex items-center gap-m3-xs cursor-pointer">
+              <label className="flex items-center cursor-pointer">
                 <input type="color" value={brushColor} onChange={e => setBrushColor(e.target.value)}
-                  className="w-6 h-6 rounded-md border border-white/[0.15] cursor-pointer bg-transparent"
-                  style={{ appearance: 'none', WebkitAppearance: 'none', padding: 0 }} />
+                  className="w-7 h-7 rounded-lg cursor-pointer bg-transparent"
+                  style={{ appearance: 'none', WebkitAppearance: 'none', padding: 0, border: '1.5px solid var(--color-surface-600)' }} />
               </label>
             )}
 
             {/* Size */}
-            <div className="flex items-center gap-m3-xs">
-              <Circle size={9} className="text-surface-500" />
+            <div className="flex items-center" style={{ gap: '5px' }}>
+              <Circle size={10} className="text-surface-500" />
               <input type="range" min={1} max={100} step={1} value={brushSize}
                 onChange={e => setBrushSize(Number(e.target.value))}
                 className="w-16 accent-amber-400 h-1 cursor-pointer" />
@@ -1864,38 +1831,41 @@ export default function StitcherSubTab({ apiKey, theme, onHistoryAdd, loadProjec
             </div>
 
             {/* Opacity */}
-            <div className="flex items-center gap-m3-xs">
-              <span className="text-[8px] text-surface-500">Op</span>
+            <div className="flex items-center" style={{ gap: '5px' }}>
+              <span className="text-[9px] text-surface-500 font-medium">Op</span>
               <input type="range" min={1} max={100} step={1} value={brushOpacity}
                 onChange={e => setBrushOpacity(Number(e.target.value))}
-                className="w-12 accent-amber-400 h-1 cursor-pointer" />
+                className="w-14 accent-amber-400 h-1 cursor-pointer" />
               <span className="text-[9px] font-mono text-surface-400 w-7 text-right">{brushOpacity}%</span>
             </div>
 
             {/* Hardness */}
-            <div className="flex items-center gap-m3-xs">
-              <span className="text-[8px] text-surface-500">Hd</span>
+            <div className="flex items-center" style={{ gap: '5px' }}>
+              <span className="text-[9px] text-surface-500 font-medium">Hd</span>
               <input type="range" min={0} max={100} step={5} value={brushHardness}
                 onChange={e => setBrushHardness(Number(e.target.value))}
-                className="w-10 accent-amber-400 h-1 cursor-pointer" />
+                className="w-12 accent-amber-400 h-1 cursor-pointer" />
               <span className="text-[9px] font-mono text-surface-400 w-7 text-right">{brushHardness}%</span>
             </div>
 
             {/* Divider */}
-            <div className="w-px h-6 bg-white/[0.10]" />
+            <div style={{ width: '1px', height: '20px', background: 'var(--color-surface-600)', opacity: 0.2 }} />
 
             {/* Undo / Redo / Clear */}
             <button onClick={paintUndo} disabled={undoStackRef.current.length === 0}
-              className="p-m3-xs rounded-md text-surface-400 hover:text-white hover:bg-white/[0.08] disabled:opacity-30 transition-colors" title="Undo (Ctrl+Z)">
-              <Undo size={12} />
+              className="flex items-center justify-center rounded-lg text-surface-400 hover:text-surface-100 hover:bg-surface-800/40 disabled:opacity-30 transition-colors cursor-pointer"
+              style={{ width: '28px', height: '28px' }} title="Undo (Ctrl+Z)">
+              <Undo size={13} />
             </button>
             <button onClick={paintRedo} disabled={redoStackRef.current.length === 0}
-              className="p-m3-xs rounded-md text-surface-400 hover:text-white hover:bg-white/[0.08] disabled:opacity-30 transition-colors" title="Redo (Ctrl+Y)">
-              <Redo size={12} />
+              className="flex items-center justify-center rounded-lg text-surface-400 hover:text-surface-100 hover:bg-surface-800/40 disabled:opacity-30 transition-colors cursor-pointer"
+              style={{ width: '28px', height: '28px' }} title="Redo (Ctrl+Y)">
+              <Redo size={13} />
             </button>
             <button onClick={clearPaintOverlay}
-              className="p-m3-xs rounded-md text-surface-400 hover:text-red-400 hover:bg-red-500/10 transition-colors" title="Clear paint overlay">
-              <Trash2 size={12} />
+              className="flex items-center justify-center rounded-lg text-surface-400 hover:text-red-400 hover:bg-red-500/10 transition-colors cursor-pointer"
+              style={{ width: '28px', height: '28px' }} title="Clear paint overlay">
+              <Trash2 size={13} />
             </button>
           </div>
         )}

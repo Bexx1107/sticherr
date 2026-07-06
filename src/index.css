@@ -124,7 +124,8 @@ textarea:focus-visible, input:focus-visible, select:focus-visible {
   color: white;
   font-weight: 700;
   letter-spacing: -0.01em;
-  padding: 10px 20px;
+  padding: 12px 22px;
+  font-size: 14px;
   border-radius: 10px;
   transition: all 0.2s cubic-bezier(0.22, 1, 0.36, 1);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.15);
@@ -132,7 +133,6 @@ textarea:focus-visible, input:focus-visible, select:focus-visible {
 .btn-accent:hover:not(:disabled) {
   background: linear-gradient(135deg, var(--color-accent), var(--color-accent-light));
   border-color: rgba(52, 211, 153, 0.7);
-  transform: translateY(-1.5px) scale(1.02);
   box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
 .btn-accent:active:not(:disabled) {
@@ -147,7 +147,8 @@ textarea:focus-visible, input:focus-visible, select:focus-visible {
   color: white;
   font-weight: 700;
   letter-spacing: -0.01em;
-  padding: 10px 20px;
+  padding: 12px 22px;
+  font-size: 14px;
   border-radius: 10px;
   transition: all 0.2s cubic-bezier(0.22, 1, 0.36, 1);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.15);
@@ -155,7 +156,6 @@ textarea:focus-visible, input:focus-visible, select:focus-visible {
 .btn-violet:hover:not(:disabled) {
   background: linear-gradient(135deg, var(--color-accent), var(--color-accent-light));
   border-color: rgba(52, 211, 153, 0.7);
-  transform: translateY(-1.5px) scale(1.02);
   box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
 .btn-violet:active:not(:disabled) { transform: translateY(0) scale(0.96); }
@@ -167,7 +167,8 @@ textarea:focus-visible, input:focus-visible, select:focus-visible {
   color: #020617;
   font-weight: 700;
   letter-spacing: -0.01em;
-  padding: 10px 20px;
+  padding: 12px 22px;
+  font-size: 14px;
   border-radius: 10px;
   transition: all 0.2s cubic-bezier(0.22, 1, 0.36, 1);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.25);
@@ -175,7 +176,6 @@ textarea:focus-visible, input:focus-visible, select:focus-visible {
 .btn-mint:hover:not(:disabled) {
   background: linear-gradient(135deg, var(--color-mint), var(--color-mint-light));
   border-color: rgba(110, 231, 183, 0.8);
-  transform: translateY(-1.5px) scale(1.02);
   box-shadow: 0 6px 20px rgba(52, 211, 153, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.3);
 }
 .btn-mint:active:not(:disabled) {
@@ -189,7 +189,8 @@ textarea:focus-visible, input:focus-visible, select:focus-visible {
   border: 1.5px solid rgba(16, 185, 129, 0.35);
   color: var(--color-surface-100);
   font-weight: 600;
-  padding: 10px 20px;
+  padding: 12px 22px;
+  font-size: 14px;
   border-radius: 10px;
   transition: all 0.2s cubic-bezier(0.22, 1, 0.36, 1);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
@@ -198,7 +199,6 @@ textarea:focus-visible, input:focus-visible, select:focus-visible {
   background: rgba(16, 185, 129, 0.14);
   border-color: rgba(16, 185, 129, 0.65);
   color: white;
-  transform: translateY(-1px) scale(1.01);
   box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25);
 }
 .btn-cyan:active:not(:disabled) {
@@ -211,7 +211,8 @@ textarea:focus-visible, input:focus-visible, select:focus-visible {
   border: 1.5px solid rgba(16, 185, 129, 0.28);
   color: var(--color-mint);
   font-weight: 600;
-  padding: 10px 20px;
+  padding: 12px 22px;
+  font-size: 14px;
   border-radius: 10px;
   transition: all 0.2s cubic-bezier(0.22, 1, 0.36, 1);
 }
@@ -219,7 +220,6 @@ textarea:focus-visible, input:focus-visible, select:focus-visible {
   background: rgba(16, 185, 129, 0.18);
   border-color: rgba(16, 185, 129, 0.6);
   color: white;
-  transform: translateY(-1px) scale(1.01);
 }
 .btn-ghost:active:not(:disabled) {
   transform: translateY(0) scale(0.96);
@@ -242,8 +242,8 @@ textarea:focus-visible, input:focus-visible, select:focus-visible {
   background: rgba(2,6,23,0.5);
   border: 1px solid rgba(16,185,129,0.18);
   border-radius: 8px;
-  padding: var(--md-sys-spacing-sm) var(--md-sys-spacing-ms);
-  font-size: 0.8125rem;
+  padding: 12px 16px;
+  font-size: 0.875rem;
   color: white;
   transition: all 0.2s cubic-bezier(0.22, 1, 0.36, 1);
   width: 100%;
@@ -269,7 +269,7 @@ select.input-field {
   background-size: 18px;
 }
 
-textarea.input-field { resize: vertical; min-height: 60px; line-height: 1.5; }
+textarea.input-field { resize: vertical; min-height: 70px; line-height: 1.5; }
 
 /* ── Spinner ────────────────────────────────────── */
 .spinner {
@@ -367,34 +367,34 @@ textarea.input-field { resize: vertical; min-height: 60px; line-height: 1.5; }
   min-height: 0;
 }
 .studio-controls {
-  width: 480px;
-  min-width: 380px;
-  max-width: 520px;
+  width: 380px;
+  min-width: 320px;
+  max-width: 420px;
   flex-shrink: 0;
   overflow-y: auto;
   border-right: 1px solid rgba(16,185,129,0.15);
-  padding: var(--md-sys-spacing-ml);
+  padding: 16px;
   background: rgba(15,23,42,0.45);
   display: flex;
   flex-direction: column;
-  gap: var(--md-sys-spacing-ml);
+  gap: 16px;
 }
 
 /* ── Control Cards (Steps 1, 2, 3, 4) ───────────── */
 .control-card {
   display: flex;
   flex-direction: column;
-  gap: var(--md-sys-spacing-md);
-  background: rgba(2, 6, 23, 0.85); /* Solid high-contrast background matching project bar */
-  border: 1.5px solid rgba(52, 211, 153, 0.2); /* Mint border outline */
+  gap: 14px;
+  background: rgba(2, 6, 23, 0.85);
+  border: 1px solid rgba(52, 211, 153, 0.10);
   border-radius: 14px;
-  padding: var(--md-sys-spacing-md);
-  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.35);
+  padding: 20px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
   transition: all 0.25s cubic-bezier(0.22, 1, 0.36, 1);
 }
 .control-card:hover {
-  border-color: rgba(52, 211, 153, 0.4);
-  box-shadow: 0 6px 24px rgba(52, 211, 153, 0.1), 0 4px 24px rgba(0, 0, 0, 0.35);
+  border-color: rgba(52, 211, 153, 0.22);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.2);
 }
 .studio-preview {
   flex: 1;
@@ -410,21 +410,21 @@ textarea.input-field { resize: vertical; min-height: 60px; line-height: 1.5; }
 /* ── Section Headers ────────────────────────────── */
 .section-label {
   display: block;
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.1em;
   color: var(--color-surface-400);
-  margin-bottom: 8px;
+  margin-bottom: 10px;
 }
 .section-header {
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 700;
   color: white;
-  margin-bottom: 12px;
+  margin-bottom: 14px;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   letter-spacing: -0.01em;
 }
 .section-num {
@@ -494,19 +494,7 @@ textarea.input-field { resize: vertical; min-height: 60px; line-height: 1.5; }
 .toggle-switch.active::after { transform: translateX(16px); }
 .toggle-switch[disabled], .toggle-switch.disabled { opacity: 0.4; cursor: not-allowed; pointer-events: none; }
 
-/* ── Beat Cards ─────────────────────────────────── */
-.beat-card {
-  transition: all 0.2s cubic-bezier(0.22, 1, 0.36, 1);
-}
-.beat-card:hover { background: rgba(16,185,129,0.08); }
-.beat-card.selected {
-  background: rgba(16,185,129,0.12);
-  border-color: rgba(16,185,129,0.3);
-}
-.prompt-tag {
-  background: rgba(16,185,129,0.08);
-  border: 1px solid rgba(16,185,129,0.15);
-}
+
 
 /* ── Image Cards ────────────────────────────────── */
 .image-card {
@@ -571,33 +559,7 @@ textarea.input-field { resize: vertical; min-height: 60px; line-height: 1.5; }
   box-shadow: 0 2px 8px rgba(0,0,0,0.15);
 }
 
-/* ── Chain Prompt Progress ──────────────────────── */
-.chain-progress {
-  background: rgba(15,23,42,0.5);
-  border: 1px solid rgba(16,185,129,0.18);
-  border-radius: 10px;
-  padding: var(--md-sys-spacing-ms) var(--md-sys-spacing-md);
-  margin-bottom: var(--md-sys-spacing-sm);
-}
-.chain-bar {
-  height: 3px;
-  border-radius: 100px;
-  background: rgba(16,185,129,0.2);
-  overflow: hidden;
-}
-.chain-bar-fill {
-  height: 100%;
-  border-radius: 100px;
-  background: linear-gradient(90deg, var(--color-accent), var(--color-accent-light));
-  transition: width 0.4s cubic-bezier(0.22, 1, 0.36, 1);
-}
 
-/* ── Chain Result Grid ──────────────────────────── */
-.chain-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: var(--md-sys-spacing-ms);
-}
 
 /* ── Skeleton Loaders ──────────────────────────── */
 @keyframes skeleton-shimmer {
@@ -678,62 +640,7 @@ textarea.input-field { resize: vertical; min-height: 60px; line-height: 1.5; }
 .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
 .scrollbar-hide::-webkit-scrollbar { display: none; }
 
-/* ── Usage Analytics Dashboard ─────────────────── */
-.usage-card {
-  background: rgba(15,23,42,0.5);
-  border: 1px solid rgba(16,185,129,0.18);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  box-shadow: 0 2px 12px rgba(0,0,0,0.2);
-  transition: all 0.25s cubic-bezier(0.22, 1, 0.36, 1);
-}
-.usage-card:hover {
-  border-color: rgba(16,185,129,0.3);
-  transform: translateY(-1px);
-  box-shadow: 0 4px 20px rgba(0,0,0,0.25);
-}
 
-.usage-summary-card {
-  border: 1px solid;
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  box-shadow: 0 2px 16px rgba(0,0,0,0.2);
-  transition: all 0.25s cubic-bezier(0.22, 1, 0.36, 1);
-}
-.usage-summary-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 24px rgba(0,0,0,0.3);
-}
-
-.usage-pct-badge {
-  display: inline-flex;
-  align-items: center;
-  padding: 2px 8px;
-  border-radius: 100px;
-  font-size: 10px;
-  font-weight: 700;
-  background: rgba(16,185,129,0.15);
-  color: var(--color-surface-200);
-}
-
-.usage-bar {
-  transition: height 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-
-.tabular-nums {
-  font-variant-numeric: tabular-nums;
-}
-
-/* ── Noise overlay for premium texture ─────────── */
-.noise-overlay::before {
-  content: '';
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: 9999;
-  opacity: 0.012;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
-}
 
 /* ── Color picker input (paint mode) ────────── */
 input[type="color"] {

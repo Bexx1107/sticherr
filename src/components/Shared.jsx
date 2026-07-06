@@ -1,6 +1,6 @@
 import { useState, useRef, useCallback } from 'react';
 import { createPortal } from 'react-dom';
-import { Upload, X, Download, AlertCircle, Eye, EyeOff, Maximize2, Check, Sun, Moon } from 'lucide-react';
+import { Upload, X, Download, AlertCircle, Eye, EyeOff, Maximize2, Check, Sun, Moon, ChevronDown } from 'lucide-react';
 import { resizeImage, readImageFullRes, imageToDataUrl, downloadImage } from '../lib/imageUtils';
 
 // ─── Reusable Image Lightbox ────────────────────────────────────
@@ -71,7 +71,7 @@ export function ApiKeyInput({ apiKey, setApiKey, compact = false }) {
   const isValidFormat = isKeyPresent && apiKey.length >= 20;
 
   return (
-    <div className={compact ? 'mb-1.5' : 'mb-5'}>
+    <div className={compact ? 'mb-1.5' : 'mb-0'}>
       <label className="section-label flex items-center justify-between select-none">
         <span>Floyo API key</span>
         {isKeyPresent && (

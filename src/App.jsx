@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Sparkles, Scissors, HelpCircle, ChevronLeft, ChevronRight, Sun, Moon } from 'lucide-react';
+import { Sparkles, Scissors, HelpCircle, ChevronLeft, ChevronRight, Sun, Moon, X } from 'lucide-react';
 import StitcherSubTab from './components/studio/StitcherSubTab';
 import { ApiKeyInput } from './components/Shared';
 
@@ -17,6 +17,9 @@ export default function App() {
   const [theme, setTheme] = useState(() => {
     return localStorage.getItem('dmd_theme') || 'dark';
   });
+  const [showGuide, setShowGuide] = useState(() => {
+    return localStorage.getItem('dmd_guide_dismissed') !== 'true';
+  });
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
@@ -26,6 +29,11 @@ export default function App() {
     const nextTheme = theme === 'dark' ? 'light' : 'dark';
     setTheme(nextTheme);
     localStorage.setItem('dmd_theme', nextTheme);
+  };
+
+  const dismissGuide = () => {
+    setShowGuide(false);
+    localStorage.setItem('dmd_guide_dismissed', 'true');
   };
 
   const handleSetApiKey = (key) => {
@@ -55,50 +63,54 @@ export default function App() {
         {/* Sidebar Content (hidden when collapsed) */}
         <div className={`flex flex-col h-full w-[280px] overflow-hidden transition-opacity duration-200 ${isSidebarCollapsed ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
           {/* Brand */}
-          <div className="flex flex-col gap-m3-sm px-m3-ml py-m3-ml shrink-0">
-            <div className="flex items-center">
+          <div className="flex items-center justify-between px-5 py-4 shrink-0">
+            <div className="flex items-center" style={{ gap: '8px' }}>
               <div 
-                className="w-10 h-10 rounded-xl flex items-center justify-center shadow-lg"
+                className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0"
                 style={{ 
                   background: 'linear-gradient(135deg, #047857, #10B981)', 
-                  boxShadow: '0 4px 20px rgba(16,185,129,0.3), inset 0 1px 0 rgba(255,255,255,0.15)' 
+                  boxShadow: '0 2px 8px rgba(16,185,129,0.25)' 
                 }}
               >
-                <Scissors size={20} className="text-white" />
+                <Scissors size={16} className="text-white" />
               </div>
-              <div className="ml-m3-ms">
+              <div>
                 <h1 className="text-base font-bold text-white tracking-tight leading-none">Sticherr</h1>
-                <p className="text-[10px] font-medium text-surface-500 mt-0.5 tracking-wide uppercase">Standalone Editor</p>
+                <p className="text-[10px] font-medium text-surface-500 mt-0.5 tracking-wide uppercase">Editor</p>
               </div>
             </div>
-
-            {/* Theme Toggle Button */}
-            <button
-              onClick={toggleTheme}
-              className="w-full mt-2 py-2 px-3 rounded-lg bg-white/[0.04] border border-white/10 hover:border-mint/30 hover:bg-mint/5 text-[11px] font-semibold text-surface-300 hover:text-white flex items-center justify-center gap-1.5 cursor-pointer transition-all duration-150 shadow-sm"
-              title={theme === 'dark' ? "Switch to Light Mode" : "Switch to Dark Mode"}
-            >
-              {theme === 'dark' ? (
-                <><Sun size={12} className="text-mint animate-pulse" /> Switch to Light Mode</>
-              ) : (
-                <><Moon size={12} className="text-mint" /> Switch to Dark Mode</>
-              )}
-            </button>
           </div>
 
           {/* Separator */}
-          <div className="mx-m3-md h-px bg-white/[0.10]" />
+          <div className="h-px bg-white/[0.10]" style={{ margin: '12px 20px' }} />
 
           {/* Configurations */}
-          <div className="flex-1 p-m3-ml overflow-y-auto flex flex-col gap-m3-ml">
+          <div className="flex-1 p-5 overflow-y-auto flex flex-col gap-4">
+            {/* Theme Toggle */}
+            <button
+              onClick={toggleTheme}
+              className="flex items-center gap-2 w-full px-4 py-2.5 rounded-xl text-[12px] font-semibold text-surface-400 hover:text-surface-100 border border-surface-600/15 hover:border-surface-600/30 hover:bg-surface-800/30 transition-all cursor-pointer"
+            >
+              {theme === 'dark' ? <Sun size={14} className="text-mint" /> : <Moon size={14} className="text-mint" />}
+              {theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+            </button>
+
             {/* API Key */}
             <ApiKeyInput apiKey={apiKey} setApiKey={handleSetApiKey} compact={false} />
 
             {/* Workspace Guide */}
+            {showGuide && (
             <div className="workspace-guide-card rounded-xl border border-mint/20 bg-slate-950/40 p-m3-md flex flex-col gap-m3-md shadow-lg">
               <div className="flex items-center gap-2 text-white font-extrabold text-xs uppercase tracking-wider">
                 <HelpCircle size={14} className="text-mint" />
-                <span>Workspace Guide</span>
+                <span className="flex-1">Workspace Guide</span>
+                <button
+                  onClick={dismissGuide}
+                  className="p-1 rounded-md text-surface-500 hover:text-white hover:bg-white/[0.08] transition-all cursor-pointer"
+                  title="Dismiss guide"
+                >
+                  <X size={12} />
+                </button>
               </div>
               
               {/* Steps */}
@@ -135,56 +147,20 @@ export default function App() {
                   </div>
                 </div>
               </div>
-
-              {/* Separator */}
-              <div className="h-px bg-white/[0.08]" />
-
-              {/* Keyboard Shortcuts */}
-              <div className="flex flex-col gap-3">
-                <div className="text-[10px] text-surface-400 uppercase tracking-wider font-extrabold">
-                  Canvas Shortcuts
-                </div>
-                
-                <div className="flex flex-col gap-2.5">
-                  <div className="flex flex-col gap-1 text-[11px] text-surface-300">
-                    <span className="flex items-center gap-1.5 font-semibold text-white">
-                      <span className="w-1.5 h-1.5 rounded-full bg-mint" /> Pan Canvas
-                    </span>
-                    <div className="flex items-center gap-1 pl-[15px]">
-                      <kbd className="px-1.5 py-0.5 rounded text-[9px] font-mono font-bold bg-slate-950 border border-white/20 text-white shadow-sm">Middle Mouse</kbd>
-                      <span>+</span>
-                      <span className="text-[10px] font-medium text-surface-400">Drag</span>
-                    </div>
-                  </div>
-
-                  <div className="flex flex-col gap-1 text-[11px] text-surface-300">
-                    <span className="flex items-center gap-1.5 font-semibold text-white">
-                      <span className="w-1.5 h-1.5 rounded-full bg-mint" /> Zoom Canvas
-                    </span>
-                    <div className="flex items-center gap-1 pl-[15px]">
-                      <kbd className="px-1.5 py-0.5 rounded text-[9px] font-mono font-bold bg-slate-950 border border-white/20 text-white shadow-sm">Scroll</kbd>
-                      <span className="text-[10px] text-surface-400">or</span>
-                      <kbd className="px-1.5 py-0.5 rounded text-[9px] font-mono font-bold bg-slate-950 border border-white/20 text-white shadow-sm">Pinch</kbd>
-                    </div>
-                  </div>
-
-                  <div className="flex flex-col gap-1 text-[11px] text-surface-300">
-                    <span className="flex items-center gap-1.5 font-semibold text-white">
-                      <span className="w-1.5 h-1.5 rounded-full bg-mint" /> Save Project
-                    </span>
-                    <div className="flex items-center gap-1 pl-[15px]">
-                      <kbd className="px-1.5 py-0.5 rounded text-[9px] font-mono font-bold bg-slate-950 border border-white/20 text-white shadow-sm">Ctrl</kbd>
-                      <span>+</span>
-                      <kbd className="px-1.5 py-0.5 rounded text-[9px] font-mono font-bold bg-slate-950 border border-white/20 text-white shadow-sm">S</kbd>
-                    </div>
-                  </div>
-                </div>
-              </div>
             </div>
+            )}
+            {!showGuide && (
+              <button
+                onClick={() => { setShowGuide(true); localStorage.removeItem('dmd_guide_dismissed'); }}
+                className="flex items-center gap-2 px-3 py-2 rounded-lg text-[11px] text-surface-400 hover:text-white hover:bg-white/[0.04] transition-all cursor-pointer"
+              >
+                <HelpCircle size={13} className="text-mint" /> Show Guide
+              </button>
+            )}
           </div>
 
           {/* Footer */}
-          <div className="p-m3-ml border-t border-white/[0.08] text-[10px] text-surface-500 font-medium select-none">
+          <div className="px-5 py-3 text-[10px] text-surface-500 font-medium select-none">
             Sticherr v1.2
           </div>
         </div>

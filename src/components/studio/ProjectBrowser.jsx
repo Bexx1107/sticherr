@@ -92,44 +92,44 @@ export default function ProjectBrowser({
 
       {/* Modal */}
       <div
-        className="relative w-full max-w-3xl max-h-[80vh] bg-surface-900 border border-white/[0.14] rounded-2xl shadow-2xl flex flex-col overflow-hidden animate-scale-in"
-        style={{ background: 'linear-gradient(180deg, rgba(15,23,42,0.98) 0%, rgba(2,6,23,0.99) 100%)' }}
+        className="project-browser-modal relative w-full max-w-3xl max-h-[80vh] bg-surface-950 border border-surface-600/20 rounded-2xl shadow-2xl flex flex-col overflow-hidden animate-scale-in"
       >
         {/* Header */}
-        <div className="flex items-center justify-between px-m3-ml py-m3-md border-b border-white/[0.12]">
+        <div className="flex items-center justify-between px-m3-ml py-m3-md border-b border-surface-600/15">
           <div className="flex items-center gap-m3-ms">
             <div className="w-9 h-9 rounded-xl bg-mint/10 flex items-center justify-center">
               <FolderOpen size={18} className="text-mint" />
             </div>
             <div>
-              <h2 className="text-base font-bold text-white">Projects</h2>
+              <h2 className="text-base font-bold text-surface-100">Projects</h2>
               <p className="text-[11px] text-surface-500 font-medium">{filtered.length} saved project{filtered.length !== 1 ? 's' : ''}</p>
             </div>
           </div>
           <div className="flex items-center gap-m3-sm">
             <button
               onClick={handleImportClick}
-              className="flex items-center gap-m3-xs px-m3-ms py-m3-xs rounded-lg bg-white/[0.07] border border-white/[0.10] text-surface-300 text-[11px] font-semibold hover:bg-white/[0.12] hover:text-white transition-all"
+              className="flex items-center gap-m3-xs px-m3-ms py-m3-xs rounded-lg bg-surface-800/50 border border-surface-600/15 text-surface-300 text-[11px] font-semibold hover:bg-surface-800 hover:text-surface-100 transition-all"
             >
               <Upload size={12} /> Import .dmd
             </button>
             <input ref={fileInputRef} type="file" accept=".dmd,.json" className="hidden" onChange={handleFileChange} />
-            <button onClick={onClose} className="p-m3-xs rounded-lg hover:bg-white/[0.08] text-surface-400 hover:text-white transition-colors">
+            <button onClick={onClose} className="p-m3-xs rounded-lg hover:bg-surface-800/50 text-surface-400 hover:text-surface-100 transition-colors">
               <X size={18} />
             </button>
           </div>
         </div>
 
         {/* Search */}
-        <div className="px-m3-ml py-m3-ms border-b border-white/[0.08]">
+        <div className="px-m3-ml py-m3-ms border-b border-surface-600/10">
           <div className="relative">
-            <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-surface-500 z-10 pointer-events-none" />
+            <Search size={14} className="absolute left-4 top-1/2 -translate-y-1/2 text-surface-500 z-10 pointer-events-none" />
             <input
               type="text"
               value={search}
               onChange={e => setSearch(e.target.value)}
               placeholder="Search projects..."
-              className="w-full pl-10 pr-4 py-2 rounded-lg bg-white/[0.05] border border-white/[0.08] text-sm text-white placeholder:text-surface-500 outline-none focus:border-mint/30 transition-colors"
+              className="w-full py-2.5 rounded-lg bg-surface-900/50 border border-surface-600/15 text-sm text-surface-100 placeholder:text-surface-500 outline-none focus:border-mint/30 transition-colors"
+              style={{ paddingLeft: '42px', paddingRight: '16px' }}
             />
           </div>
         </div>
@@ -139,12 +139,12 @@ export default function ProjectBrowser({
           {isLoading ? (
             <div className="grid grid-cols-3 gap-m3-ms">
               {Array.from({ length: 6 }).map((_, i) => (
-                <div key={i} className="aspect-[4/3] rounded-xl bg-white/[0.04] animate-pulse" />
+                <div key={i} className="aspect-[4/3] rounded-xl bg-surface-800/30 animate-pulse" />
               ))}
             </div>
           ) : filtered.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-16 text-center">
-              <div className="w-14 h-14 rounded-2xl bg-white/[0.05] flex items-center justify-center mb-m3-md">
+              <div className="w-14 h-14 rounded-2xl bg-surface-800/30 flex items-center justify-center mb-m3-md">
                 <FolderOpen size={24} className="text-surface-500" />
               </div>
               <p className="text-sm font-semibold text-surface-400 mb-1">
@@ -159,11 +159,11 @@ export default function ProjectBrowser({
               {filtered.map(project => (
                 <div
                   key={project.id}
-                  className="group relative rounded-xl border border-white/[0.08] hover:border-white/[0.16] bg-white/[0.03] hover:bg-white/[0.05] transition-all cursor-pointer overflow-hidden"
+                  className="group relative rounded-xl border border-surface-600/12 hover:border-surface-600/25 bg-surface-900/40 hover:bg-surface-900/70 transition-all cursor-pointer overflow-hidden"
                   onClick={() => { onLoad?.(project.id); onClose(); }}
                 >
                   {/* Thumbnail */}
-                  <div className="aspect-[4/3] bg-black/30 overflow-hidden">
+                  <div className="aspect-[4/3] bg-surface-900/50 overflow-hidden">
                     <img
                       src={getProjectThumbUrl(project.id)}
                       alt={project.name}
@@ -189,7 +189,7 @@ export default function ProjectBrowser({
                         </button>
                       </div>
                     ) : (
-                      <h3 className="text-xs font-bold text-surface-200 truncate">{project.name || 'Untitled'}</h3>
+                      <h3 className="text-xs font-bold text-surface-100 truncate">{project.name || 'Untitled'}</h3>
                     )}
                     <div className="flex items-center gap-m3-sm mt-m3-xs text-[10px] text-surface-500">
                       <span className="flex items-center gap-m3-xs"><Layers size={9} />{project.layerCount || 0} layers</span>
@@ -205,14 +205,14 @@ export default function ProjectBrowser({
                   >
                     <button
                       onClick={(e) => { e.stopPropagation(); setRenamingId(project.id); setRenameValue(project.name || ''); }}
-                      className="p-2 rounded-lg bg-black/80 backdrop-blur-sm text-surface-300 hover:text-white transition-all hover:scale-105 active:scale-95 cursor-pointer border border-white/10"
+                      className="p-2 rounded-lg bg-surface-950/80 backdrop-blur-sm text-surface-300 hover:text-surface-100 transition-all hover:scale-105 active:scale-95 cursor-pointer border border-surface-600/15"
                       title="Rename"
                     >
                       <Pencil size={14} />
                     </button>
                     <button
                       onClick={(e) => { e.stopPropagation(); onExport?.(project.id); }}
-                      className="p-2 rounded-lg bg-black/80 backdrop-blur-sm text-surface-300 hover:text-mint transition-all hover:scale-105 active:scale-95 cursor-pointer border border-white/10"
+                      className="p-2 rounded-lg bg-surface-950/80 backdrop-blur-sm text-surface-300 hover:text-mint transition-all hover:scale-105 active:scale-95 cursor-pointer border border-surface-600/15"
                       title="Export .dmd"
                     >
                       <FileDown size={14} />
@@ -222,7 +222,7 @@ export default function ProjectBrowser({
                       className={`p-2 rounded-lg backdrop-blur-sm transition-all hover:scale-105 active:scale-95 cursor-pointer border ${
                         confirmDeleteId === project.id
                           ? 'bg-red-500 text-white border-red-400/50 shadow-[0_0_12px_rgba(239,68,68,0.4)]'
-                          : 'bg-black/80 text-surface-300 hover:text-red-400 border-white/10'
+                          : 'bg-surface-950/80 text-surface-300 hover:text-red-400 border-surface-600/15'
                       }`}
                       title={confirmDeleteId === project.id ? 'Click again to confirm' : 'Delete'}
                     >
