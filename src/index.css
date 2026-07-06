@@ -20,7 +20,7 @@
   --color-surface-900: #0F172A;
   --color-surface-950: #020617;
 
-  /* ── Accent (Emerald — regija.net primary) ────────── */
+  /* ── Accent (Emerald) ────────────────────────── */
   --color-accent: #10B981;
   --color-accent-light: #34D399;
   --color-accent-dark: #047857;
@@ -30,7 +30,7 @@
   --color-violet-light: #34D399;
   --color-violet-dark: #047857;
 
-  /* ── Mint → Lemon (regija.net secondary accent) ───────────── */
+  /* ── Mint (Secondary Accent) ─────────────────── */
   --color-mint: #34D399;
   --color-mint-light: #6EE7B7;
   --color-mint-dark: #10B981;
