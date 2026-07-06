@@ -195,18 +195,15 @@ npm run server
 
 ---
 
-## 🔑 Entity References & @Mentions
+## 🔑 Reference Images & @Mentions
 
-Upload reference images as named entities to maintain visual consistency:
+Upload reference images to maintain visual consistency across edits. Name them, and then `@mention` them directly in your prompt:
 
-| Type | Use Case | Example |
-|------|----------|---------|
-| 🧑 **Character** | People, animals, figures | *"Add @John sitting on the bench"* |
-| 📦 **Asset** | Objects, props, items | *"Place @RedCar in the driveway"* |
-| 🏷️ **Logo** | Brand marks, watermarks | *"Add @CompanyLogo to the corner"* |
-| 🌍 **Location** | Environments, backdrops | *"Change background to @Beach"* |
+- **Upload** a reference image and give it a name (e.g. "RedCar", "John", "CompanyLogo")
+- **Mention** it in your prompt: *"Add @John sitting on the bench"* or *"Place @RedCar in the driveway"*
+- The AI receives the reference image alongside your prompt to preserve the exact appearance
 
-Each entity type has specialized prompt instructions that guide the AI to preserve the reference's exact appearance.
+References work great for characters, objects, logos, environments — anything you want the AI to reproduce faithfully.
 
 ---
 
