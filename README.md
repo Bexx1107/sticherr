@@ -13,7 +13,7 @@
   <img src="https://img.shields.io/badge/Vite-8-646CFF?style=flat-square&logo=vite" />
   <img src="https://img.shields.io/badge/Tailwind-4-38BDF8?style=flat-square&logo=tailwindcss" />
   <img src="https://img.shields.io/badge/Express-5-000000?style=flat-square&logo=express" />
-  <img src="https://img.shields.io/badge/License-Private-red?style=flat-square" />
+  <img src="https://img.shields.io/badge/License-Source_Available-blue?style=flat-square" />
 </p>
 
 <p align="center">
@@ -225,7 +225,7 @@ References work great for characters, objects, logos, environments — anything 
 
 ## 📄 License
 
-This project is proprietary software. All rights reserved.
+Source available — free to download and use, but modifications and redistribution are not permitted. See [LICENSE](LICENSE) for details.
 
 ---
 
