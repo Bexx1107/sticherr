@@ -6,6 +6,9 @@
 
 <p align="center">
   <b>AI-Powered Image Editor with Non-Destructive Layer Compositing</b>
+</p>
+
+<p align="center">
   <b>https://sticherr.netlify.app/</b>
 </p>
 
