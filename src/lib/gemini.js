@@ -3,7 +3,8 @@ import { logCall } from './usageTracker.js';
 const GEMINI_API_BASE = 'https://generativelanguage.googleapis.com/v1beta';
 
 /**
- * Execute image editing / generation via Google Gemini / Imagen API
+ * Execute image editing / generation via Google Gemini / Nano Banana API
+ * (Uses :generateContent endpoint with responseModalities: ["TEXT", "IMAGE"])
  */
 export async function geminiEdit(apiKey, modelId, params) {
   const start = performance.now();
@@ -34,56 +35,75 @@ export async function geminiEdit(apiKey, modelId, params) {
 
   if (onStatus) onStatus('generating', {});
 
-  // Try Imagen 3 Predict endpoint first
-  try {
-    const result = await callImagenPredict(apiKey, finalPrompt, aspectRatio, imgBase64);
-    logCall({ functionName: 'geminiEdit', modelId: 'imagen-3.0-generate-002', durationMs: performance.now() - start, success: true }).catch(() => {});
-    return {
-      image: result,
-      text: '',
-      apiPayload: { provider: 'gemini', model: 'imagen-3.0-generate-002', prompt: finalPrompt }
-    };
-  } catch (imagenErr) {
-    console.warn('[Gemini] Imagen 3 predict endpoint failed, trying Gemini Flash multimodal fallback...', imagenErr.message);
-    
+  // List of Nano Banana / Gemini models to attempt via :generateContent
+  const modelsToTry = Array.from(new Set([
+    modelId,
+    'gemini-3.1-flash-image-preview',
+    'gemini-3.1-flash-image',
+    'gemini-2.5-flash-image',
+    'gemini-3-pro-image-preview',
+    'gemini-2.0-flash',
+    'gemini-1.5-flash'
+  ])).filter(Boolean);
+
+  let lastError = null;
+
+  for (const model of modelsToTry) {
     try {
-      const result = await callGeminiMultimodal(apiKey, finalPrompt, imgBase64, imgMimeType, refBase64, refMimeType);
-      logCall({ functionName: 'geminiEdit', modelId: 'gemini-2.0-flash', durationMs: performance.now() - start, success: true }).catch(() => {});
+      console.log(`[Gemini] Attempting generation with model: ${model}`);
+      const result = await callGeminiGenerateContent(apiKey, model, finalPrompt, imgBase64, imgMimeType, refBase64, refMimeType);
+      
+      logCall({ functionName: 'geminiEdit', modelId: model, durationMs: performance.now() - start, success: true }).catch(() => {});
+      
       return {
         image: result,
         text: '',
-        apiPayload: { provider: 'gemini', model: 'gemini-2.0-flash', prompt: finalPrompt }
+        apiPayload: { provider: 'gemini', model, prompt: finalPrompt }
       };
-    } catch (flashErr) {
-      console.error('[Gemini] Flash fallback failed:', flashErr);
-      logCall({ functionName: 'geminiEdit', modelId: 'gemini', durationMs: performance.now() - start, success: false, error: imagenErr.message }).catch(() => {});
-      throw new Error(`Gemini API Error: ${imagenErr.message || flashErr.message}`);
+    } catch (err) {
+      console.warn(`[Gemini] Model ${model} failed:`, err.message);
+      lastError = err;
     }
   }
+
+  logCall({ functionName: 'geminiEdit', modelId: modelId || 'gemini', durationMs: performance.now() - start, success: false, error: lastError?.message }).catch(() => {});
+  throw new Error(`Gemini API Error: ${lastError?.message || 'Failed to generate image with Gemini API'}`);
 }
 
-async function callImagenPredict(apiKey, prompt, aspectRatio, imgBase64) {
-  const url = `${GEMINI_API_BASE}/models/imagen-3.0-generate-002:predict?key=${apiKey}`;
+async function callGeminiGenerateContent(apiKey, model, prompt, imgBase64, imgMimeType, refBase64, refMimeType) {
+  const url = `${GEMINI_API_BASE}/models/${model}:generateContent?key=${apiKey}`;
 
-  let formattedRatio = '1:1';
-  if (aspectRatio === '16:9' || aspectRatio === 'wide') formattedRatio = '16:9';
-  else if (aspectRatio === '9:16' || aspectRatio === 'tall') formattedRatio = '9:16';
-  else if (aspectRatio === '4:3') formattedRatio = '4:3';
-  else if (aspectRatio === '3:4') formattedRatio = '3:4';
+  const parts = [];
 
-  const instancePayload = {
-    prompt: prompt
-  };
   if (imgBase64) {
-    instancePayload.image = { bytesBase64Encoded: imgBase64 };
+    parts.push({
+      inlineData: {
+        mimeType: imgMimeType || 'image/png',
+        data: imgBase64
+      }
+    });
   }
 
+  if (refBase64) {
+    parts.push({
+      inlineData: {
+        mimeType: refMimeType || 'image/png',
+        data: refBase64
+      }
+    });
+  }
+
+  parts.push({ text: prompt });
+
   const body = {
-    instances: [instancePayload],
-    parameters: {
-      sampleCount: 1,
-      aspectRatio: formattedRatio,
-      outputMimeType: 'image/png'
+    contents: [
+      {
+        role: 'user',
+        parts: parts
+      }
+    ],
+    generationConfig: {
+      responseModalities: ["TEXT", "IMAGE"]
     }
   };
 
@@ -100,86 +120,27 @@ async function callImagenPredict(apiKey, prompt, aspectRatio, imgBase64) {
       const errJson = JSON.parse(errText);
       errMsg = errJson.error?.message || errJson.message || errMsg;
     } catch (e) {}
-    throw new Error(errMsg);
+    throw new Error(`${model} error (${resp.status}): ${errMsg}`);
   }
 
   const data = await resp.json();
-  const prediction = data.predictions?.[0];
-  if (!prediction) {
-    throw new Error('No predictions returned from Imagen 3 API');
-  }
+  const candidateParts = data.candidates?.[0]?.content?.parts || [];
 
-  const base64 = prediction.bytesBase64Encoded || prediction.bytes;
-  const mimeType = prediction.mimeType || 'image/png';
-
-  if (!base64) {
-    throw new Error('Imagen 3 API did not return image bytes');
-  }
-
-  return { base64, mimeType };
-}
-
-async function callGeminiMultimodal(apiKey, prompt, imgBase64, imgMimeType, refBase64, refMimeType) {
-  const modelsToTry = ['gemini-2.0-flash', 'gemini-1.5-flash'];
-  let lastErr = null;
-
-  for (const model of modelsToTry) {
-    try {
-      const url = `${GEMINI_API_BASE}/models/${model}:generateContent?key=${apiKey}`;
-      const parts = [
-        {
-          inline_data: {
-            mime_type: imgMimeType || 'image/png',
-            data: imgBase64
-          }
-        }
-      ];
-
-      if (refBase64) {
-        parts.push({
-          inline_data: {
-            mime_type: refMimeType || 'image/png',
-            data: refBase64
-          }
-        });
-      }
-
-      parts.push({ text: prompt });
-
-      const body = {
-        contents: [{ parts }],
-        generationConfig: {
-          responseModalities: ["TEXT", "IMAGE"]
-        }
+  for (const part of candidateParts) {
+    const inlineData = part.inlineData || part.inline_data;
+    if (inlineData && (inlineData.data || inlineData.bytes)) {
+      return {
+        base64: inlineData.data || inlineData.bytes,
+        mimeType: inlineData.mimeType || inlineData.mime_type || 'image/png'
       };
-
-      const resp = await fetch(url, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(body)
-      });
-
-      if (!resp.ok) {
-        const errText = await resp.text().catch(() => '');
-        throw new Error(`${model} API error (${resp.status}): ${errText}`);
-      }
-
-      const data = await resp.json();
-      const candidateParts = data.candidates?.[0]?.content?.parts || [];
-
-      for (const part of candidateParts) {
-        const inlineData = part.inlineData || part.inline_data;
-        if (inlineData && inlineData.data) {
-          return {
-            base64: inlineData.data,
-            mimeType: inlineData.mimeType || inlineData.mime_type || 'image/png'
-          };
-        }
-      }
-    } catch (err) {
-      lastErr = err;
     }
   }
 
-  throw lastErr || new Error('No image output received from Gemini API');
+  // If text was returned instead of image, extract and report error message
+  const textPart = candidateParts.find(p => p.text)?.text;
+  if (textPart) {
+    throw new Error(`Model returned text instead of image: "${textPart.slice(0, 150)}..."`);
+  }
+
+  throw new Error(`Model ${model} did not return image data in output parts.`);
 }
