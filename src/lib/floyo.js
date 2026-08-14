@@ -1,5 +1,6 @@
 import { WORKFLOWS } from './workflows.js';
 import { logCall } from './usageTracker.js';
+import { geminiEdit } from './gemini.js';
 
 const FLOYO_API_BASE = '/api/floyo';
 const FLOYO_CDN_BASE = '/cdn/floyo';
