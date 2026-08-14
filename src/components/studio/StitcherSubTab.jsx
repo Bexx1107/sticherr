@@ -126,7 +126,7 @@ async function compositeLayer(compCtx, layer, maskData) {
   compCtx.globalAlpha = prevAlpha;
 }
 
-export default function StitcherSubTab({ apiKey, theme, onHistoryAdd, loadProjectId, onProjectLoaded: onProjectLoadedProp }) {
+export default function StitcherSubTab({ apiKey, theme, apiProvider = 'floyo', onHistoryAdd, loadProjectId, onProjectLoaded: onProjectLoadedProp }) {
   // ── Persisted state ──
   const [modelKey, setModelKey] = usePersistedState('stitcher_model', 'standard');
   const [sourceImage, setSourceImage] = usePersistedImage('stitcher_source');
@@ -1242,7 +1242,7 @@ export default function StitcherSubTab({ apiKey, theme, onHistoryAdd, loadProjec
         entityRefs,
         aspectRatio: selAspect, resolution,
         advancedConfig: getAdvancedConfig(advanced.settings),
-      });
+      }, apiProvider);
 
       const newLayer = {
         id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
@@ -1303,7 +1303,7 @@ export default function StitcherSubTab({ apiKey, theme, onHistoryAdd, loadProjec
         entityRefs,
         aspectRatio: selAspect, resolution,
         advancedConfig: getAdvancedConfig(advanced.settings),
-      });
+      }, apiProvider);
 
       setLayers(prev => prev.map(l => l.id === layerId ? { 
         ...l, 

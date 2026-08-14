@@ -215,7 +215,10 @@ async function executeWorkflow(apiKey, workflowName, workflowPrompt, { onStatus,
   };
 }
 
-export async function stitcherEdit(apiKey, modelId, params) {
+export async function stitcherEdit(apiKey, modelId, params, provider = 'floyo') {
+  if (provider === 'gemini' || (apiKey && apiKey.startsWith('AIza'))) {
+    return geminiEdit(apiKey, modelId, params);
+  }
   const { sourceImage, cropBase64, cropMimeType, prompt = '', onStatus = null, aspectRatio = 'auto', resolution = '1K', entityRefs = [], advancedConfig = {} } = params;
   const wf = WORKFLOWS.stitcherEdit;
 

@@ -34,7 +34,8 @@
 - **Zoom & Pan** — Scroll to zoom, space+drag to pan, fit-to-screen button
 - **Live Preview** — Real-time composited preview of all layers and edits
 
-### 🧠 AI Generation
+### 🧠 AI Generation & Dual Provider
+- **Dual API Provider** — Use either a **Floyo API Key** or a direct **Google Gemini API Key** (Google AI Studio)
 - **3 Model Tiers** — Choose from NB (fast), NB 2 (high fidelity), or NB PRO (studio-quality 4K)
 - **Smart Prompting** — Built-in system prompt enforces seamless in-place editing (matches lighting, perspective, textures)
 - **Resolution Control** — Auto, 1K, 2K, or 4K output
@@ -77,7 +78,7 @@
 
 ### Prerequisites
 - [Node.js](https://nodejs.org/) 18+ 
-- An API key from [Floyo AI](https://floyo.ai)
+- An API key from **Floyo AI** OR **Google AI Studio** (Gemini key starting with `AIza`)
 
 ### Install & Run
 
@@ -99,7 +100,7 @@ The editor opens at **http://localhost:3002**
 
 ### Enter Your API Key
 
-Paste your Floyo API key in the sidebar input. It's stored locally in your browser's `localStorage` — never sent anywhere except Floyo's API with your requests.
+Select your provider tab (**Floyo API** or **Google Gemini**) in the sidebar and paste your key. Keys are stored locally in your browser's `localStorage` — never sent anywhere except the respective provider's API with your generation requests. Typing a key starting with `AIza` automatically selects the Google Gemini provider!
 
 ---
 

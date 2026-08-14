@@ -4,8 +4,15 @@ import StitcherSubTab from './components/studio/StitcherSubTab';
 import { ApiKeyInput } from './components/Shared';
 
 export default function App() {
+  const [apiProvider, setApiProvider] = useState(() => {
+    return localStorage.getItem('sticherr_api_provider') || 'floyo';
+  });
   const [apiKey, setApiKey] = useState(() => {
-    const stored = localStorage.getItem('dmd_api_key') || '';
+    const stored = localStorage.getItem('dmd_api_key') || localStorage.getItem('sticherr_api_key') || '';
+    return stored.trim().replace(/['"\s]/g, '');
+  });
+  const [geminiApiKey, setGeminiApiKey] = useState(() => {
+    const stored = localStorage.getItem('sticherr_gemini_api_key') || '';
     return stored.trim().replace(/['"\s]/g, '');
   });
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(() => {
@@ -40,6 +47,18 @@ export default function App() {
     const cleaned = (key || '').trim().replace(/['"\s]/g, '');
     setApiKey(cleaned);
     localStorage.setItem('dmd_api_key', cleaned);
+    localStorage.setItem('sticherr_api_key', cleaned);
+  };
+
+  const handleSetGeminiApiKey = (key) => {
+    const cleaned = (key || '').trim().replace(/['"\s]/g, '');
+    setGeminiApiKey(cleaned);
+    localStorage.setItem('sticherr_gemini_api_key', cleaned);
+  };
+
+  const handleSetApiProvider = (provider) => {
+    setApiProvider(provider);
+    localStorage.setItem('sticherr_api_provider', provider);
   };
 
   return (
@@ -96,7 +115,15 @@ export default function App() {
             </button>
 
             {/* API Key */}
-            <ApiKeyInput apiKey={apiKey} setApiKey={handleSetApiKey} compact={false} />
+            <ApiKeyInput 
+              apiKey={apiKey} 
+              setApiKey={handleSetApiKey} 
+              geminiApiKey={geminiApiKey}
+              setGeminiApiKey={handleSetGeminiApiKey}
+              apiProvider={apiProvider}
+              setApiProvider={handleSetApiProvider}
+              compact={false} 
+            />
 
             {/* Workspace Guide */}
             {showGuide && (
@@ -168,7 +195,12 @@ export default function App() {
 
       {/* Main Workspace */}
       <main className="main-workspace flex-1 flex flex-col min-h-0 relative z-10 w-full overflow-hidden">
-        <StitcherSubTab apiKey={apiKey} theme={theme} />
+        <StitcherSubTab 
+          apiKey={apiProvider === 'gemini' ? geminiApiKey : apiKey} 
+          theme={theme} 
+          apiProvider={apiProvider}
+          geminiApiKey={geminiApiKey}
+        />
       </main>
     </div>
   );

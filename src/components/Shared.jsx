@@ -58,22 +58,46 @@ export function ImageLightbox({ src, name, onClose }) {
 }
 
 // ─── API Key Input ──────────────────────────────────────────────
-export function ApiKeyInput({ apiKey, setApiKey, compact = false }) {
+export function ApiKeyInput({ 
+  apiKey, 
+  setApiKey, 
+  geminiApiKey, 
+  setGeminiApiKey, 
+  apiProvider = 'floyo', 
+  setApiProvider, 
+  compact = false 
+}) {
   const [visible, setVisible] = useState(false);
+
+  const isGemini = apiProvider === 'gemini';
+  const currentKey = isGemini ? (geminiApiKey || '') : (apiKey || '');
 
   const handleChange = (e) => {
     const rawVal = e.target.value;
     const cleaned = rawVal.trim().replace(/['"\s]/g, '');
-    setApiKey(cleaned);
+    
+    // Auto-detect Gemini key format (starts with AIza)
+    if (cleaned.startsWith('AIza') && !isGemini) {
+      if (setApiProvider) setApiProvider('gemini');
+      if (setGeminiApiKey) setGeminiApiKey(cleaned);
+      return;
+    }
+
+    if (isGemini) {
+      if (setGeminiApiKey) setGeminiApiKey(cleaned);
+    } else {
+      if (setApiKey) setApiKey(cleaned);
+    }
   };
 
-  const isKeyPresent = apiKey && apiKey.length > 0;
-  const isValidFormat = isKeyPresent && apiKey.length >= 20;
+  const isKeyPresent = currentKey && currentKey.length > 0;
+  const isValidFormat = isKeyPresent && currentKey.length >= 20;
 
   return (
     <div className={compact ? 'mb-1.5' : 'mb-0'}>
-      <label className="section-label flex items-center justify-between select-none">
-        <span>Floyo API key</span>
+      {/* Provider Selector Tabs */}
+      <div className="flex items-center justify-between mb-2 select-none">
+        <label className="section-label mb-0">API Key Provider</label>
         {isKeyPresent && (
           <span className={`text-[10px] font-bold tracking-wide uppercase transition-colors duration-200 ${
             isValidFormat ? 'text-mint' : 'text-accent'
@@ -81,21 +105,62 @@ export function ApiKeyInput({ apiKey, setApiKey, compact = false }) {
             {isValidFormat ? '✓ Key set' : '✗ Key too short'}
           </span>
         )}
-      </label>
+      </div>
+
+      <div className="grid grid-cols-2 gap-1.5 p-1 rounded-xl bg-slate-950/60 border border-white/[0.08] mb-2.5">
+        <button
+          type="button"
+          onClick={() => setApiProvider && setApiProvider('floyo')}
+          className={`py-1.5 px-2 rounded-lg text-[11px] font-bold transition-all cursor-pointer text-center ${
+            !isGemini 
+              ? 'bg-mint/20 text-mint border border-mint/40 shadow-sm' 
+              : 'text-surface-400 hover:text-surface-100 hover:bg-white/[0.04]'
+          }`}
+        >
+          Floyo API
+        </button>
+        <button
+          type="button"
+          onClick={() => setApiProvider && setApiProvider('gemini')}
+          className={`py-1.5 px-2 rounded-lg text-[11px] font-bold transition-all cursor-pointer text-center ${
+            isGemini 
+              ? 'bg-blue-500/20 text-blue-300 border border-blue-500/40 shadow-sm' 
+              : 'text-surface-400 hover:text-surface-100 hover:bg-white/[0.04]'
+          }`}
+        >
+          Google Gemini
+        </button>
+      </div>
+
       <div className="relative">
         <input
           type={visible ? 'text' : 'password'} 
-          value={apiKey}
+          value={currentKey}
           onChange={handleChange}
-          placeholder="Enter your Floyo API key..."
+          placeholder={isGemini ? "Enter Gemini API key (AIza...)..." : "Enter your Floyo API key..."}
           className={`input-field w-full pr-10 text-[12px] transition-all duration-200 ${
-            isKeyPresent ? (isValidFormat ? 'border-mint/30 focus:border-mint' : 'border-accent/40 focus:border-accent') : ''
+            isKeyPresent 
+              ? (isValidFormat 
+                  ? (isGemini ? 'border-blue-500/40 focus:border-blue-400' : 'border-mint/30 focus:border-mint') 
+                  : 'border-accent/40 focus:border-accent') 
+              : ''
           }`}
         />
-        <button onClick={() => setVisible(!visible)} className="absolute right-3 top-1/2 -translate-y-1/2 text-surface-400 hover:text-mint transition-all duration-150 hover:scale-110 active:scale-90 cursor-pointer" title={visible ? "Hide API key" : "Show API key"}>
+        <button 
+          type="button"
+          onClick={() => setVisible(!visible)} 
+          className="absolute right-3 top-1/2 -translate-y-1/2 text-surface-400 hover:text-mint transition-all duration-150 hover:scale-110 active:scale-90 cursor-pointer" 
+          title={visible ? "Hide API key" : "Show API key"}
+        >
           {visible ? <EyeOff size={14} /> : <Eye size={14} />}
         </button>
       </div>
+
+      {isGemini && (
+        <p className="text-[10px] text-surface-500 mt-1.5 flex items-center gap-1">
+          <span className="text-blue-400 font-semibold">Gemini API:</span> Uses Google AI Studio key directly
+        </p>
+      )}
     </div>
   );
 }
