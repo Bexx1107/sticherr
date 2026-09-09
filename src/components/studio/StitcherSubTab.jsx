@@ -1721,16 +1721,6 @@ export default function StitcherSubTab({ apiKey, theme, apiProvider = 'floyo', o
 
       {/* Right Panel — Canvas */}
       <div className={`studio-preview relative ${theme === 'light' ? 'canvas-light' : ''}`} ref={containerRef}>
-        {/* Floating Quick Switch Button to Controls on Mobile */}
-        <div className="md:hidden absolute bottom-5 right-5 z-20">
-          <button
-            onClick={() => setMobileTab('controls')}
-            className="btn-mint flex items-center gap-2 px-4 py-3 rounded-2xl shadow-2xl font-bold text-xs cursor-pointer border border-mint/40"
-          >
-            <Scissors size={15} /> Edit & Prompt
-          </button>
-        </div>
-
         {/* Canvas Mode Toolbar */}
         {currentImage && (
           <div className="canvas-mode-toolbar absolute top-4 left-1/2 -translate-x-1/2 z-10 flex items-center rounded-2xl border shadow-2xl max-w-[calc(100vw-24px)] overflow-x-auto no-scrollbar"
@@ -1965,18 +1955,33 @@ export default function StitcherSubTab({ apiKey, theme, apiProvider = 'floyo', o
                 className="rounded-lg shadow-2xl" style={{ cursor: spaceHeldRef.current ? 'grab' : canvasMode === 'paint' ? 'crosshair' : canvasMode === 'select' ? 'crosshair' : 'default' }}
               />
             </div>
-            <button onClick={() => downloadImage(currentImage.base64, currentImage.mimeType, `sticherr_${Date.now()}.png`)}
-              className="absolute bottom-m3-md left-1/2 -translate-x-1/2 z-10 btn-accent flex items-center gap-2 text-xs font-bold cursor-pointer hover:scale-105 active:scale-95 transition-all duration-200 shadow-lg"
-              title="Download final edited image"
-            >
-              <Download size={14} /> Download Image
-            </button>
+            {/* Bottom Actions Bar (Side-by-side on mobile, centered Download on desktop) */}
+            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-20 flex items-center gap-2 max-w-[calc(100vw-32px)]">
+              <button
+                onClick={() => setMobileTab('controls')}
+                className="md:hidden btn-mint flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl shadow-xl text-xs font-bold cursor-pointer border border-mint/40 whitespace-nowrap"
+              >
+                <Scissors size={14} /> Edit Prompt
+              </button>
+              <button onClick={() => downloadImage(currentImage.base64, currentImage.mimeType, `sticherr_${Date.now()}.png`)}
+                className="btn-accent flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold cursor-pointer hover:scale-105 active:scale-95 transition-all duration-200 shadow-xl whitespace-nowrap"
+                title="Download final edited image"
+              >
+                <Download size={14} /> Download Image
+              </button>
+            </div>
           </div>
         ) : !loading ? (
           <div className="empty-state flex-1">
             <div className="empty-state-icon"><Scissors size={28} className="text-white" /></div>
             <h3 className="text-lg font-bold text-surface-300 mb-2">Sticherr</h3>
             <p className="text-sm text-surface-500 max-w-xs">Upload an image, select an area, and edit it with AI while keeping everything else intact.</p>
+            <button
+              onClick={() => setMobileTab('controls')}
+              className="md:hidden mt-4 btn-mint flex items-center gap-2 px-4 py-2.5 rounded-xl shadow-lg text-xs font-bold cursor-pointer border border-mint/40"
+            >
+              <Scissors size={14} /> Open Controls & Setup
+            </button>
           </div>
         ) : (
           <div className="w-full max-w-2xl animate-slide-up mx-auto">
