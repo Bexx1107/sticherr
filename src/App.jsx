@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Sparkles, Scissors, HelpCircle, ChevronLeft, ChevronRight, Sun, Moon, X, Menu } from 'lucide-react';
+import { Sparkles, Scissors, HelpCircle, ChevronLeft, ChevronRight, Sun, Moon, X, Menu, AlertTriangle } from 'lucide-react';
 import StitcherSubTab from './components/studio/StitcherSubTab';
 import { ApiKeyInput } from './components/Shared';
 
@@ -27,6 +27,17 @@ export default function App() {
   const [showGuide, setShowGuide] = useState(() => {
     return localStorage.getItem('dmd_guide_dismissed') !== 'true';
   });
+  const [showMobileNotice, setShowMobileNotice] = useState(false);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined' && window.innerWidth < 768) {
+      setShowMobileNotice(true);
+      const timer = setTimeout(() => {
+        setShowMobileNotice(false);
+      }, 6000);
+      return () => clearTimeout(timer);
+    }
+  }, []);
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
@@ -240,6 +251,25 @@ export default function App() {
             {theme === 'dark' ? <Sun size={15} className="text-mint" /> : <Moon size={15} className="text-mint" />}
           </button>
         </header>
+
+        {/* Mobile Disclaimer Toast (auto-dismisses) */}
+        {showMobileNotice && (
+          <div className="md:hidden fixed top-14 left-3 right-3 z-50 flex items-center justify-between gap-3 px-3.5 py-2.5 rounded-xl bg-surface-900/95 border border-amber-500/40 text-surface-200 text-xs shadow-2xl backdrop-blur-md animate-slide-up">
+            <div className="flex items-center gap-2.5">
+              <AlertTriangle size={15} className="text-amber-400 shrink-0" />
+              <span className="leading-snug">
+                Mobile experience might feel a bit limited or broken — please switch to <strong className="text-white">desktop mode</strong> for the best experience!
+              </span>
+            </div>
+            <button
+              onClick={() => setShowMobileNotice(false)}
+              className="text-surface-400 hover:text-surface-100 p-1 cursor-pointer shrink-0 text-xs font-bold"
+              aria-label="Dismiss disclaimer"
+            >
+              ✕
+            </button>
+          </div>
+        )}
 
         <StitcherSubTab 
           apiKey={apiProvider === 'gemini' ? geminiApiKey : apiKey} 
