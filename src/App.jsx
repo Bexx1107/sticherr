@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Sparkles, Scissors, HelpCircle, ChevronLeft, ChevronRight, Sun, Moon, X } from 'lucide-react';
+import { Sparkles, Scissors, HelpCircle, ChevronLeft, ChevronRight, Sun, Moon, X, Menu } from 'lucide-react';
 import StitcherSubTab from './components/studio/StitcherSubTab';
 import { ApiKeyInput } from './components/Shared';
 
@@ -63,17 +63,25 @@ export default function App() {
 
   return (
     <div className="h-dvh flex text-surface-100 overflow-hidden bg-surface-950">
+      {/* Mobile Drawer Backdrop */}
+      {!isSidebarCollapsed && (
+        <div 
+          className="fixed inset-0 bg-black/60 backdrop-blur-sm z-30 md:hidden"
+          onClick={() => setIsSidebarCollapsed(true)}
+        />
+      )}
+
       {/* Sidebar */}
       <aside 
-        className="sidebar-panel shrink-0 flex flex-col z-20 border-r border-white/[0.08] relative transition-all duration-300 ease-in-out"
+        className="sidebar-panel shrink-0 flex flex-col z-40 border-r border-white/[0.08] relative transition-all duration-300 ease-in-out"
         style={{ 
           width: isSidebarCollapsed ? '0px' : '280px'
         }}
       >
-        {/* Toggle Button */}
+        {/* Desktop Toggle Button */}
         <button
           onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
-          className="absolute -right-4 top-7 w-8 h-8 rounded-full border border-mint/40 bg-slate-950 text-mint hover:text-mint-light hover:border-mint hover:bg-mint/5 flex items-center justify-center z-30 shadow-[0_0_12px_rgba(52,211,153,0.25)] hover:shadow-[0_0_18px_rgba(52,211,153,0.5)] active:scale-90 cursor-pointer transition-all duration-200"
+          className="hidden md:flex absolute -right-4 top-7 w-8 h-8 rounded-full border border-mint/40 bg-slate-950 text-mint hover:text-mint-light hover:border-mint hover:bg-mint/5 items-center justify-center z-30 shadow-[0_0_12px_rgba(52,211,153,0.25)] hover:shadow-[0_0_18px_rgba(52,211,153,0.5)] active:scale-90 cursor-pointer transition-all duration-200"
           title={isSidebarCollapsed ? "Expand Sidebar" : "Collapse Sidebar"}
         >
           {isSidebarCollapsed ? <ChevronRight size={16} /> : <ChevronLeft size={16} />}
@@ -98,6 +106,15 @@ export default function App() {
                 <p className="text-[10px] font-medium text-surface-500 mt-0.5 tracking-wide uppercase">Editor</p>
               </div>
             </div>
+
+            {/* Mobile Close Button */}
+            <button
+              onClick={() => setIsSidebarCollapsed(true)}
+              className="md:hidden p-1.5 rounded-lg text-surface-400 hover:text-white hover:bg-white/[0.08] transition-all cursor-pointer"
+              title="Close sidebar"
+            >
+              <X size={18} />
+            </button>
           </div>
 
           {/* Separator */}
@@ -195,6 +212,35 @@ export default function App() {
 
       {/* Main Workspace */}
       <main className="main-workspace flex-1 flex flex-col min-h-0 relative z-10 w-full overflow-hidden">
+        {/* Mobile Header Bar */}
+        <header className="mobile-app-header flex md:hidden items-center justify-between px-4 py-2.5 bg-surface-950/90 backdrop-blur-md border-b border-white/[0.08] shrink-0 z-20">
+          <div className="flex items-center gap-2.5">
+            <button
+              onClick={() => setIsSidebarCollapsed(false)}
+              className="p-2 rounded-lg text-surface-300 hover:text-white hover:bg-white/[0.06] transition-all cursor-pointer border border-white/10"
+              aria-label="Open settings menu"
+            >
+              <Menu size={18} />
+            </button>
+            <div className="flex items-center gap-2">
+              <div 
+                className="w-6 h-6 rounded-md flex items-center justify-center shrink-0"
+                style={{ background: 'linear-gradient(135deg, #047857, #10B981)' }}
+              >
+                <Scissors size={13} className="text-white" />
+              </div>
+              <span className="text-sm font-bold text-white tracking-tight">Sticherr</span>
+            </div>
+          </div>
+          <button
+            onClick={toggleTheme}
+            className="p-2 rounded-lg text-surface-300 hover:text-white hover:bg-white/[0.06] transition-all cursor-pointer border border-white/10"
+            aria-label="Toggle theme"
+          >
+            {theme === 'dark' ? <Sun size={15} className="text-mint" /> : <Moon size={15} className="text-mint" />}
+          </button>
+        </header>
+
         <StitcherSubTab 
           apiKey={apiProvider === 'gemini' ? geminiApiKey : apiKey} 
           theme={theme} 

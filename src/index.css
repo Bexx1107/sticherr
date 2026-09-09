@@ -659,38 +659,105 @@ input[type="color"]::-webkit-color-swatch {
 }
 
 /* ── Mobile Responsiveness ──────────────────────── */
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
 @media (max-width: 768px) {
-  /* Stack split columns vertically (canvas preview on top, controls below) */
+  /* Prevent canvas scroll trap: split container becomes full height column */
   .studio-split {
-    flex-direction: column-reverse;
-    overflow-y: auto;
+    flex-direction: column;
+    height: 100%;
+    min-height: 0;
+    overflow: hidden;
   }
-  
-  /* Make studio controls full width */
-  .studio-controls {
+
+  /* When Canvas view is active on mobile */
+  .studio-split.mobile-tab-canvas .studio-preview {
+    display: flex !important;
+    width: 100% !important;
+    height: 100% !important;
+    flex: 1;
+    min-height: 0;
+    padding: 12px !important;
+    overflow: hidden;
+  }
+  .studio-split.mobile-tab-canvas .studio-controls {
+    display: none !important;
+  }
+
+  /* When Controls view is active on mobile */
+  .studio-split.mobile-tab-controls .studio-preview {
+    display: none !important;
+  }
+  .studio-split.mobile-tab-controls .studio-controls {
+    display: flex !important;
     width: 100% !important;
     min-width: 100% !important;
     max-width: 100% !important;
-    border-right: none;
-    border-bottom: 1px solid rgba(16,185,129,0.15);
-    padding: var(--md-sys-spacing-md) !important;
-  }
-  
-  /* Give the canvas preview a fixed height so it's fully visible & interactable */
-  .studio-preview {
-    width: 100% !important;
-    height: 480px !important;
-    min-height: 400px !important;
-    padding: var(--md-sys-spacing-md) !important;
-    flex-shrink: 0;
-  }
-  
-  /* Make the left settings sidebar float as a drawer when open */
-  aside.shrink-0 {
-    position: absolute !important;
     height: 100% !important;
-    box-shadow: 20px 0 30px rgba(0, 0, 0, 0.65) !important;
+    flex: 1;
+    border-right: none;
+    padding: 14px 12px 32px !important;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .studio-split.mobile-tab-controls .control-section-config {
+    display: flex !important;
+  }
+  .studio-split.mobile-tab-controls .control-section-layers {
+    display: none !important;
+  }
+
+  /* When Layers view is active on mobile */
+  .studio-split.mobile-tab-layers .studio-preview {
+    display: none !important;
+  }
+  .studio-split.mobile-tab-layers .studio-controls {
+    display: flex !important;
+    width: 100% !important;
+    min-width: 100% !important;
+    max-width: 100% !important;
+    height: 100% !important;
+    flex: 1;
+    border-right: none;
+    padding: 14px 12px 32px !important;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .studio-split.mobile-tab-layers .control-section-config {
+    display: none !important;
+  }
+  .studio-split.mobile-tab-layers .control-section-layers {
+    display: flex !important;
+  }
+
+  /* Mobile floating drawer for sidebar */
+  aside.shrink-0 {
+    position: fixed !important;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    height: 100dvh !important;
+    z-index: 50 !important;
+    max-width: 85vw;
+    box-shadow: 20px 0 40px rgba(0, 0, 0, 0.7) !important;
     background: var(--color-surface-950) !important;
+  }
+
+  /* Prevent auto-zoom on mobile inputs */
+  input, textarea, select {
+    font-size: 16px !important;
+  }
+
+  /* Touch action to prevent scrolling while drawing on canvas */
+  canvas {
+    touch-action: none;
+  }
+
+  /* Toolbars on mobile */
+  .canvas-mode-toolbar, .paint-controls-bar {
+    border-radius: 14px !important;
+    padding: 6px 10px !important;
   }
 }
 

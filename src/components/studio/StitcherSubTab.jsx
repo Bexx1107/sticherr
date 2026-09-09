@@ -127,6 +127,9 @@ async function compositeLayer(compCtx, layer, maskData) {
 }
 
 export default function StitcherSubTab({ apiKey, theme, apiProvider = 'floyo', onHistoryAdd, loadProjectId, onProjectLoaded: onProjectLoadedProp }) {
+  // ── Mobile View state ──
+  const [mobileTab, setMobileTab] = useState('canvas'); // 'canvas' | 'controls' | 'layers'
+
   // ── Persisted state ──
   const [modelKey, setModelKey] = usePersistedState('stitcher_model', 'standard');
   const [sourceImage, setSourceImage] = usePersistedImage('stitcher_source');
@@ -1210,6 +1213,9 @@ export default function StitcherSubTab({ apiKey, theme, apiProvider = 'floyo', o
   const handleGenerate = useCallback(async () => {
     if (!canGenerate || !selection) return;
     setLoading(true); setError('');
+    if (typeof window !== 'undefined' && window.innerWidth < 768) {
+      setMobileTab('canvas');
+    }
     try {
       const srcImg = sourceImgRef.current;
       if (!srcImg) throw new Error('Image not loaded');
@@ -1370,10 +1376,52 @@ export default function StitcherSubTab({ apiKey, theme, apiProvider = 'floyo', o
 
   // ── Render ──
   return (
-    <div className="studio-split">
+    <div className={`studio-split mobile-tab-${mobileTab}`}>
+      {/* Mobile Tab Switcher */}
+      <div className="mobile-stitcher-tabs flex md:hidden items-center justify-between border-b border-white/[0.08] bg-surface-950 px-2 py-1.5 shrink-0 z-20">
+        <button
+          onClick={() => setMobileTab('canvas')}
+          className={`flex-1 flex items-center justify-center gap-1.5 py-2 px-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+            mobileTab === 'canvas' 
+              ? 'bg-mint/20 text-white border border-mint/40 shadow-sm' 
+              : 'text-surface-400 hover:text-surface-200 border border-transparent'
+          }`}
+        >
+          <MousePointer2 size={13} />
+          <span>Canvas</span>
+        </button>
+        <button
+          onClick={() => setMobileTab('controls')}
+          className={`flex-1 flex items-center justify-center gap-1.5 py-2 px-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+            mobileTab === 'controls' 
+              ? 'bg-mint/20 text-white border border-mint/40 shadow-sm' 
+              : 'text-surface-400 hover:text-surface-200 border border-transparent'
+          }`}
+        >
+          <Scissors size={13} />
+          <span>Controls</span>
+        </button>
+        <button
+          onClick={() => setMobileTab('layers')}
+          className={`flex-1 flex items-center justify-center gap-1.5 py-2 px-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+            mobileTab === 'layers' 
+              ? 'bg-mint/20 text-white border border-mint/40 shadow-sm' 
+              : 'text-surface-400 hover:text-surface-200 border border-transparent'
+          }`}
+        >
+          <Layers size={13} />
+          <span>Layers</span>
+          {layers.length > 0 && (
+            <span className="px-1.5 py-0.5 rounded-full bg-mint text-surface-950 text-[10px] font-extrabold ml-1">
+              {layers.length}
+            </span>
+          )}
+        </button>
+      </div>
+
       <div className="studio-controls">
         {/* Project Bar */}
-        <div className="flex items-center gap-2 rounded-xl border border-mint/25 bg-slate-950/80 px-3 py-2 shadow-lg">
+        <div className="control-section-config flex items-center gap-2 rounded-xl border border-mint/25 bg-slate-950/80 px-3 py-2 shadow-lg">
             <button
               onClick={() => setShowProjectBrowser(true)}
               className="p-2 rounded-lg text-surface-300 hover:text-white hover:bg-white/[0.06] transition-all cursor-pointer border border-white/10 shrink-0"
@@ -1425,7 +1473,7 @@ export default function StitcherSubTab({ apiKey, theme, apiProvider = 'floyo', o
         <ErrorBanner error={error} onDismiss={() => setError('')} />
 
         {/* Card 1: Project & Image Setup */}
-        <div className="control-card">
+        <div className="control-card control-section-config">
           <h3 className="text-[11px] font-bold text-surface-300 uppercase tracking-wider">Upload</h3>
           
           {/* Source Image Upload */}
@@ -1454,7 +1502,7 @@ export default function StitcherSubTab({ apiKey, theme, apiProvider = 'floyo', o
         </div>
 
         {/* Card 2: Edit Operations */}
-        <div className="control-card">
+        <div className="control-card control-section-config">
           <h3 className="text-[11px] font-bold text-surface-300 uppercase tracking-wider">Prompt</h3>
 
           {/* Edit Prompt */}
@@ -1507,7 +1555,7 @@ export default function StitcherSubTab({ apiKey, theme, apiProvider = 'floyo', o
         </div>
 
         {/* Card 3: Model, Quality & Execution */}
-        <div className="control-card">
+        <div className="control-card control-section-config">
           <h3 className="text-[11px] font-bold text-surface-300 uppercase tracking-wider">Generate</h3>
 
           {/* Model */}
@@ -1557,7 +1605,7 @@ export default function StitcherSubTab({ apiKey, theme, apiProvider = 'floyo', o
         </div>
 
         {/* Card 4: Layers Manager */}
-        <div className="control-card">
+        <div className="control-card control-section-layers">
           <div className="flex items-center justify-between"><h3 className="text-[11px] font-bold text-surface-300 uppercase tracking-wider">Layers</h3><span className="text-[10px] text-surface-500 font-medium">{layers.length}</span></div>
 
           {layers.length === 0 ? (
@@ -1666,14 +1714,26 @@ export default function StitcherSubTab({ apiKey, theme, apiProvider = 'floyo', o
           )}
         </div>
 
-        <AdvancedSettings {...advanced} />
+        <div className="control-section-config">
+          <AdvancedSettings {...advanced} />
+        </div>
       </div>
 
       {/* Right Panel — Canvas */}
       <div className={`studio-preview relative ${theme === 'light' ? 'canvas-light' : ''}`} ref={containerRef}>
+        {/* Floating Quick Switch Button to Controls on Mobile */}
+        <div className="md:hidden absolute bottom-5 right-5 z-20">
+          <button
+            onClick={() => setMobileTab('controls')}
+            className="btn-mint flex items-center gap-2 px-4 py-3 rounded-2xl shadow-2xl font-bold text-xs cursor-pointer border border-mint/40"
+          >
+            <Scissors size={15} /> Edit & Prompt
+          </button>
+        </div>
+
         {/* Canvas Mode Toolbar */}
         {currentImage && (
-          <div className="absolute top-4 left-1/2 -translate-x-1/2 z-10 flex items-center rounded-2xl border shadow-2xl"
+          <div className="canvas-mode-toolbar absolute top-4 left-1/2 -translate-x-1/2 z-10 flex items-center rounded-2xl border shadow-2xl max-w-[calc(100vw-24px)] overflow-x-auto no-scrollbar"
             style={{ gap: '6px', padding: '8px 14px', background: 'var(--color-surface-950)', borderColor: 'rgba(16,185,129,0.18)', backdropFilter: 'blur(16px)' }}
           >
             <button
@@ -1748,8 +1808,8 @@ export default function StitcherSubTab({ apiKey, theme, apiProvider = 'floyo', o
 
         {/* Paint Controls Bar */}
         {currentImage && canvasMode === 'paint' && (
-          <div className="absolute z-10 flex items-center rounded-xl border shadow-xl"
-            style={{ top: '68px', left: '50%', transform: 'translateX(-50%)', gap: '8px', padding: '6px 12px', background: 'var(--color-surface-950)', borderColor: 'rgba(16,185,129,0.12)', backdropFilter: 'blur(12px)' }}
+          <div className="paint-controls-bar absolute z-10 flex items-center rounded-xl border shadow-xl max-w-[calc(100vw-20px)] overflow-x-auto no-scrollbar"
+            style={{ top: '64px', left: '50%', transform: 'translateX(-50%)', gap: '8px', padding: '6px 12px', background: 'var(--color-surface-950)', borderColor: 'rgba(16,185,129,0.12)', backdropFilter: 'blur(12px)' }}
           >
             {/* Tool toggle */}
             <div className="flex items-center rounded-lg" style={{ gap: '2px', padding: '3px', background: 'var(--color-surface-900)' }}>
